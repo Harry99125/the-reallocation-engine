@@ -16,4 +16,4 @@ Delta between attested `resume.json` and the target role in `profile.yml`
 
 **Killed row:G4 Coding-interview readiness (DS&A under pressure)** I think this was wrong because everyone who is job hunting in tech industry will do leetcode or such stuff. So am I.
 
-**Rewrote row: G4** (above) - New G4 will be “The real gap for me isn't years; it's that I've never worked inside an industry development pipeline at all, because every project I've done has been solo or small-team. I rewrote the row.”
+**Rewrote row: G4** (above) - New G4 will be “The real gap for me isn't years; it's that I've never worked inside an industry development pipeline at all, because every project I've done has been solo or small-team. So I rewrote the row， this looks similar to G2, but G2 represents team collaboration, while new G4 represent technical skills”
