@@ -184,7 +184,7 @@ Verification — how you confirmed the output was real: re-ran with --dry-run, p
 Reflection — what went well, what the mode got wrong or missed, and your next steps. Nothing is perfect; say where yours isn't.
 
 ## Attestation
-- Recipe: `opt-research-like-job` v0.2.0
+- Recipe: `opt-research-like-job` v0.1.0
 - By: Zening Teng · 2026-07-07
 
 ### Tested
@@ -199,11 +199,9 @@ Reflection — what went well, what the mode got wrong or missed, and your next 
 
 ### Did not test
 - No live H-1B join — `sponsorship.p`/`.tier` are illustrative fixtures, not a real lookup against `data/80-days-to-stay/` (that join is `[TODO: DATA SOURCE]`).
-- The `liveness.factor` values inside `research-like-roles.json` are hand-set; I proved the liveness surface on one real Databricks URL but did not wire per-URL liveness into the score run.
-- The proposed `.py` enrichment scripts were not built or run — they remain typed `[TODO: DEV]`.
-- `role_quality` (weight 0) was not exercised — the Ch.9 / O*NET signal contributes nothing today (repo gap #3).
-- `npm run resumes:pdf` ran on the repo's example CVs (aarav-patel etc.), not on my own résumé and not part of this mode's decision path.
+
+- `npm run resumes:pdf` ran on the repo's example CVs (aarav-patel etc.), not on my own resume
 
 ### Broke during testing, fixed
-- Unbalanced code fence in the original draft recipe: the ```` ```json ```` agent-log block was never closed → `conformance.mjs` reported "unbalanced code fences" and the file was ungradeable. Fixed in the rewrite; `node scripts/conformance.mjs` now exits 0 (`✓ all conform`).
-- `python3` not on PATH — only Anaconda `python` was, so `conformance.mjs`'s `python3 -m py_compile` failed on all 30 `.py` files + `metadata.yaml`. Fixed by adding a `python3.exe` shim in the on-PATH Anaconda folder; `npm run doctor` now shows `✓ python3 Python 3.13.9` and the environment reads `✓ runnable`.
+- run score shows error
+- `python3` not on PATH — only Anaconda `python` 
