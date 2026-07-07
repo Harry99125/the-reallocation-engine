@@ -6,24 +6,24 @@ attestation: null
 recipe_version: 0.2.0
 ---
 
-# case-mscs-opt-research-like-ai-software — Research-Like Software Roles for an AI-Era F-1 Student
+# opt research like job
 
 ## Purpose
 
-Score and rank job postings for an **F-1 MSCS/MSIS student, pre-OPT**, who is
-targeting *research-like* software roles — Applied AI Engineer, Full-Stack /
+Score and rank job postings for an F-1 MSCS/MSIS student, pre-OPT, who is
+targeting research-like software roles — Applied AI Engineer, Full-Stack /
 Software Engineer on a prototyping team, XR/HCI prototype developer, Research
 Engineer — where the day-to-day work is exploration, prototyping, benchmarking,
 evaluation, and AI-assisted discovery rather than ticket-closing maintenance.
 
 Use this mode when you have a small batch of candidate postings and a limited
-OPT runway, and you must decide **which to apply to first, which to investigate,
-and which to skip** — so that scarce application effort goes where the evidence
-supports it. Liveness and visa timeline are **gates, not votes**: a ghost
+OPT runway, and you must decide which to apply to first, which to investigate,
+and which to skip — so that scarce application effort goes where the evidence
+supports it. Liveness and visa timeline are gates, not votes: a ghost
 posting or a start date before your OPT EAD zeroes the role no matter how good
 the fit.
 
-This mode is **not** for formal PhD research-scientist roles (publications,
+This mode is not for formal PhD research-scientist roles (publications,
 tenure track) or senior/staff-only leadership roles.
 
 ## Source Inventory
@@ -31,7 +31,7 @@ tenure track) or senior/staff-only leadership roles.
 | Source Node | Node Type | Source URL or Path | Human Check |
 |---|---|---|---|
 | This recipe | Markdown recipe | `recipes/case-mscs-opt-research-like-ai-software.md` | Confirm current + approved before a run. |
-| **Bayesian Role Scorer (RUNS TODAY)** | Node script | `scripts/score/role-scorer.mjs` → `npm run score <roles.json> [--profile p.json] [--out-dir dir] [--md report.md]` | The combiner that produces Apply/Consider/Skip. Real, tested, wired. |
+| Bayesian Role Scorer (RUNS TODAY) | Node script | `scripts/score/role-scorer.mjs` → `npm run score <roles.json> [--profile p.json] [--out-dir dir] [--md report.md]` | The combiner that produces Apply/Consider/Skip. Real, tested, wired. |
 | Role-evidence input (this run) | JSON | `data/examples/research-like-roles.json` | 8 illustrative research-like roles in the scorer's input contract. Anonymized — no personal data. |
 | Student profile (this run) | JSON | `data/examples/research-like-profile.json` | F-1 pre-OPT persona → `needs_sponsorship = true`. |
 | Sponsorship / funding evidence | CSV | `data/80-days-to-stay/` (H-1B history), `data/sec/form-d/` (funding) | Upstream feed for the `sponsorship` vote. Read-only; do not rewrite. |
@@ -46,11 +46,11 @@ Each mode concept maps to an existing scorer field:
 
 | Mode concept | Scorer field | Weight / role | Source label |
 |---|---|---|---|
-| Research-like **software fit** (prototyping / evaluation / AI-assisted discovery signal) | `fit.p` | vote, 0.30 | `model-judgment` |
+| Research-like software fit (prototyping / evaluation / AI-assisted discovery signal) | `fit.p` | vote, 0.30 | `model-judgment` |
 | Sponsorship feasibility | `sponsorship.p` + `.tier` | vote, 0.35 (→0 if profile needs no sponsorship) | `record` (80-days / DOL) |
-| Role-quality (AI-resilience, BLS/O*NET) | `role_quality.p` | vote, **weight 0.0 today** — see "cannot verify" | `record` (BLS) |
-| Posting liveness | `liveness.factor` | **GATE** (multiplier) | `record` (ATS) |
-| Visa timeline vs OPT EAD | `timeline.factor` | **GATE** (multiplier) | `your-input` |
+| Role-quality (AI-resilience, BLS/O*NET) | `role_quality.p` | vote, weight 0.0 today — see "cannot verify" | `record` (BLS) |
+| Posting liveness | `liveness.factor` | GATE (multiplier) | `record` (ATS) |
+| Visa timeline vs OPT EAD | `timeline.factor` | GATE (multiplier) | `your-input` |
 
 ## Inputs
 
@@ -65,27 +65,27 @@ Each role record: `role_id`, `company`, `title`, `sponsorship {p,tier,source}`,
 
 ## Phase Gates
 
-1. **Source gate** — required paths present or typed-TODO. Test: `test -f scripts/score/role-scorer.mjs && test -f data/examples/research-like-roles.json`. Human capacity: confirm inputs are current.
-2. **Scope gate** — run declares `sample` (no live network, no external writes). This mode's real run is sample: the scorer only reads local JSON and writes reports. Test: profile + roles are local files. Human capacity: approve mode.
-3. **Data-shape gate** — roles + profile JSON parse before scoring. Test: `node -e "JSON.parse(require('fs').readFileSync('data/examples/research-like-roles.json'))"`. Human capacity: confirm parse.
-4. **Script-readiness gate** — the decision script exists. Test: `npm run score -- data/examples/research-like-roles.json --out-dir <tmp>` exits 0. **PASSES today** (proposed `.py` enrichment scripts remain typed `[TODO: DEV]`, not required for the decision). Human capacity: accept scope.
-5. **Approval gate** — live network / external writes / model calls with sensitive data require a logged approval. This sample run makes **none**, so the gate is n/a. Test: `rg --fixed-strings "[TODO: APPROVE]"` — none open for sample mode. Human capacity: block live execution.
-6. **Liveness GATE (hard stop, not a vote)** — a role whose `liveness.factor ≤ 0.05` is Skipped regardless of votes. Confirm liveness with `npm run ats:liveness -- <job-url>` before setting the factor. Human capacity: clear each live posting.
-7. **Visa-timeline GATE (hard stop, not a vote)** — a role whose start date precedes the student's OPT EAD gets `timeline.factor → 0` and is Skipped. Human capacity: clear each timeline. *(This is a scheduling/eligibility judgment, never an immigration-legal conclusion.)*
-8. **Report gate** — agent log + human report written with required fields/sections. Test: `test -f logs/case-mscs-opt-research-like-ai-software-[DATE].json && test -f reports/generated/case-mscs-opt-research-like-ai-software-[DATE].md`.
+1. Source gate — required paths present or typed-TODO. Test: `test -f scripts/score/role-scorer.mjs && test -f data/examples/research-like-roles.json`. Human capacity: confirm inputs are current.
+2. Scope gate — run declares `sample` (no live network, no external writes). This mode's real run is sample: the scorer only reads local JSON and writes reports. Test: profile + roles are local files. Human capacity: approve mode.
+3. Data-shape gate — roles + profile JSON parse before scoring. Test: `node -e "JSON.parse(require('fs').readFileSync('data/examples/research-like-roles.json'))"`. Human capacity: confirm parse.
+4. Script-readiness gate — the decision script exists. Test: `npm run score -- data/examples/research-like-roles.json --out-dir <tmp>` exits 0. PASSES today (proposed `.py` enrichment scripts remain typed `[TODO: DEV]`, not required for the decision). Human capacity: accept scope.
+5. Approval gate — live network / external writes / model calls with sensitive data require a logged approval. This sample run makes none, so the gate is n/a. Test: `rg --fixed-strings "[TODO: APPROVE]"` — none open for sample mode. Human capacity: block live execution.
+6. Liveness GATE (hard stop, not a vote) — a role whose `liveness.factor ≤ 0.05` is Skipped regardless of votes. Confirm liveness with `npm run ats:liveness -- <job-url>` before setting the factor. Human capacity: clear each live posting.
+7. Visa-timeline GATE (hard stop, not a vote) — a role whose start date precedes the student's OPT EAD gets `timeline.factor → 0` and is Skipped. Human capacity: clear each timeline. (This is a scheduling/eligibility judgment, never an immigration-legal conclusion.)
+8. Report gate — agent log + human report written with required fields/sections. Test: `test -f logs/case-mscs-opt-research-like-ai-software-[DATE].json && test -f reports/generated/case-mscs-opt-research-like-ai-software-[DATE].md`.
 
 ## Steps
 
-1. **Assemble role-evidence records.** Labor: human + AI. For each candidate posting, fill the record fields. `fit.p` is an explicit **model-judgment** (label it as such); `sponsorship.p/.tier` come from 80-days/DOL **records**; `liveness.factor` from the ATS check; `timeline.factor` from your OPT EAD vs the posting's start date. Output → `data/examples/research-like-roles.json` (or your batch). *(An automated `fit` extractor is proposed — see `[TODO: DEV]` below — but is not required: the human/AME judgment path runs today.)*
-2. **Confirm liveness (GATE).** Labor: AI + human clearance. `npm run ats:liveness -- <job-url>` per posting; set `liveness.factor` (1.0 live, 0.0 dead/ghost). Dead ⇒ Skip.
-3. **Confirm timeline (GATE).** Labor: human. Compare start date to OPT EAD; set `timeline.factor`. Impossible start ⇒ Skip.
-4. **Score & rank.** Labor: AI (stored script). `npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json --out-dir reports/generated --md reports/generated/case-mscs-opt-research-like-ai-software-[DATE].md`. Emits per-role composite, Apply/Consider/Skip, and a full audit trace.
-5. **Produce human report + agent log.** Labor: AI + human read. The scorer's Markdown is the human report; write the agent log JSON (Output Contract below). Human reads the verified-vs-inferred split before acting.
+1. Assemble role-evidence records. Labor: human + AI. For each candidate posting, fill the record fields. `fit.p` is an explicit model-judgment (label it as such); `sponsorship.p/.tier` come from 80-days/DOL records; `liveness.factor` from the ATS check; `timeline.factor` from your OPT EAD vs the posting's start date. Output → `data/examples/research-like-roles.json` (or your batch). (An automated `fit` extractor is proposed — see `[TODO: DEV]` below — but is not required: the human/AME judgment path runs today.)
+2. Confirm liveness (GATE). Labor: AI + human clearance. `npm run ats:liveness -- <job-url>` per posting; set `liveness.factor` (1.0 live, 0.0 dead/ghost). Dead ⇒ Skip.
+3. Confirm timeline (GATE). Labor: human. Compare start date to OPT EAD; set `timeline.factor`. Impossible start ⇒ Skip.
+4. Score & rank. Labor: AI (stored script). `npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json --out-dir reports/generated --md reports/generated/case-mscs-opt-research-like-ai-software-[DATE].md`. Emits per-role composite, Apply/Consider/Skip, and a full audit trace.
+5. Produce human report + agent log. Labor: AI + human read. The scorer's Markdown is the human report; write the agent log JSON (Output Contract below). Human reads the verified-vs-inferred split before acting.
 
 ### Proposed additions (typed TODO — NOT required for a decision today)
 
-- `[TODO: DEV]` `scripts/modes/research-like-extract-fit.py` — parse a posting and emit a **proposed** `fit.p` from research-like keyword evidence (prototype, benchmark, evaluate, POC, ambiguous requirements) + software-stack signals. *Justification:* removes hand-scoring of `fit`; belongs because the mode's differentiator is the research-like signal. Until built, `fit.p` is a labeled model-judgment.
-- `[TODO: DEV]` `scripts/modes/research-like-check-entry-level.py` — flag 5+/8+ yrs, staff/principal, PhD-required. *Justification:* entry-level feasibility is a distinct axis for a new grad; today it folds into `fit`.
+- `[TODO: DEV]` `scripts/modes/research-like-extract-fit.py` — parse a posting and emit a proposed `fit.p` from research-like keyword evidence (prototype, benchmark, evaluate, POC, ambiguous requirements) + software-stack signals. Justification: removes hand-scoring of `fit`; belongs because the mode's differentiator is the research-like signal. Until built, `fit.p` is a labeled model-judgment.
+- `[TODO: DEV]` `scripts/modes/research-like-check-entry-level.py` — flag 5+/8+ yrs, staff/principal, PhD-required. Justification: entry-level feasibility is a distinct axis for a new grad; today it folds into `fit`.
 - `[TODO: DEFINE]` give `role_quality` a non-zero weight and renormalize (repo defect #3) so the BLS/O*NET AI-resilience signal actually moves the composite — currently weight 0.0.
 - `[TODO: DATA SOURCE]` batch H-1B lookup joining a company list to `data/80-days-to-stay/` to populate `sponsorship.p/.tier` automatically.
 - `[TODO: DEV]` `scripts/modes/research-like-produce-report.py` — richer human report than the scorer's default table.
@@ -101,14 +101,14 @@ Fields: `workflow, run_id, mode, command, steps_completed, records_seen, apply, 
 File: `reports/generated/case-mscs-opt-research-like-ai-software-[DATE].md`
 Reader: the student (and instructor/reviewer).
 Decision enabled: which postings to apply to first, which to investigate, which to skip; and whether any score should be distrusted.
-Sections: summary + skip-rate, per-role table with **composite, recommendation, why, and full audit trace** (term · value · weight · source), verified-vs-inferred split, gates fired, open TODOs.
+Sections: summary + skip-rate, per-role table with composite, recommendation, why, and full audit trace (term · value · weight · source), verified-vs-inferred split, gates fired, open TODOs.
 
-*(P5: one artifact cannot serve both readers — the scorer emits `role-scores.json` for the agent and `role-scores.md` for the human.)*
+(P5: one artifact cannot serve both readers — the scorer emits `role-scores.json` for the agent and `role-scores.md` for the human.)
 
 ## Scoring Contract
 
 Composite = ( Σ vote·weight ) × liveness × timeline (Ch.11). Defaults today:
-sponsorship 0.35, fit 0.30, role_quality **0.0** `[VERIFY]`; apply_threshold 0.30;
+sponsorship 0.35, fit 0.30, role_quality 0.0 `[VERIFY]`; apply_threshold 0.30;
 consider_floor 0.20; a gate ≤ 0.05 ⇒ Skip. Soft sponsorship tier
 (Likely/Possible/Unknown) or timeline < 0.6 demotes Apply → Consider.
 
@@ -124,7 +124,7 @@ consider_floor 0.20; a gate ≤ 0.05 ⇒ Skip. Soft sponsorship tier
 - Stop if the student profile lacks visa context — feasibility would overstate certainty.
 - Stop if a role needs a live network call but no approval record exists.
 - Stop if the posting states US-citizen-only / clearance-only / no-sponsorship and the student is ineligible (hard reject).
-- Stop before any **immigration-legal conclusion** — the timeline gate is a scheduling judgment, not legal advice.
+- Stop before any immigration-legal conclusion — the timeline gate is a scheduling judgment, not legal advice.
 - Refuse to emit a score for any term you cannot source; label every model-judgment as a judgment (never as a record).
 
 ## Snickerdoodle
