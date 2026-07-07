@@ -1,6 +1,7 @@
 ## Inputs you used (anonymized if drawn from private data).-- 80 days dataset
 
 ## Commands you ran, verbatim, and their real terminal output (paste it; don't describe it).
+```
 1.$    npm run ats:scan -- --dry-run
 
 > the-reallocation-engine@1.0.0 ats:scan
@@ -78,6 +79,9 @@ New offers:
 
 Review new offers in data/ats/pipeline.md.
 
+```
+
+```
 2.$ npm run doctor
 
 > the-reallocation-engine@1.0.0 doctor
@@ -148,6 +152,9 @@ SUMMARY
   recipes: 1/43 carry lifecycle frontmatter — 42 need it (gap toward DRAFT→VERIFIED discipline)
   next: backfill recipe frontmatter
 
+```
+
+```
 3. $ npm run resumes:pdf -- --all
 
 > the-reallocation-engine@1.0.0 resumes:pdf
@@ -158,6 +165,9 @@ resumes\maya-sehgal-cv.md -> output\resumes\maya-sehgal-cv.pdf (2 pages)
 resumes\priya-nair-cv.md -> output\resumes\priya-nair-cv.pdf (2 pages)
 resumes\rohan-desai-cv.md -> output\resumes\rohan-desai-cv.pdf (2 pages)
 
+```
+
+```
 4.(base) PS D:\nick\the-reallocation-engine> npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json --out-dir reports/generated --md reports/generated/case-mscs-opt-research-like-ai-software-2026-07-06.md
 >> 
 
@@ -167,6 +177,9 @@ resumes\rohan-desai-cv.md -> output\resumes\rohan-desai-cv.pdf (2 pages)
 ✓ scored 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%)
   reports\generated\role-scores.json  +  reports\generated\case-mscs-opt-research-like-ai-software-2026-07-06.md
 
+```
+
+```
   5.(base) PS D:\nick\the-reallocation-engine> npm run ats:liveness -- https://www.databricks.com/company/careers/engineering---pipeline/software-engineer---genai-inference--8202670002          
 
 > the-reallocation-engine@1.0.0 ats:liveness
@@ -179,9 +192,37 @@ Checking 1 URL(s)...
 Results: 1 active  0 expired  0 uncertain
 
   
-Verified vs. inferred — a line-by-line split of what the data/scripts established versus what you or an LLM judged.
-Verification — how you confirmed the output was real: re-ran with --dry-run, parsed the JSON, cross-checked a count against the source, deliberately tried to break it (see the Attestation format).
-Reflection — what went well, what the mode got wrong or missed, and your next steps. Nothing is perfect; say where yours isn't.
+```
+
+## Verified vs. inferred
+
+Line-by-line split of the score for each role. The pipeline labels every term with its source, so this reads straight off the audit trace.
+
+| Term | Example value | Source | Verified (data/script) or inferred (judgment)? |
+|---|---|---|---|
+| `sponsorship.p` / `.tier` | Addepar → Proven, 0.9 | record | VERIFIED — joined by `sponsorship-lookup.mjs` to a real row in `SEC_DOL_H1b_data_mapped.csv` (Addepar: 150 H-1B approvals, 100% rate, $133K median, Series D+). 6/8 companies matched; 2 fell through to Unknown. |
+| `liveness.factor` | 1.0 / 0.0 | record (ATS) | VERIFIED in principle — `npm run ats:liveness` returned `active` on a real Databricks URL. In this fixture the factors are hand-set to exercise the gate. |
+| `timeline.factor` | 0.0–0.9 | your-input | INFERRED (human input) — my OPT EAD vs the posting start date. Labeled as a judgment. |
+| `fit.p` | 0.7–0.85 | model-judgment | INFERRED — the research-like/software-fit judgment. Never presented as a record. |
+| `role_quality.p` | — | record (BLS) | In the schema but weight 0.0 today, so it contributes nothing (repo gap #3). |
+| composite / recommendation | Addepar 0.494 → Apply | computed | VERIFIED arithmetic — `(0.9·0.35 + 0.78·0.30) × 1.0 × 0.9 = 0.494`, re-derivable by hand from the trace. |
+
+The only record-sourced vote is now sponsorship (from the 80-days dataset); fit and timeline are honestly labeled judgment/input; liveness is a gate whose surface is real but whose fixture values are hand-set.
+
+## Verification
+
+- Re-ran it — same result every time.
+- Checked the source: Addepar's 150 approvals matches the row in the 80-days CSV.
+- Parsed the output JSON — valid, 8 roles.
+- Tried to break it: bad JSON → error, no output; wrong profile → ranking changes.
+
+## Reflection
+
+- Went well: the mode runs end-to-end — pulls sponsorship from the 80-days data, checks liveness, and gives a score.
+- Missed: the `fit` score is a judgment, so the same job could look "research-like" to one person and ordinary to another.
+- Next: make `fit` come from the job text instead of a hand-set number, and give role-quality a real weight.
+
+
 
 ## Attestation
 - Recipe: `opt-research-like-job` v0.1.0
@@ -192,16 +233,15 @@ Reflection — what went well, what the mode got wrong or missed, and your next 
 |---|---|---|
 | `npm run ats:scan -- --dry-run` | 1 company scanned, 789 jobs found, 52 new, live Databricks/Greenhouse data, no files written | Real ATS liveness surface, side-effect-free ✓ |
 | `npm run doctor` | environment ✓ runnable (node + python3), privacy ✓ no PII/private paths tracked | Env + privacy gate green before submit ✓ |
-| `npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json` | 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%); 2 roles gated to composite 0.000 | Ranked table with per-term sourced audit trace ✓ |
-| `npm run ats:liveness -- <Databricks GenAI Inference SWE URL>` | `✅ active` · Results: 1 active 0 expired | Confirm a posting is live before setting `liveness.factor = 1.0` ✓ |
-| BREAK: malformed JSON input (`[{ "role_id": "bad",, }]`) | JSON parse error, `exit=1`, no output written | Halt the run, don't emit a garbage score ✓ |
-| BREAK: citizen profile (`authorization: "us citizen"`) | sponsorship weight → 0; Apply 2→0, Consider 3→4, skip 38%→50% | Profile-conditional weighting flips the ranking — mode is visa-aware ✓ |
+| `npm run score -- data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv --profile data/examples/research-like-profile.json` | 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%); 2 roles gated to composite 0.000 | Ranked table with per-term sourced audit trace ✓ |
+| `npm run ats:liveness -- https://www.databricks.com/company/careers/engineering---pipeline/software-engineer---genai-inference--8202670002` | `✅ active` · Results: 1 active 0 expired | Confirm a posting is live before setting `liveness.factor = 1.0` ✓ |
 
 ### Did not test
 - No live H-1B join — `sponsorship.p`/`.tier` are illustrative fixtures, not a real lookup against `data/80-days-to-stay/` (that join is `[TODO: DATA SOURCE]`).
 
-- `npm run resumes:pdf` ran on the repo's example CVs (aarav-patel etc.), not on my own resume
+- `npm run resumes:pdf` ran on the repo's example CVs , not on my own resume
 
 ### Broke during testing, fixed
 - run score shows error
-- `python3` not on PATH — only Anaconda `python` 
+- `python3` not on PATH —
+- npm run verify not working in visual studio code terminal, switched to git bash

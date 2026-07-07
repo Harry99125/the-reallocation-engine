@@ -20,21 +20,21 @@
   "profile_needs_sponsorship": true,
   "roles": [
     {
-      "role_id": "applied-ai-startup",
-      "company": "Series-A applied-AI startup (recent Form D)",
-      "title": "Applied AI Engineer — new grad",
-      "composite": 0.4783,
+      "role_id": "addepar-ai",
+      "company": "Addepar",
+      "title": "Applied AI / Sr. Software Engineer (prototyping)",
+      "composite": 0.4941,
       "recommendation": "Apply",
       "machine_recommendation": "Apply",
-      "reason": "composite 0.478 ≥ 0.3, gates healthy",
+      "reason": "composite 0.494 ≥ 0.3, gates healthy",
       "override": null,
       "trace": {
         "votes": [
           {
             "factor": "sponsorship",
-            "value": 0.85,
+            "value": 0.9,
             "weight": 0.35,
-            "contribution": 0.2975,
+            "contribution": 0.315,
             "source": "record"
           },
           {
@@ -43,16 +43,9 @@
             "weight": 0.3,
             "contribution": 0.234,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.8,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
-        "vote_sum": 0.5315,
+        "vote_sum": 0.549,
         "gates": [
           {
             "factor": "liveness",
@@ -66,17 +59,17 @@
           }
         ],
         "gate_product": 0.9,
-        "arithmetic": "(0.85·0.35 + 0.78·0.3 + 0.8·0) × 1 × 0.9 = 0.478"
+        "arithmetic": "(0.9·0.35 + 0.78·0.3) × 1 × 0.9 = 0.494"
       }
     },
     {
-      "role_id": "fullstack-biglab",
-      "company": "Established sponsor — enterprise AI lab",
-      "title": "Full-Stack SWE (New Grad), prototyping team",
-      "composite": 0.4208,
+      "role_id": "aeva-research",
+      "company": "Aeva",
+      "title": "Research Engineer (perception / prototyping)",
+      "composite": 0.4995,
       "recommendation": "Apply",
       "machine_recommendation": "Apply",
-      "reason": "composite 0.421 ≥ 0.3, gates healthy",
+      "reason": "composite 0.499 ≥ 0.3, gates healthy",
       "override": null,
       "trace": {
         "votes": [
@@ -89,20 +82,13 @@
           },
           {
             "factor": "fit",
-            "value": 0.6,
+            "value": 0.8,
             "weight": 0.3,
-            "contribution": 0.18,
+            "contribution": 0.24,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.65,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
-        "vote_sum": 0.495,
+        "vote_sum": 0.555,
         "gates": [
           {
             "factor": "liveness",
@@ -111,48 +97,41 @@
           },
           {
             "factor": "timeline",
-            "multiplier": 0.85,
+            "multiplier": 0.9,
             "source": "your-input"
           }
         ],
-        "gate_product": 0.85,
-        "arithmetic": "(0.9·0.35 + 0.6·0.3 + 0.65·0) × 1 × 0.85 = 0.421"
+        "gate_product": 0.9,
+        "arithmetic": "(0.9·0.35 + 0.8·0.3) × 1 × 0.9 = 0.499"
       }
     },
     {
-      "role_id": "research-eng-nonsponsor",
-      "company": "Household-name non-sponsor",
-      "title": "Research-Engineer (prototype/benchmark)",
-      "composite": 0.2091,
-      "recommendation": "Consider",
-      "machine_recommendation": "Consider",
-      "reason": "composite 0.209 in the Consider band [0.2, 0.3)",
+      "role_id": "6sense-ml",
+      "company": "6sense Insights",
+      "title": "Machine Learning Engineer (prototyping)",
+      "composite": 0.4462,
+      "recommendation": "Apply",
+      "machine_recommendation": "Apply",
+      "reason": "composite 0.446 ≥ 0.3, gates healthy",
       "override": null,
       "trace": {
         "votes": [
           {
             "factor": "sponsorship",
-            "value": 0,
+            "value": 0.9,
             "weight": 0.35,
-            "contribution": 0,
+            "contribution": 0.315,
             "source": "record"
           },
           {
             "factor": "fit",
-            "value": 0.82,
+            "value": 0.7,
             "weight": 0.3,
-            "contribution": 0.246,
+            "contribution": 0.21,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.9,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
-        "vote_sum": 0.246,
+        "vote_sum": 0.525,
         "gates": [
           {
             "factor": "liveness",
@@ -166,13 +145,99 @@
           }
         ],
         "gate_product": 0.85,
-        "arithmetic": "(0·0.35 + 0.82·0.3 + 0.9·0) × 1 × 0.85 = 0.209"
+        "arithmetic": "(0.9·0.35 + 0.7·0.3) × 1 × 0.85 = 0.446"
       }
     },
     {
-      "role_id": "ghost-ai-posting",
-      "company": "Proven sponsor (ghost posting)",
-      "title": "AI Prototype Engineer — looks perfect, not live",
+      "role_id": "acv-ml",
+      "company": "ACV Auctions",
+      "title": "Machine Learning Engineer III",
+      "composite": 0.459,
+      "recommendation": "Apply",
+      "machine_recommendation": "Apply",
+      "reason": "composite 0.459 ≥ 0.3, gates healthy",
+      "override": null,
+      "trace": {
+        "votes": [
+          {
+            "factor": "sponsorship",
+            "value": 0.9,
+            "weight": 0.35,
+            "contribution": 0.315,
+            "source": "record"
+          },
+          {
+            "factor": "fit",
+            "value": 0.75,
+            "weight": 0.3,
+            "contribution": 0.225,
+            "source": "model-judgment"
+          }
+        ],
+        "vote_sum": 0.54,
+        "gates": [
+          {
+            "factor": "liveness",
+            "multiplier": 1,
+            "source": "record"
+          },
+          {
+            "factor": "timeline",
+            "multiplier": 0.85,
+            "source": "your-input"
+          }
+        ],
+        "gate_product": 0.85,
+        "arithmetic": "(0.9·0.35 + 0.75·0.3) × 1 × 0.85 = 0.459"
+      }
+    },
+    {
+      "role_id": "nimbus-xr",
+      "company": "Nimbus Prototyping Labs",
+      "title": "XR Prototype Developer (Unity/C#)",
+      "composite": 0.279,
+      "recommendation": "Consider",
+      "machine_recommendation": "Consider",
+      "reason": "composite 0.279 in the Consider band [0.2, 0.3)",
+      "override": null,
+      "trace": {
+        "votes": [
+          {
+            "factor": "sponsorship",
+            "value": 0.2,
+            "weight": 0.35,
+            "contribution": 0.07,
+            "source": "record"
+          },
+          {
+            "factor": "fit",
+            "value": 0.8,
+            "weight": 0.3,
+            "contribution": 0.24,
+            "source": "model-judgment"
+          }
+        ],
+        "vote_sum": 0.31,
+        "gates": [
+          {
+            "factor": "liveness",
+            "multiplier": 1,
+            "source": "record"
+          },
+          {
+            "factor": "timeline",
+            "multiplier": 0.9,
+            "source": "your-input"
+          }
+        ],
+        "gate_product": 0.9,
+        "arithmetic": "(0.2·0.35 + 0.8·0.3) × 1 × 0.9 = 0.279"
+      }
+    },
+    {
+      "role_id": "acorns-ghost",
+      "company": "Acorns Grow",
+      "title": "AI Prototype Engineer (ghost posting — not live)",
       "composite": 0,
       "recommendation": "Skip",
       "machine_recommendation": "Skip",
@@ -193,13 +258,6 @@
             "weight": 0.3,
             "contribution": 0.255,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.85,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
         "vote_sum": 0.57,
@@ -216,63 +274,13 @@
           }
         ],
         "gate_product": 0,
-        "arithmetic": "(0.9·0.35 + 0.85·0.3 + 0.85·0) × 0 × 0.85 = 0.000"
+        "arithmetic": "(0.9·0.35 + 0.85·0.3) × 0 × 0.85 = 0.000"
       }
     },
     {
-      "role_id": "hci-vr-likely",
-      "company": "Likely-tier sponsor (HCI/VR studio)",
-      "title": "XR Prototype Developer (Unity/C#)",
-      "composite": 0.3892,
-      "recommendation": "Consider",
-      "machine_recommendation": "Consider",
-      "reason": "above threshold (0.389) but one soft spot: sponsorship tier \"Likely\"",
-      "override": null,
-      "trace": {
-        "votes": [
-          {
-            "factor": "sponsorship",
-            "value": 0.55,
-            "weight": 0.35,
-            "contribution": 0.1925,
-            "source": "record"
-          },
-          {
-            "factor": "fit",
-            "value": 0.8,
-            "weight": 0.3,
-            "contribution": 0.24,
-            "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.75,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
-          }
-        ],
-        "vote_sum": 0.4325,
-        "gates": [
-          {
-            "factor": "liveness",
-            "multiplier": 1,
-            "source": "record"
-          },
-          {
-            "factor": "timeline",
-            "multiplier": 0.9,
-            "source": "your-input"
-          }
-        ],
-        "gate_product": 0.9,
-        "arithmetic": "(0.55·0.35 + 0.8·0.3 + 0.75·0) × 1 × 0.9 = 0.389"
-      }
-    },
-    {
-      "role_id": "sim-eng-timeline",
-      "company": "Proven sponsor — start date before OPT EAD",
-      "title": "Simulation Engineer (start date too early)",
+      "role_id": "23andme-early",
+      "company": "23andMe",
+      "title": "Data/ML Research role (start date before OPT EAD)",
       "composite": 0,
       "recommendation": "Skip",
       "machine_recommendation": "Skip",
@@ -282,9 +290,9 @@
         "votes": [
           {
             "factor": "sponsorship",
-            "value": 0.85,
+            "value": 0.9,
             "weight": 0.35,
-            "contribution": 0.2975,
+            "contribution": 0.315,
             "source": "record"
           },
           {
@@ -293,16 +301,9 @@
             "weight": 0.3,
             "contribution": 0.225,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.7,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
-        "vote_sum": 0.5225,
+        "vote_sum": 0.54,
         "gates": [
           {
             "factor": "liveness",
@@ -316,78 +317,28 @@
           }
         ],
         "gate_product": 0,
-        "arithmetic": "(0.85·0.35 + 0.75·0.3 + 0.7·0) × 1 × 0 = 0.000"
-      }
-    },
-    {
-      "role_id": "ai-innovation-sales",
-      "company": "Vague 'AI Innovation' posting",
-      "title": "AI Innovation Associate (actually sales/support)",
-      "composite": 0.1573,
-      "recommendation": "Skip",
-      "machine_recommendation": "Skip",
-      "reason": "composite 0.157 < 0.2 — time is better spent elsewhere",
-      "override": null,
-      "trace": {
-        "votes": [
-          {
-            "factor": "sponsorship",
-            "value": 0.4,
-            "weight": 0.35,
-            "contribution": 0.14,
-            "source": "record"
-          },
-          {
-            "factor": "fit",
-            "value": 0.15,
-            "weight": 0.3,
-            "contribution": 0.045,
-            "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.2,
-            "weight": 0,
-            "contribution": 0,
-            "source": "model-judgment"
-          }
-        ],
-        "vote_sum": 0.185,
-        "gates": [
-          {
-            "factor": "liveness",
-            "multiplier": 1,
-            "source": "record"
-          },
-          {
-            "factor": "timeline",
-            "multiplier": 0.85,
-            "source": "your-input"
-          }
-        ],
-        "gate_product": 0.85,
-        "arithmetic": "(0.4·0.35 + 0.15·0.3 + 0.2·0) × 1 × 0.85 = 0.157"
+        "arithmetic": "(0.9·0.35 + 0.75·0.3) × 1 × 0 = 0.000"
       }
     },
     {
       "role_id": "referral-override",
-      "company": "Non-sponsor, but HM is a referral",
-      "title": "Software Engineer (prototyping) — scorer says Skip",
-      "composite": 0.1985,
+      "company": "Household Robotics Co",
+      "title": "Software Engineer (prototyping) — referral",
+      "composite": 0.2431,
       "recommendation": "Consider",
-      "machine_recommendation": "Skip",
-      "reason": "composite 0.198 < 0.2 — time is better spent elsewhere",
+      "machine_recommendation": "Consider",
+      "reason": "composite 0.243 in the Consider band [0.2, 0.3)",
       "override": {
         "decision": "Consider",
-        "reason": "Referral from a classmate on the team says they just opened a cap-exempt req and will sponsor; DOL/Form-D records lag the actual hiring plan."
+        "reason": "Classmate on the team says they just opened a cap-exempt req; the 80-days mapping has no record yet because DOL/Form-D data lags the hiring plan."
       },
       "trace": {
         "votes": [
           {
             "factor": "sponsorship",
-            "value": 0.05,
+            "value": 0.2,
             "weight": 0.35,
-            "contribution": 0.0175,
+            "contribution": 0.07,
             "source": "record"
           },
           {
@@ -396,16 +347,9 @@
             "weight": 0.3,
             "contribution": 0.216,
             "source": "model-judgment"
-          },
-          {
-            "factor": "role_quality",
-            "value": 0.7,
-            "weight": 0,
-            "contribution": 0,
-            "source": "record"
           }
         ],
-        "vote_sum": 0.2335,
+        "vote_sum": 0.286,
         "gates": [
           {
             "factor": "liveness",
@@ -419,7 +363,7 @@
           }
         ],
         "gate_product": 0.85,
-        "arithmetic": "(0.05·0.35 + 0.72·0.3 + 0.7·0) × 1 × 0.85 = 0.198"
+        "arithmetic": "(0.2·0.35 + 0.72·0.3) × 1 × 0.85 = 0.243"
       }
     }
   ]

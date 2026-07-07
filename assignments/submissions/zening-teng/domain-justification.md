@@ -1,71 +1,13 @@
-# Domain Justification — `case-mscs-opt-research-like-ai-software`
+Domain Justification
+This mode is designed for an international master’s or early PhD student in Computer Science, HCI, Data Science, AI, or a related technical field who is trying to find research-like industry roles in the United States. The intended user can be any student who wants a job in the United States but need sponsor with H1B, or STEM OPT.
+The information asymmetry this mode addresses is that the role of software developers and engineers is changing as AI tools become more capable. In the past, an entry-level software developer was often expected to contribute to maintenance tasks, implement assigned features, fix bugs, and support existing systems. However, in the current market, some technical roles increasingly expect one person to use AI tools to design, prototype, evaluate, and complete a larger portion of a project independently.
+This shift makes certain industry roles look more similar to research-oriented work. The worker is not only writing code; they are identifying a problem, testing possible solutions, evaluating results, making technical judgments, and translating an idea into a usable product or system. This resembles part of what a PhD student or applied researcher does, except the work happens inside a company rather than an academic setting, and the expected outcome is often commercial value rather than publication.
+Many students may not recognize this shift when reading job postings. A role may still be labeled “Software Engineer,” “AI Engineer,” or “Product Engineer,” but the real hiring signal may be creativity, self-direction, AI-assisted execution, experimental thinking, and the ability to complete an ambiguous project with limited supervision. Based on my investigation of current hiring trends, some large technology companies appear to be reducing layers of routine management and implementation work while placing more value on people who can use AI effectively, reason independently, and turn uncertain technical ideas into working products.
+This mode addresses that asymmetry by helping students identify roles that are not merely routine software jobs, but research-like technical roles where independent judgment, experimentation, evaluation, and creative AI-assisted project execution are central parts of the work.
+The asymmetry is larger for international students because they must also evaluate hidden employer-side constraints. A posting may look attractive, but the student usually cannot immediately see whether the company has historical H-1B sponsorship behavior, whether it has recent funding capacity, whether the job posting is still live, whether the posting is hosted through a valid ATS, whether the role maps to a relevant SOC occupation, or whether the employer is likely to be compatible with OPT or STEM OPT constraints. 
+This mode connects to all three layers of The Reallocation Engine. It uses the 80 Days to Stay layer to check company-level sponsorship history and visa-related signals. It uses the Job-Ops layer to check ATS information, posting liveness, and pipeline integrity. It also connects to The Cognitive Pivot because the target roles are selected for work that depends on verification, system judgment, experimental reasoning, evaluation, and causal interpretation — areas where human judgment is still valuable even when AI tools can produce code or text quickly. The mode therefore does not only ask “Can I get this job?” It also asks “Is this job aligned with the kind of technical judgment that may remain valuable as routine developer work becomes more automated?”
+The main failure mode is misclassifying the difference between a real research role and a research-like technical role. This mode is designed for a new and unclear labor-market situation: many jobs are still titled “Software Engineer,” “Developer,” “AI Engineer,” or “Product Engineer,” but some of them now involve research-like work such as experimentation, prototyping, evaluation, benchmarking, user testing, and independent AI-assisted project execution.
+However, this does not mean these roles have the same requirements as formal research positions. Some positions, such as top-level AI Research Scientist, advanced chip design researcher, or theoretical machine learning researcher, still usually require a PhD, publication record, or deep specialized expertise. If this mode incorrectly treats those roles as accessible research-like jobs for early-career master’s students, it may cause students to waste time applying to positions that are structurally out of reach.
+Therefore, the mode needs to separate “research-like” from “research-required.” A research-like role may value independent judgment, experimentation, and AI-assisted project ownership without requiring a PhD. A research-required role usually expects formal research credentials, advanced domain specialization, or evidence of original scholarly contribution. The hardest error to catch is when a job description uses similar language for both types of roles. For example, words such as “research,” “model evaluation,” “AI systems,” or “novel methods” may appear in both an entry-level applied AI engineer posting and a senior research scientist posting, but the actual hiring bar is very different.
+This matters because the target user is an international student with limited OPT time. Misreading a research-required role as research-like could waste valuable application time, while misreading a research-like engineering role as ordinary software development could cause the student to ignore a strong-fit opportunity.
 
-**By:** Zening Teng · 2026-07-06
-
-## Who uses this mode, and in what exact situation
-
-An **F-1 international MSCS/MSIS student, pre-OPT** — still in the program, will
-file for OPT at graduation — who is deliberately targeting *research-like*
-software roles: Applied AI Engineer, Full-Stack / Software Engineer on a
-prototyping team, XR/HCI prototype developer, Research Engineer. The work they
-want is exploration, prototyping, benchmarking, evaluation, and AI-assisted
-discovery — **not** ticket-closing maintenance, and **not** a formal
-PhD-required research-scientist post. They have a fixed, shrinking OPT runway
-and can only send a limited number of tailored applications, so every
-application spent on a dead-end posting is runway they cannot get back.
-
-## The information asymmetry it addresses
-
-A job title of "Software Engineer" or "AI Innovation Associate" tells this
-student almost nothing about the four things that actually decide the outcome,
-and none of them are visible from the posting alone:
-
-1. **Will this employer sponsor H-1B?** — invisible without DOL/H-1B history.
-2. **Is the posting even live, or a ghost req?** — invisible without an ATS
-   liveness check.
-3. **Does the start date fit my OPT EAD?** — a scheduling constraint the posting
-   rarely states.
-4. **Is the "research-like" language real, or is this actually sales/support
-   dressed up as innovation?** — a judgment the title actively hides.
-
-The student cannot see any of this by reading harder. The mode makes it explicit
-and, critically, **traceable**: every score term is emitted with its value *and*
-its source (`record` / `model-judgment` / `your-input`), so the student can tell
-what was verified from data versus what was a judgment.
-
-## Connection to the engine layers
-
-- **80 Days to Stay** — the `sponsorship` vote (weight 0.35) draws on H-1B
-  history + Form-D funding; profile-conditional (→0 if the student needs no
-  sponsorship).
-- **Job-Ops** — the `liveness` **gate** (`npm run ats:liveness`, `ats:scan`); a
-  ghost posting zeroes the composite regardless of fit.
-- **The Cognitive Pivot** — the research-like `fit` vote (weight 0.30) is exactly
-  the "verification / system judgment / discovery" work the pivot thesis says AI
-  cannot yet do reliably; the `role_quality` (BLS/O*NET AI-resilience) vote is
-  wired but currently carries weight 0 (repo defect #3 — see limitations).
-
-The decision core is the Ch.11 Bayesian Role Scorer, run as `npm run score`.
-
-## Failure modes specific to this domain (not "the model hallucinates")
-
-1. **Inflated research-like language passes as real discovery work.** A posting
-   full of "innovation," "prototype," "cutting-edge" can be a sales or support
-   role. The mode captures this as a *high-fit model-judgment on thin evidence* —
-   and the person **least able to catch it is this exact student**: an
-   early-career international applicant is the most motivated to believe an
-   ambiguous posting is the research-like role they want, and the least likely to
-   have the industry network to sanity-check it. The mitigation is structural:
-   `fit` is labeled `model-judgment`, never `record`, so the human is forced to
-   see it is a guess — but the mode cannot stop an optimistic reader from trusting
-   it anyway.
-
-2. **Stale sponsorship records skip a company that just started sponsoring.** DOL
-   and Form-D data lag real hiring plans by months. A company that opened a
-   cap-exempt or newly-sponsoring req looks like a `None`-tier non-sponsor and
-   gets Skipped. The person hurt most is the student **without insider signal** —
-   someone with a referral (see the override case in the worked run) can correct
-   it with a documented reason; a student cold-applying has no way to know the
-   record is stale, so the mode silently steers them away from a real opportunity.
-   The override mechanism exists precisely for this, but it only helps those who
-   already have the outside information.

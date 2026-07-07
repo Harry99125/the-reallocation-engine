@@ -1,0 +1,278 @@
+[
+  {
+    "role_id": "addepar-ai",
+    "company": "Addepar",
+    "title": "Applied AI / Sr. Software Engineer (prototyping)",
+    "fit": {
+      "p": 0.78,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.9,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "150 H-1B approvals, 100% rate",
+        "h1b_approvals": 150,
+        "h1b_denials": 0,
+        "approval_rate_pct": 100,
+        "median_salary_offered": 133000,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2021-06-07",
+        "top_job_titles_sponsored": "['Sr. Software Engineer', 'Product Designer', 'Product Management I', 'Software Engineer ', 'Test Automation Engineer']"
+      }
+    }
+  },
+  {
+    "role_id": "aeva-research",
+    "company": "Aeva",
+    "title": "Research Engineer (perception / prototyping)",
+    "fit": {
+      "p": 0.8,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.9,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "120 H-1B approvals, 100% rate",
+        "h1b_approvals": 120,
+        "h1b_denials": 0,
+        "approval_rate_pct": 100,
+        "median_salary_offered": 175000,
+        "latest_funding_stage": "Seed",
+        "latest_funding_date": "2017-01-13",
+        "top_job_titles_sponsored": "['Senior Reliability Engineer', 'Staff Software Engineering Program Manager', 'Senior Embedded Software Engineer', 'Optical System Engineer', 'Staff Validation Firmware Engineer']"
+      }
+    }
+  },
+  {
+    "role_id": "6sense-ml",
+    "company": "6sense Insights",
+    "title": "Machine Learning Engineer (prototyping)",
+    "fit": {
+      "p": 0.7,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "62 H-1B approvals, 100% rate",
+        "h1b_approvals": 62,
+        "h1b_denials": 0,
+        "approval_rate_pct": 100,
+        "median_salary_offered": 172308,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2022-01-20",
+        "top_job_titles_sponsored": "['Senior Software Engineer', 'Principal Customer Success Manager, Strategic']"
+      }
+    }
+  },
+  {
+    "role_id": "acv-ml",
+    "company": "ACV Auctions",
+    "title": "Machine Learning Engineer III",
+    "fit": {
+      "p": 0.75,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "22 H-1B approvals, 100% rate",
+        "h1b_approvals": 22,
+        "h1b_denials": 0,
+        "approval_rate_pct": 100,
+        "median_salary_offered": 67205,
+        "latest_funding_stage": "Series C",
+        "latest_funding_date": "2018-12-06",
+        "top_job_titles_sponsored": "['Machine Learning Engineer III']"
+      }
+    }
+  },
+  {
+    "role_id": "nimbus-xr",
+    "company": "Nimbus Prototyping Labs",
+    "title": "XR Prototype Developer (Unity/C#)",
+    "fit": {
+      "p": 0.8,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.9,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.2,
+      "tier": "Unknown",
+      "source": "record",
+      "evidence": {
+        "matched": false,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "not found in the 80-days mapping",
+        "h1b_approvals": null,
+        "h1b_denials": null,
+        "approval_rate_pct": null,
+        "median_salary_offered": null,
+        "latest_funding_stage": null,
+        "latest_funding_date": null,
+        "top_job_titles_sponsored": null
+      }
+    }
+  },
+  {
+    "role_id": "acorns-ghost",
+    "company": "Acorns Grow",
+    "title": "AI Prototype Engineer (ghost posting — not live)",
+    "fit": {
+      "p": 0.85,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 0,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "42 H-1B approvals, 100% rate",
+        "h1b_approvals": 42,
+        "h1b_denials": 0,
+        "approval_rate_pct": 100,
+        "median_salary_offered": 225000,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2019-01-25",
+        "top_job_titles_sponsored": "['Sr. Software Engineer', 'Senior Site Reliability Engineer', 'Sr. Product Manager']"
+      }
+    }
+  },
+  {
+    "role_id": "23andme-early",
+    "company": "23andMe",
+    "title": "Data/ML Research role (start date before OPT EAD)",
+    "fit": {
+      "p": 0.75,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "52 H-1B approvals, 96% rate",
+        "h1b_approvals": 52,
+        "h1b_denials": 2,
+        "approval_rate_pct": 96.29629629629628,
+        "median_salary_offered": 183195,
+        "latest_funding_stage": "Series C",
+        "latest_funding_date": "2020-12-09",
+        "top_job_titles_sponsored": "['Technical Lead', 'Lead BI Engineer', 'Sr. Software Engineer III', 'Sr. Mobile Engineer III', 'Offensive Security Engineer']"
+      }
+    }
+  },
+  {
+    "role_id": "referral-override",
+    "company": "Household Robotics Co",
+    "title": "Software Engineer (prototyping) — referral",
+    "fit": {
+      "p": 0.72,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "override": {
+      "decision": "Consider",
+      "reason": "Classmate on the team says they just opened a cap-exempt req; the 80-days mapping has no record yet because DOL/Form-D data lags the hiring plan."
+    },
+    "sponsorship": {
+      "p": 0.2,
+      "tier": "Unknown",
+      "source": "record",
+      "evidence": {
+        "matched": false,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "not found in the 80-days mapping",
+        "h1b_approvals": null,
+        "h1b_denials": null,
+        "approval_rate_pct": null,
+        "median_salary_offered": null,
+        "latest_funding_stage": null,
+        "latest_funding_date": null,
+        "top_job_titles_sponsored": null
+      }
+    }
+  }
+]
