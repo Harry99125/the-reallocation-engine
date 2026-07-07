@@ -1,69 +1,17 @@
-# Worked Run — `case-mscs-opt-research-like-ai-software`
+## Inputs you used (anonymized if drawn from private data).-- 80 days dataset
 
-**By:** Zening Teng · 2026-07-06 · Lifecycle stage reached: **RUNNABLE-SAMPLE**
+## Commands you ran, verbatim, and their real terminal output (paste it; don't describe it).
+1.$    npm run ats:scan -- --dry-run
 
-## Inputs
+> the-reallocation-engine@1.0.0 ats:scan
+> node scripts/ats/scan.mjs --dry-run
 
-- **Persona (anonymized):** F-1 MSCS/MSIS student, pre-OPT, needs future H-1B
-  sponsorship. File: `data/examples/research-like-profile.json`.
-- **8 illustrative research-like roles** in the scorer's input contract. File:
-  `data/examples/research-like-roles.json`. No personal data — each role is a
-  synthetic case built to exercise one mechanic (a clear Apply, a soft-tier
-  Consider, a non-sponsor, a ghost posting, an impossible start date, a
-  sales-role-in-disguise, a referral override).
-
-## Commands run (verbatim) and real terminal output
-
-### 1. Confirm the toolchain (conformance)
-
-```
-$ npm run score -- data/examples/ch11-roles.json --out-dir "$TEMP/rle-test"
-✓ scored 5 roles → Apply 2 · Consider 1 · Skip 2 (skip 40%)
-```
-
-Reproduces Ch.11's worked example → the scorer is behaving as the book specifies.
-
-### 2. The mode's real run
-
-```
-$ node scripts/score/role-scorer.mjs data/examples/research-like-roles.json \
-    --profile data/examples/research-like-profile.json \
-    --out-dir reports/generated \
-    --md reports/generated/case-mscs-opt-research-like-ai-software-2026-07-06.md
-
-✓ scored 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%)
-  reports\generated\role-scores.json  +  reports\generated\case-mscs-opt-research-like-ai-software-2026-07-06.md
-```
-
-Human report (`reports/generated/case-mscs-opt-research-like-ai-software-2026-07-06.md`), pasted verbatim:
-
-```
-# Role Scorer report — 2026-07-06
-
-*Bayesian Role Scorer (Ch.11). Weights: sponsorship 0.35, fit 0.3, role_quality 0 [role_quality weight is [VERIFY] — not pinned by the chapter]. Threshold 0.3. Profile requires sponsorship.*
-
-Summary: 8 roles → Apply 2 · Consider 3 · Skip 3. Skip rate 38% (below the ~50% a healthy run skips; check the inputs).
-
-| Role | Composite | Rec | Why | Audit (term · value · weight · source) |
-|---|---|---|---|---|
-| Series-A applied-AI startup (recent Form D) — Applied AI Engineer — new grad | 0.478 | Apply | composite 0.478 ≥ 0.3, gates healthy | sponsorship 0.85·0.35 [record]; fit 0.78·0.3 [model-judgment]; role_quality 0.8·0 [record] × liveness 1[record]×timeline 0.9[your-input] |
-| Established sponsor — enterprise AI lab — Full-Stack SWE (New Grad), prototyping team | 0.421 | Apply | composite 0.421 ≥ 0.3, gates healthy | sponsorship 0.9·0.35 [record]; fit 0.6·0.3 [model-judgment]; role_quality 0.65·0 [record] × liveness 1[record]×timeline 0.85[your-input] |
-| Likely-tier sponsor (HCI/VR studio) — XR Prototype Developer (Unity/C#) | 0.389 | Consider | above threshold (0.389) but one soft spot: sponsorship tier "Likely" | sponsorship 0.55·0.35 [record]; fit 0.8·0.3 [model-judgment]; role_quality 0.75·0 [record] × liveness 1[record]×timeline 0.9[your-input] |
-| Household-name non-sponsor — Research-Engineer (prototype/benchmark) | 0.209 | Consider | composite 0.209 in the Consider band [0.2, 0.3) | sponsorship 0·0.35 [record]; fit 0.82·0.3 [model-judgment]; role_quality 0.9·0 [record] × liveness 1[record]×timeline 0.85[your-input] |
-| Non-sponsor, but HM is a referral — Software Engineer (prototyping) — scorer says Skip | 0.199 | Consider ⟵ override | composite 0.198 < 0.2 — time is better spent elsewhere | sponsorship 0.05·0.35 [record]; fit 0.72·0.3 [model-judgment]; role_quality 0.7·0 [record] × liveness 1[record]×timeline 0.85[your-input] |
-| Vague 'AI Innovation' posting — AI Innovation Associate (actually sales/support) | 0.157 | Skip | composite 0.157 < 0.2 — time is better spent elsewhere | sponsorship 0.4·0.35 [record]; fit 0.15·0.3 [model-judgment]; role_quality 0.2·0 [model-judgment] × liveness 1[record]×timeline 0.85[your-input] |
-| Proven sponsor (ghost posting) — AI Prototype Engineer — looks perfect, not live | 0.000 | Skip | gated: liveness ≈ 0.000 (a closed gate zeroes the composite regardless of votes) | sponsorship 0.9·0.35 [record]; fit 0.85·0.3 [model-judgment]; role_quality 0.85·0 [record] × liveness 0[record]×timeline 0.85[your-input] |
-| Proven sponsor — start date before OPT EAD — Simulation Engineer (start date too early) | 0.000 | Skip | gated: timeline ≈ 0.000 (a closed gate zeroes the composite regardless of votes) | sponsorship 0.85·0.35 [record]; fit 0.75·0.3 [model-judgment]; role_quality 0.7·0 [record] × liveness 1[record]×timeline 0[your-input] |
-```
-
-### 3. Second real command — the liveness/ATS layer (`ats:scan --dry-run`)
-
-```
-$ npm run ats:scan -- --dry-run
 Scanning 1 companies via providers (0 local parser; 0 skipped — no provider matched)
 (dry run — no files will be written)
+
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Portal Scan — 2026-07-06
+Portal Scan — 2026-07-07
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Companies scanned:     1
 Total jobs found:      789
@@ -71,108 +19,191 @@ Filtered by title:     347 removed
 Filtered by location:  389 removed
 Duplicates:            1 skipped
 New offers added:      52
+
 New offers:
   + Databricks | AI Engineer - FDE (Forward Deployed Engineer) | Remote - India
+  + Databricks | Delivery Solutions Architect - Communications, Media, Entertainment & Games | United States
+  + Databricks | Director, AI Forward Deployed Engineering (FDE) | United States
+  + Databricks | Director, Lakebase Sales Specialists - Retail | United States
+  + Databricks | Forward Deployed Engineer | Remote - India
   + Databricks | Forward Deployed Engineer - FDE (Fullstack) - Digital Native Business  | United States
+  + Databricks | Lakebase Sales Specialist - Retail | United States
+  + Databricks | Manager, Field Engineering - Strategic Digital Native Business | Remote - California; Remote - Colorado; Remote - Oregon; Remote - Washington
+  + Databricks | Manager, Forward Deployed Engineering - CMEG | Remote - Washington D.C.
+  + Databricks | Manager, Forward Deployed Engineering - Manufacturing | Remote - California
+  + Databricks | Pre-sales Manager, Field Engineering - Named Accounts | Remote - Denmark
+  + Databricks | Principal Security Field Engineer | Remote - California
   + Databricks | Product Marketing Director, AI | United States
-  ... (real, live ATS data via Greenhouse)
-```
+  + Databricks | Product Marketing Director, Lakewatch | United States
+  + Databricks | RVP, Retail | United States
+  + Databricks | Senior Manager, Forward Deployed Engineering (Full Stack) x 2 New roles | Remote - France
+  + Databricks | Senior Solutions Engineer | Aarhus, Denmark; Remote - Denmark
+  + Databricks | Senior Specialist Solutions Architect - AI & ML Engineer | Finland; Remote - Denmark; Stockholm, Sweden
+  + Databricks | Solutions Architect, Retail  | Remote - Ohio
+  + Databricks | Solutions Architect, Retail - CPG | Central - United States
+  + Databricks | Solutions Architect - Strategic AI Natives | Remote - California; Remote - Colorado; Remote - Oregon; Remote - Washington
+  + Databricks | Specialist Solutions Architect - AI/ML | United States
+  + Databricks | Specialist Solutions Architect - Data Engineering & Warehousing | United States
+  + Databricks | Specialist Solutions Architect - Data Warehousing (Healthcare & Life Sciences) | Northeast - United States
+  + Databricks | Sr. Delivery Solutions Architect - AI Native | Remote - California; Remote - Colorado; Remote - Oregon; Remote - Washington
+  + Databricks | Sr. Director, Enterprise - Retail Vertical - Strategic Accounts  | Remote - New York
+  + Databricks | Sr. Director, Field Engineering (Lakebase) | United States
+  + Databricks | Sr. Engagement Manager, Forward Deployed Engineering | United States
+  + Databricks | Sr. Engagement Manager, Forward Deployed Engineering - LATAM | Remote - Mexico
+  + Databricks | Sr. Field Technical Program Manager, Forward Deployed Engineering | United States
+  + Databricks | Sr Forward Deployed Engineer | Remote - India
+  + Databricks | Sr. Forward Deployed Engineer - Communications, Media, Entertainment & Games | United States
+  + Databricks | Sr. Forward Deployed Engineer - Financial Services | Central - United States
+  + Databricks | Sr. Forward Deployed Engineer - Public Sector | Central - United States; Northeast - United States; Southeast - United States
+  + Databricks | Sr. Manager, Field Engineering - Digital Native Business | Colorado; Remote - California; Remote - Oregon; Remote - Washington
+  + Databricks | Sr. Manager, Field Engineering - Lakebase | Atlanta, Georgia; Chicago, Illinois; Dallas, Texas; New York City, New York; San Francisco, California; United States
+  + Databricks | Sr. Manager, Field Engineering (Specialist) - HCLS | Northeast - United States
+  + Databricks | Sr. Product Marketing Manager, Lakebase | United States
+  + Databricks | Sr Security Engineer, Incident Response | Belgium; Finland; Remote - Denmark; Remote - France; Remote - Germany; Remote - Netherlands; Remote - Spain; Remote - Sweden; Remote - United Kingdom; Switzerland
+  + Databricks | Sr. Solutions Architect - AI Natives Business | Remote - California; Remote - Oregon; Remote - Washington
+  + Databricks | Sr. Solutions Architect, Retail | West Coast - United States
+  + Databricks | Sr. Solutions Architect, Retail  | Northeast - United States
+  + Databricks | Sr. Solutions Engineer | United States
+  + Databricks | Sr. Solutions Engineer - AI Natives Business | Remote - California; Remote - Colorado; Remote - Oregon; Remote - Washington
+  + Databricks | Sr. Specialist Solutions Architect - Data Engineering & Warehousing | United States
+  + Databricks | Sr. Staff Product Security Engineer | United States
+  + Databricks | Sr. Technical Marketing Engineer - Lakebase/Apps | United States
+  + Databricks | Staff Enterprise Security Engineer | Remote - California
+  + Databricks | Staff Security Assurance Engineer  | Remote - Washington D.C.; Washington, D.C.
+  + Databricks | Staff Security Detection Engineer  | United States
+  + Databricks | Strategic Core Account Executive - Retail  | Remote - Ohio
+  + Databricks | Strategic Genie and AI Sales Specialist | Remote - New York
 
-This is the real source behind the `liveness` gate: a posting only earns
-`liveness.factor = 1.0` after it is confirmed present on the live board.
+(dry run — run without --dry-run to save results)
 
-## Verified vs. inferred (line by line)
+Review new offers in data/ats/pipeline.md.
 
-| Term | Value | Source label | Verified or inferred? |
-|---|---|---|---|
-| `sponsorship.p` / `.tier` | e.g. 0.85 / Proven | `record` | **Verified** in principle from 80-days/DOL H-1B history. In *this* run the numbers are illustrative fixtures, not a live join — flagged honestly. |
-| `liveness.factor` | 1.0 / 0.0 | `record` | **Verifiable** via `npm run ats:liveness` / `ats:scan` (shown live above). Fixture values here are hand-set. |
-| `timeline.factor` | 0.0–0.9 | `your-input` | **Human input** — the student's OPT EAD vs the posting start date. A judgment, labeled as such. |
-| `fit.p` | 0.15–0.85 | `model-judgment` | **Inferred** — the research-like/software-fit judgment. Never presented as a record. |
-| `role_quality.p` | 0.2–0.9 | `record` | Present but **weight 0.0** → contributes nothing today (repo defect #3). |
-| composite / recommendation | see table | computed | **Verified arithmetic** — every row's `(Σ vote·weight) × gates` is shown and re-derivable by hand. |
+2.$ npm run doctor
 
-The scorer never let an inferred term masquerade as a record: the audit column
-tags each one.
+> the-reallocation-engine@1.0.0 doctor
+> node scripts/doctor.mjs
 
-## Verification (how I confirmed the output is real)
+RECIPE DOCTOR — The Reallocation Engine
+==========================================
 
-1. **Re-ran and reproduced Ch.11** — command #1 gives Apply 2 / Consider 1 /
-   Skip 2 on the book fixture, matching the documented worked example.
-2. **Parsed the output JSON** —
-   `node -e "const d=require('.../role-scores.json'); ..."` →
-   `valid JSON — roles: 8 | needs_sponsorship: true | gated-to-zero: 2`.
-3. **Cross-checked a count** — 2 roles gated to composite 0.000 (ghost posting,
-   early start) matches the 2 gate-fired Skips in the table.
-4. **Hand-checked arithmetic** — Applied-AI startup:
-   `(0.85·0.35 + 0.78·0.30 + 0.8·0) × 1.0 × 0.9 = (0.2975 + 0.234) × 0.9 = 0.478`. ✓
+ENVIRONMENT (required)
+  ✓ node       v24.15.0
+  ✓ python3    Python 3.13.9
+
+ENVIRONMENT (optional — features degrade without these)
+  ✓ pandoc     pandoc 3.8
+  — libreoffice not found (PDF fallback)
+  ✓ playwright installed
+
+RUNNABLE COMMANDS (npm script → target file present?)
+  ✓ verify         scripts/conformance.mjs
+  ✓ manifest-check scripts/manifest-check.mjs
+  ✓ eval:score     scripts/eval/score-run.mjs
+  ✓ eval:report    scripts/eval/report.mjs
+  ✓ doctor         scripts/doctor.mjs
+  ✓ build-instructions scripts/build-instructions.mjs
+  ✓ to-markdown    scripts/to-markdown.mjs
+  ✓ score          scripts/score/role-scorer.mjs
+  ✓ ats:dedup      scripts/ats/dedup-tracker.mjs
+  ✓ ats:liveness   scripts/ats/check-liveness.mjs
+  ✓ ats:merge      scripts/ats/merge-tracker.mjs
+  ✓ ats:normalize  scripts/ats/normalize-statuses.mjs
+  ✓ ats:scan       scripts/ats/scan.mjs
+  ✓ ats:verify     scripts/ats/verify-pipeline.mjs
+  ✓ resumes:pdf    scripts/resumes/generate-pdf.mjs
+  ✓ svg-to-png     scripts/svg-to-png.mjs
+  ✓ audit:layout   scripts/svg-layout-audit.mjs
+  ✓ postsvg-to-png scripts/svg-layout-audit.mjs
+
+DOMAIN DIRECTORIES
+  ✓ data/sec
+  ✓ data/bls
+  ✓ data/ats
+  ✓ data/80-days-to-stay
+  ✓ scripts/sec
+  ✓ scripts/bls
+  ✓ scripts/ats
+  ✓ scripts/resumes
+
+PRIVACY (no personal data committed)
+  ✓ no private/PII paths are tracked
+
+RECIPES (43)
+  with lifecycle frontmatter: 1   missing: 42
+  by status: RUNNABLE-SAMPLE 1
+  open TODOs: 9 declared (in frontmatter) · 526 [TODO markers in bodies
+  ! missing frontmatter (42) — add: status / todos_open / last_gate / attestation / recipe_version
+      apply.md
+      auto-pipeline.md
+      batch.md
+      case-backend-swe-opt-triage.md
+      case-data-ml-h1b-triage.md
+      case-ds-faang-opt-runway.md
+      case-fullstack-swe-sponsor-triage.md
+      case-funded-systems-analyst.md
+      … +34 more
+
+SUMMARY
+  environment: ✓ runnable
+  recipes: 1/43 carry lifecycle frontmatter — 42 need it (gap toward DRAFT→VERIFIED discipline)
+  next: backfill recipe frontmatter
+
+3. $ npm run resumes:pdf -- --all
+
+> the-reallocation-engine@1.0.0 resumes:pdf
+> node scripts/resumes/generate-pdf.mjs --all
+
+resumes\aarav-patel-cv.md -> output\resumes\aarav-patel-cv.pdf (2 pages)
+resumes\maya-sehgal-cv.md -> output\resumes\maya-sehgal-cv.pdf (2 pages)
+resumes\priya-nair-cv.md -> output\resumes\priya-nair-cv.pdf (2 pages)
+resumes\rohan-desai-cv.md -> output\resumes\rohan-desai-cv.pdf (2 pages)
+
+4.(base) PS D:\nick\the-reallocation-engine> npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json --out-dir reports/generated --md reports/generated/case-mscs-opt-research-like-ai-software-2026-07-06.md
+>> 
+
+> the-reallocation-engine@1.0.0 score
+> node scripts/score/role-scorer.mjs data/examples/research-like-roles.json --profile data/examples/research-like-profile.json --out-dir reports/generated --md reports/generated/case-mscs-opt-research-like-ai-software-2026-07-06.md
+
+✓ scored 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%)
+  reports\generated\role-scores.json  +  reports\generated\case-mscs-opt-research-like-ai-software-2026-07-06.md
+
+  5.(base) PS D:\nick\the-reallocation-engine> npm run ats:liveness -- https://www.databricks.com/company/careers/engineering---pipeline/software-engineer---genai-inference--8202670002          
+
+> the-reallocation-engine@1.0.0 ats:liveness
+> node scripts/ats/check-liveness.mjs https://www.databricks.com/company/careers/engineering---pipeline/software-engineer---genai-inference--8202670002
+
+Checking 1 URL(s)...
+
+✅ active     https://www.databricks.com/company/careers/engineering---pipeline/software-engineer---genai-inference--8202670002
+
+Results: 1 active  0 expired  0 uncertain
+
+  
+Verified vs. inferred — a line-by-line split of what the data/scripts established versus what you or an LLM judged.
+Verification — how you confirmed the output was real: re-ran with --dry-run, parsed the JSON, cross-checked a count against the source, deliberately tried to break it (see the Attestation format).
+Reflection — what went well, what the mode got wrong or missed, and your next steps. Nothing is perfect; say where yours isn't.
 
 ## Attestation
-
-- Recipe: `case-mscs-opt-research-like-ai-software` v0.2.0
-- By: Zening Teng · 2026-07-06
+- Recipe: `opt-research-like-job` v0.2.0
+- By: Zening Teng · 2026-07-07
 
 ### Tested
 | Ran | Saw | Expected |
 |---|---|---|
-| `npm run score` on `research-like-roles.json` + F-1 profile | 8 roles → Apply 2 · Consider 3 · Skip 3 (38%), full audit trace | A ranked table with sourced terms | 
-| `npm run score` on `ch11-roles.json` (control) | Apply 2 · Consider 1 · Skip 2 | Reproduce Ch.11 worked example ✓ |
-| `npm run ats:scan -- --dry-run` | 789 jobs found, 52 new, live Databricks/Greenhouse data, no writes | Real ATS liveness surface, side-effect-free ✓ |
-| Parse `role-scores.json` via node | valid JSON, 8 roles, 2 gated-to-zero | Machine-readable agent output ✓ |
-| **BREAK: missing input file** | `Usage: ...` + `exit=2` | Refuse cleanly, don't invent data ✓ |
-| **BREAK: malformed JSON input** | JSON parse error, `exit=1`, no output written | Halt the run, don't emit garbage ✓ |
-| **BREAK: override with empty reason** | Skip kept; `! override WITHOUT a documented reason — ignored` | Ch.11 discipline enforced ✓ |
-| **BREAK: citizen profile (needs no sponsorship)** | sponsorship weight → 0; Apply 2→0, skip 38%→50% | Profile-conditional weighting flips the ranking ✓ |
+| `npm run ats:scan -- --dry-run` | 1 company scanned, 789 jobs found, 52 new, live Databricks/Greenhouse data, no files written | Real ATS liveness surface, side-effect-free ✓ |
+| `npm run doctor` | environment ✓ runnable (node + python3), privacy ✓ no PII/private paths tracked | Env + privacy gate green before submit ✓ |
+| `npm run score -- data/examples/research-like-roles.json --profile data/examples/research-like-profile.json` | 8 roles → Apply 2 · Consider 3 · Skip 3 (skip 38%); 2 roles gated to composite 0.000 | Ranked table with per-term sourced audit trace ✓ |
+| `npm run ats:liveness -- <Databricks GenAI Inference SWE URL>` | `✅ active` · Results: 1 active 0 expired | Confirm a posting is live before setting `liveness.factor = 1.0` ✓ |
+| BREAK: malformed JSON input (`[{ "role_id": "bad",, }]`) | JSON parse error, `exit=1`, no output written | Halt the run, don't emit a garbage score ✓ |
+| BREAK: citizen profile (`authorization: "us citizen"`) | sponsorship weight → 0; Apply 2→0, Consider 3→4, skip 38%→50% | Profile-conditional weighting flips the ranking — mode is visa-aware ✓ |
 
 ### Did not test
-- No **live** H-1B join — `sponsorship.p/.tier` are illustrative fixtures, not a
-  real lookup against `data/80-days-to-stay/` (that join is `[TODO: DATA SOURCE]`).
-- No **live** liveness call was wired into the score run — `ats:scan` was run
-  separately to demonstrate the surface; the `liveness.factor` values in the
-  fixture are hand-set.
-- The proposed `.py` enrichment scripts were **not** built or run — they remain
-  typed `[TODO: DEV]`.
-- `npm run verify` does **not** pass fully on this Windows box (see below);
-  I did not test it on Linux/CI.
+- No live H-1B join — `sponsorship.p`/`.tier` are illustrative fixtures, not a real lookup against `data/80-days-to-stay/` (that join is `[TODO: DATA SOURCE]`).
+- The `liveness.factor` values inside `research-like-roles.json` are hand-set; I proved the liveness surface on one real Databricks URL but did not wire per-URL liveness into the score run.
+- The proposed `.py` enrichment scripts were not built or run — they remain typed `[TODO: DEV]`.
+- `role_quality` (weight 0) was not exercised — the Ch.9 / O*NET signal contributes nothing today (repo gap #3).
+- `npm run resumes:pdf` ran on the repo's example CVs (aarav-patel etc.), not on my own résumé and not part of this mode's decision path.
 
 ### Broke during testing, fixed
-- **Unbalanced code fence** in the original recipe: the `\`\`\`json` agent-log
-  block was never closed → `conformance.mjs` reported "unbalanced code fences (1)"
-  and the file was ungradeable. Fixed in the rewrite; the recipe now shows 4
-  balanced fences and no longer appears in the conformance failure list.
-- **`python3` not on PATH** — only Anaconda `python` was
-  (`C:\Users\...\anaconda3\python.exe`), so `conformance.mjs`'s
-  `python3 -m py_compile` failed on all 30 `.py` files + `metadata.yaml`
-  ("operable program or batch file"). This was a **pre-existing environment issue
-  unrelated to the mode** (my added files are `.json`/`.md`). **Fixed** by adding
-  a `python3.exe` shim (copy of `python.exe`) in the already-on-PATH Anaconda
-  folder; `node scripts/conformance.mjs` now exits 0 → `✓ all conform`, and
-  `npm run verify` goes green on this box.
-
-## Reflection
-
-**What went well.** The mode runs today against a real, tested script and the
-output is fully auditable — every term shows its value and source, and I can
-re-derive each composite by hand. Both gates fire exactly as designed (a
-perfect-looking ghost posting and an impossible start date both drop to Skip
-regardless of strong votes), which is the whole point: liveness and timeline are
-hard stops, not votes. The break attempts confirmed the scorer refuses bad input
-rather than inventing a number, and the citizen-profile test proved the mode is
-genuinely visa-aware rather than a generic ranker.
-
-**What it got wrong / missed.** (1) **Skip rate is 38%, below the ~50% a healthy
-run should skip** — and the tool says so in its own summary. That is a property
-of my curated fixture (I built cases to exercise mechanics, not sampled a noisy
-live board), not evidence about the real market; a real batch would skip more.
-(2) **`role_quality` carries weight 0** (repo defect #3), so the Cognitive-Pivot
-AI-resilience signal — arguably the most on-thesis input — currently moves
-nothing. (3) The `sponsorship` and `liveness` numbers in this run are hand-set
-fixtures, so the "record" label is aspirational until the live joins exist.
-
-**Next steps.** (a) Build `research-like-extract-fit.py` so `fit` comes from
-posting evidence instead of hand-scoring. (b) Close `[TODO: DATA SOURCE]`: join a
-real company list to `data/80-days-to-stay/` to populate sponsorship from records.
-(c) Wire `npm run ats:liveness` per-URL into the record-assembly step. (d) Resolve
-defect #3 — give `role_quality` a real weight and renormalize — then re-run and
-re-attest. Only after a live-data run with a human clearing gates 6 and 7 should
-this move past RUNNABLE-SAMPLE.
+- Unbalanced code fence in the original draft recipe: the ```` ```json ```` agent-log block was never closed → `conformance.mjs` reported "unbalanced code fences" and the file was ungradeable. Fixed in the rewrite; `node scripts/conformance.mjs` now exits 0 (`✓ all conform`).
+- `python3` not on PATH — only Anaconda `python` was, so `conformance.mjs`'s `python3 -m py_compile` failed on all 30 `.py` files + `metadata.yaml`. Fixed by adding a `python3.exe` shim in the on-PATH Anaconda folder; `npm run doctor` now shows `✓ python3 Python 3.13.9` and the environment reads `✓ runnable`.
