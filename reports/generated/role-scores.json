@@ -1,7 +1,7 @@
 {
   "_scorer": "bayesian-role-scorer",
   "_chapter": 11,
-  "generated": "2026-07-07",
+  "generated": "2026-07-17",
   "config": {
     "weights": {
       "sponsorship": 0.35,
@@ -20,9 +20,9 @@
   "profile_needs_sponsorship": true,
   "roles": [
     {
-      "role_id": "addepar-ai",
-      "company": "Addepar",
-      "title": "Applied AI / Sr. Software Engineer (prototyping)",
+      "role_id": "msft-appliedai",
+      "company": "Microsoft",
+      "title": "Applied AI / Software Engineer (prototyping)",
       "composite": 0.4941,
       "recommendation": "Apply",
       "machine_recommendation": "Apply",
@@ -63,9 +63,9 @@
       }
     },
     {
-      "role_id": "aeva-research",
-      "company": "Aeva",
-      "title": "Research Engineer (perception / prototyping)",
+      "role_id": "databricks-ml",
+      "company": "Databricks",
+      "title": "Machine Learning Engineer (prototyping)",
       "composite": 0.4995,
       "recommendation": "Apply",
       "machine_recommendation": "Apply",
@@ -106,52 +106,9 @@
       }
     },
     {
-      "role_id": "6sense-ml",
-      "company": "6sense Insights",
-      "title": "Machine Learning Engineer (prototyping)",
-      "composite": 0.4462,
-      "recommendation": "Apply",
-      "machine_recommendation": "Apply",
-      "reason": "composite 0.446 ≥ 0.3, gates healthy",
-      "override": null,
-      "trace": {
-        "votes": [
-          {
-            "factor": "sponsorship",
-            "value": 0.9,
-            "weight": 0.35,
-            "contribution": 0.315,
-            "source": "record"
-          },
-          {
-            "factor": "fit",
-            "value": 0.7,
-            "weight": 0.3,
-            "contribution": 0.21,
-            "source": "model-judgment"
-          }
-        ],
-        "vote_sum": 0.525,
-        "gates": [
-          {
-            "factor": "liveness",
-            "multiplier": 1,
-            "source": "record"
-          },
-          {
-            "factor": "timeline",
-            "multiplier": 0.85,
-            "source": "your-input"
-          }
-        ],
-        "gate_product": 0.85,
-        "arithmetic": "(0.9·0.35 + 0.7·0.3) × 1 × 0.85 = 0.446"
-      }
-    },
-    {
-      "role_id": "acv-ml",
-      "company": "ACV Auctions",
-      "title": "Machine Learning Engineer III",
+      "role_id": "snowflake-re",
+      "company": "Snowflake",
+      "title": "Research Engineer (prototype / evaluation)",
       "composite": 0.459,
       "recommendation": "Apply",
       "machine_recommendation": "Apply",
@@ -192,32 +149,118 @@
       }
     },
     {
-      "role_id": "nimbus-xr",
-      "company": "Nimbus Prototyping Labs",
-      "title": "XR Prototype Developer (Unity/C#)",
-      "composite": 0.279,
-      "recommendation": "Consider",
-      "machine_recommendation": "Consider",
-      "reason": "composite 0.279 in the Consider band [0.2, 0.3)",
+      "role_id": "linkedin-ml",
+      "company": "LinkedIn",
+      "title": "Machine Learning Engineer",
+      "composite": 0.4514,
+      "recommendation": "Apply",
+      "machine_recommendation": "Apply",
+      "reason": "composite 0.451 ≥ 0.3, gates healthy",
       "override": null,
       "trace": {
         "votes": [
           {
             "factor": "sponsorship",
-            "value": 0.2,
+            "value": 0.9,
             "weight": 0.35,
-            "contribution": 0.07,
+            "contribution": 0.315,
             "source": "record"
           },
           {
             "factor": "fit",
-            "value": 0.8,
+            "value": 0.72,
             "weight": 0.3,
-            "contribution": 0.24,
+            "contribution": 0.216,
             "source": "model-judgment"
           }
         ],
-        "vote_sum": 0.31,
+        "vote_sum": 0.531,
+        "gates": [
+          {
+            "factor": "liveness",
+            "multiplier": 1,
+            "source": "record"
+          },
+          {
+            "factor": "timeline",
+            "multiplier": 0.85,
+            "source": "your-input"
+          }
+        ],
+        "gate_product": 0.85,
+        "arithmetic": "(0.9·0.35 + 0.72·0.3) × 1 × 0.85 = 0.451"
+      }
+    },
+    {
+      "role_id": "uber-as",
+      "company": "Uber Technologies",
+      "title": "Applied Scientist (prototyping)",
+      "composite": 0.4462,
+      "recommendation": "Apply",
+      "machine_recommendation": "Apply",
+      "reason": "composite 0.446 ≥ 0.3, gates healthy",
+      "override": null,
+      "trace": {
+        "votes": [
+          {
+            "factor": "sponsorship",
+            "value": 0.9,
+            "weight": 0.35,
+            "contribution": 0.315,
+            "source": "record"
+          },
+          {
+            "factor": "fit",
+            "value": 0.7,
+            "weight": 0.3,
+            "contribution": 0.21,
+            "source": "model-judgment"
+          }
+        ],
+        "vote_sum": 0.525,
+        "gates": [
+          {
+            "factor": "liveness",
+            "multiplier": 1,
+            "source": "record"
+          },
+          {
+            "factor": "timeline",
+            "multiplier": 0.85,
+            "source": "your-input"
+          }
+        ],
+        "gate_product": 0.85,
+        "arithmetic": "(0.9·0.35 + 0.7·0.3) × 1 × 0.85 = 0.446"
+      }
+    },
+    {
+      "role_id": "pinterest-ml",
+      "company": "Pinterest",
+      "title": "Machine Learning Engineer (recommendations)",
+      "composite": 0.4455,
+      "recommendation": "Apply",
+      "machine_recommendation": "Apply",
+      "reason": "composite 0.446 ≥ 0.3, gates healthy",
+      "override": null,
+      "trace": {
+        "votes": [
+          {
+            "factor": "sponsorship",
+            "value": 0.9,
+            "weight": 0.35,
+            "contribution": 0.315,
+            "source": "record"
+          },
+          {
+            "factor": "fit",
+            "value": 0.6,
+            "weight": 0.3,
+            "contribution": 0.18,
+            "source": "model-judgment"
+          }
+        ],
+        "vote_sum": 0.495,
         "gates": [
           {
             "factor": "liveness",
@@ -231,13 +274,13 @@
           }
         ],
         "gate_product": 0.9,
-        "arithmetic": "(0.2·0.35 + 0.8·0.3) × 1 × 0.9 = 0.279"
+        "arithmetic": "(0.9·0.35 + 0.6·0.3) × 1 × 0.9 = 0.446"
       }
     },
     {
-      "role_id": "acorns-ghost",
-      "company": "Acorns Grow",
-      "title": "AI Prototype Engineer (ghost posting — not live)",
+      "role_id": "zoox-sim",
+      "company": "Zoox",
+      "title": "Simulation / Research Engineer (ghost posting — not live)",
       "composite": 0,
       "recommendation": "Skip",
       "machine_recommendation": "Skip",
@@ -278,9 +321,9 @@
       }
     },
     {
-      "role_id": "23andme-early",
-      "company": "23andMe",
-      "title": "Data/ML Research role (start date before OPT EAD)",
+      "role_id": "stripe-ml",
+      "company": "Stripe",
+      "title": "Data/ML role (start date before OPT EAD)",
       "composite": 0,
       "recommendation": "Skip",
       "machine_recommendation": "Skip",
@@ -318,52 +361,6 @@
         ],
         "gate_product": 0,
         "arithmetic": "(0.9·0.35 + 0.75·0.3) × 1 × 0 = 0.000"
-      }
-    },
-    {
-      "role_id": "referral-override",
-      "company": "Household Robotics Co",
-      "title": "Software Engineer (prototyping) — referral",
-      "composite": 0.2431,
-      "recommendation": "Consider",
-      "machine_recommendation": "Consider",
-      "reason": "composite 0.243 in the Consider band [0.2, 0.3)",
-      "override": {
-        "decision": "Consider",
-        "reason": "Classmate on the team says they just opened a cap-exempt req; the 80-days mapping has no record yet because DOL/Form-D data lags the hiring plan."
-      },
-      "trace": {
-        "votes": [
-          {
-            "factor": "sponsorship",
-            "value": 0.2,
-            "weight": 0.35,
-            "contribution": 0.07,
-            "source": "record"
-          },
-          {
-            "factor": "fit",
-            "value": 0.72,
-            "weight": 0.3,
-            "contribution": 0.216,
-            "source": "model-judgment"
-          }
-        ],
-        "vote_sum": 0.286,
-        "gates": [
-          {
-            "factor": "liveness",
-            "multiplier": 1,
-            "source": "record"
-          },
-          {
-            "factor": "timeline",
-            "multiplier": 0.85,
-            "source": "your-input"
-          }
-        ],
-        "gate_product": 0.85,
-        "arithmetic": "(0.2·0.35 + 0.72·0.3) × 1 × 0.85 = 0.243"
       }
     }
   ]

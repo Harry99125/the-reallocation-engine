@@ -1,42 +1,41 @@
 [
-  { "role_id": "addepar-ai", "company": "Addepar", "title": "Applied AI / Sr. Software Engineer (prototyping)",
+  { "role_id": "msft-appliedai", "company": "Microsoft", "title": "Applied AI / Software Engineer (prototyping)",
     "fit": { "p": 0.78, "source": "model-judgment" },
     "liveness": { "factor": 1.0, "source": "record" },
     "timeline": { "factor": 0.9, "source": "your-input" } },
 
-  { "role_id": "aeva-research", "company": "Aeva", "title": "Research Engineer (perception / prototyping)",
+  { "role_id": "databricks-ml", "company": "Databricks", "title": "Machine Learning Engineer (prototyping)",
     "fit": { "p": 0.8, "source": "model-judgment" },
     "liveness": { "factor": 1.0, "source": "record" },
     "timeline": { "factor": 0.9, "source": "your-input" } },
 
-  { "role_id": "6sense-ml", "company": "6sense Insights", "title": "Machine Learning Engineer (prototyping)",
+  { "role_id": "snowflake-re", "company": "Snowflake", "title": "Research Engineer (prototype / evaluation)",
+    "fit": { "p": 0.75, "source": "model-judgment" },
+    "liveness": { "factor": 1.0, "source": "record" },
+    "timeline": { "factor": 0.85, "source": "your-input" } },
+
+  { "role_id": "linkedin-ml", "company": "LinkedIn", "title": "Machine Learning Engineer",
+    "fit": { "p": 0.72, "source": "model-judgment" },
+    "liveness": { "factor": 1.0, "source": "record" },
+    "timeline": { "factor": 0.85, "source": "your-input" } },
+
+  { "role_id": "uber-as", "company": "Uber Technologies", "title": "Applied Scientist (prototyping)",
     "fit": { "p": 0.7, "source": "model-judgment" },
     "liveness": { "factor": 1.0, "source": "record" },
     "timeline": { "factor": 0.85, "source": "your-input" } },
 
-  { "role_id": "acv-ml", "company": "ACV Auctions", "title": "Machine Learning Engineer III",
-    "fit": { "p": 0.75, "source": "model-judgment" },
-    "liveness": { "factor": 1.0, "source": "record" },
-    "timeline": { "factor": 0.85, "source": "your-input" } },
-
-  { "role_id": "nimbus-xr", "company": "Nimbus Prototyping Labs", "title": "XR Prototype Developer (Unity/C#)",
-    "fit": { "p": 0.8, "source": "model-judgment" },
+  { "role_id": "pinterest-ml", "company": "Pinterest", "title": "Machine Learning Engineer (recommendations)",
+    "fit": { "p": 0.6, "source": "model-judgment" },
     "liveness": { "factor": 1.0, "source": "record" },
     "timeline": { "factor": 0.9, "source": "your-input" } },
 
-  { "role_id": "acorns-ghost", "company": "Acorns Grow", "title": "AI Prototype Engineer (ghost posting — not live)",
+  { "role_id": "zoox-sim", "company": "Zoox", "title": "Simulation / Research Engineer (ghost posting — not live)",
     "fit": { "p": 0.85, "source": "model-judgment" },
     "liveness": { "factor": 0.0, "source": "record" },
     "timeline": { "factor": 0.85, "source": "your-input" } },
 
-  { "role_id": "23andme-early", "company": "23andMe", "title": "Data/ML Research role (start date before OPT EAD)",
+  { "role_id": "stripe-ml", "company": "Stripe", "title": "Data/ML role (start date before OPT EAD)",
     "fit": { "p": 0.75, "source": "model-judgment" },
     "liveness": { "factor": 1.0, "source": "record" },
-    "timeline": { "factor": 0.0, "source": "your-input" } },
-
-  { "role_id": "referral-override", "company": "Household Robotics Co", "title": "Software Engineer (prototyping) — referral",
-    "fit": { "p": 0.72, "source": "model-judgment" },
-    "liveness": { "factor": 1.0, "source": "record" },
-    "timeline": { "factor": 0.85, "source": "your-input" },
-    "override": { "decision": "Consider", "reason": "Classmate on the team says they just opened a cap-exempt req; the 80-days mapping has no record yet because DOL/Form-D data lags the hiring plan." } }
+    "timeline": { "factor": 0.0, "source": "your-input" } }
 ]

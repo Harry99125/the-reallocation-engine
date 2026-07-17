@@ -1,8 +1,8 @@
 [
   {
-    "role_id": "addepar-ai",
-    "company": "Addepar",
-    "title": "Applied AI / Sr. Software Engineer (prototyping)",
+    "role_id": "msft-appliedai",
+    "company": "Microsoft",
+    "title": "Applied AI / Software Engineer (prototyping)",
     "fit": {
       "p": 0.78,
       "source": "model-judgment"
@@ -22,21 +22,21 @@
       "evidence": {
         "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "150 H-1B approvals, 100% rate",
-        "h1b_approvals": 150,
-        "h1b_denials": 0,
-        "approval_rate_pct": 100,
-        "median_salary_offered": 133000,
+        "note": "12226 H-1B approvals, 97% rate",
+        "h1b_approvals": 12226,
+        "h1b_denials": 428,
+        "approval_rate_pct": 96.61767030188084,
+        "median_salary_offered": 156705,
         "latest_funding_stage": "Series D+",
-        "latest_funding_date": "2021-06-07",
-        "top_job_titles_sponsored": "['Sr. Software Engineer', 'Product Designer', 'Product Management I', 'Software Engineer ', 'Test Automation Engineer']"
+        "latest_funding_date": "2020-07-14",
+        "top_job_titles_sponsored": "['Software Engineer', 'Product Manager', 'Technical Program Manager', 'Applied Sciences', 'Data Science']"
       }
     }
   },
   {
-    "role_id": "aeva-research",
-    "company": "Aeva",
-    "title": "Research Engineer (perception / prototyping)",
+    "role_id": "databricks-ml",
+    "company": "Databricks",
+    "title": "Machine Learning Engineer (prototyping)",
     "fit": {
       "p": 0.8,
       "source": "model-judgment"
@@ -56,21 +56,89 @@
       "evidence": {
         "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "120 H-1B approvals, 100% rate",
-        "h1b_approvals": 120,
-        "h1b_denials": 0,
-        "approval_rate_pct": 100,
-        "median_salary_offered": 175000,
-        "latest_funding_stage": "Seed",
-        "latest_funding_date": "2017-01-13",
-        "top_job_titles_sponsored": "['Senior Reliability Engineer', 'Staff Software Engineering Program Manager', 'Senior Embedded Software Engineer', 'Optical System Engineer', 'Staff Validation Firmware Engineer']"
+        "note": "1640 H-1B approvals, 100% rate",
+        "h1b_approvals": 1640,
+        "h1b_denials": 8,
+        "approval_rate_pct": 99.51456310679612,
+        "median_salary_offered": 149422.5,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2025-09-08",
+        "top_job_titles_sponsored": "['Software Engineer', 'Senior Software Engineer', 'Solutions Architect', 'Specialist Solutions Architect', 'Senior Solutions Engineer']"
       }
     }
   },
   {
-    "role_id": "6sense-ml",
-    "company": "6sense Insights",
-    "title": "Machine Learning Engineer (prototyping)",
+    "role_id": "snowflake-re",
+    "company": "Snowflake",
+    "title": "Research Engineer (prototype / evaluation)",
+    "fit": {
+      "p": 0.75,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "1816 H-1B approvals, 98% rate",
+        "h1b_approvals": 1816,
+        "h1b_denials": 28,
+        "approval_rate_pct": 98.4815618221258,
+        "median_salary_offered": 170000,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2020-02-07",
+        "top_job_titles_sponsored": "['Senior Software Engineer', 'Senior Solutions Architect', 'Software Engineer', 'Senior Software Security Engineer', 'Financial Analyst']"
+      }
+    }
+  },
+  {
+    "role_id": "linkedin-ml",
+    "company": "LinkedIn",
+    "title": "Machine Learning Engineer",
+    "fit": {
+      "p": 0.72,
+      "source": "model-judgment"
+    },
+    "liveness": {
+      "factor": 1,
+      "source": "record"
+    },
+    "timeline": {
+      "factor": 0.85,
+      "source": "your-input"
+    },
+    "sponsorship": {
+      "p": 0.9,
+      "tier": "Proven",
+      "source": "record",
+      "evidence": {
+        "matched": true,
+        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
+        "note": "4962 H-1B approvals, 99% rate",
+        "h1b_approvals": 4962,
+        "h1b_denials": 28,
+        "approval_rate_pct": 99.43887775551104,
+        "median_salary_offered": 167149,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2014-02-28",
+        "top_job_titles_sponsored": "['Sr Software Engineer', 'Staff Software Engineer', 'Sr. Software Engineer, Systems Infrastructure', 'Sr Data Scientist', 'Software Engineer', 'Sr Software Engineer', 'Staff Software Engineer', 'Staff Software Engineer, Systems Infrastructure', 'Associate Product Manager', 'Sr. Software Engineer, Machine Learning']"
+      }
+    }
+  },
+  {
+    "role_id": "uber-as",
+    "company": "Uber Technologies",
+    "title": "Applied Scientist (prototyping)",
     "fit": {
       "p": 0.7,
       "source": "model-judgment"
@@ -90,57 +158,23 @@
       "evidence": {
         "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "62 H-1B approvals, 100% rate",
-        "h1b_approvals": 62,
-        "h1b_denials": 0,
-        "approval_rate_pct": 100,
-        "median_salary_offered": 172308,
+        "note": "3984 H-1B approvals, 99% rate",
+        "h1b_approvals": 3984,
+        "h1b_denials": 42,
+        "approval_rate_pct": 98.95678092399405,
+        "median_salary_offered": 165000,
         "latest_funding_stage": "Series D+",
-        "latest_funding_date": "2022-01-20",
-        "top_job_titles_sponsored": "['Senior Software Engineer', 'Principal Customer Success Manager, Strategic']"
+        "latest_funding_date": "2021-08-10",
+        "top_job_titles_sponsored": "['Senior Software Engineer', 'Staff Software Engineer', 'Software Engineer II', 'Software Engineer', 'SOFTWARE ENGINEER']"
       }
     }
   },
   {
-    "role_id": "acv-ml",
-    "company": "ACV Auctions",
-    "title": "Machine Learning Engineer III",
+    "role_id": "pinterest-ml",
+    "company": "Pinterest",
+    "title": "Machine Learning Engineer (recommendations)",
     "fit": {
-      "p": 0.75,
-      "source": "model-judgment"
-    },
-    "liveness": {
-      "factor": 1,
-      "source": "record"
-    },
-    "timeline": {
-      "factor": 0.85,
-      "source": "your-input"
-    },
-    "sponsorship": {
-      "p": 0.9,
-      "tier": "Proven",
-      "source": "record",
-      "evidence": {
-        "matched": true,
-        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "22 H-1B approvals, 100% rate",
-        "h1b_approvals": 22,
-        "h1b_denials": 0,
-        "approval_rate_pct": 100,
-        "median_salary_offered": 67205,
-        "latest_funding_stage": "Series C",
-        "latest_funding_date": "2018-12-06",
-        "top_job_titles_sponsored": "['Machine Learning Engineer III']"
-      }
-    }
-  },
-  {
-    "role_id": "nimbus-xr",
-    "company": "Nimbus Prototyping Labs",
-    "title": "XR Prototype Developer (Unity/C#)",
-    "fit": {
-      "p": 0.8,
+      "p": 0.6,
       "source": "model-judgment"
     },
     "liveness": {
@@ -152,27 +186,27 @@
       "source": "your-input"
     },
     "sponsorship": {
-      "p": 0.2,
-      "tier": "Unknown",
+      "p": 0.9,
+      "tier": "Proven",
       "source": "record",
       "evidence": {
-        "matched": false,
+        "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "not found in the 80-days mapping",
-        "h1b_approvals": null,
-        "h1b_denials": null,
-        "approval_rate_pct": null,
-        "median_salary_offered": null,
-        "latest_funding_stage": null,
-        "latest_funding_date": null,
-        "top_job_titles_sponsored": null
+        "note": "1364 H-1B approvals, 99% rate",
+        "h1b_approvals": 1364,
+        "h1b_denials": 16,
+        "approval_rate_pct": 98.84057971014492,
+        "median_salary_offered": 156853,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2017-06-02",
+        "top_job_titles_sponsored": "['Software Engineer', 'Software Engineer II', 'Software Engineer I', 'Senior Software Engineer', 'Senior Data Analyst']"
       }
     }
   },
   {
-    "role_id": "acorns-ghost",
-    "company": "Acorns Grow",
-    "title": "AI Prototype Engineer (ghost posting — not live)",
+    "role_id": "zoox-sim",
+    "company": "Zoox",
+    "title": "Simulation / Research Engineer (ghost posting — not live)",
     "fit": {
       "p": 0.85,
       "source": "model-judgment"
@@ -192,21 +226,21 @@
       "evidence": {
         "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "42 H-1B approvals, 100% rate",
-        "h1b_approvals": 42,
-        "h1b_denials": 0,
-        "approval_rate_pct": 100,
-        "median_salary_offered": 225000,
+        "note": "1364 H-1B approvals, 99% rate",
+        "h1b_approvals": 1364,
+        "h1b_denials": 10,
+        "approval_rate_pct": 99.2721979621543,
+        "median_salary_offered": 158080,
         "latest_funding_stage": "Series D+",
-        "latest_funding_date": "2019-01-25",
-        "top_job_titles_sponsored": "['Sr. Software Engineer', 'Senior Site Reliability Engineer', 'Sr. Product Manager']"
+        "latest_funding_date": "2019-10-16",
+        "top_job_titles_sponsored": "['Software Engineer', 'Senior Software Engineer', 'Senior Systems Engineer', 'Data Engineer', 'Senior AV Safety Data and Compliance Engineer']"
       }
     }
   },
   {
-    "role_id": "23andme-early",
-    "company": "23andMe",
-    "title": "Data/ML Research role (start date before OPT EAD)",
+    "role_id": "stripe-ml",
+    "company": "Stripe",
+    "title": "Data/ML role (start date before OPT EAD)",
     "fit": {
       "p": 0.75,
       "source": "model-judgment"
@@ -226,52 +260,14 @@
       "evidence": {
         "matched": true,
         "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "52 H-1B approvals, 96% rate",
-        "h1b_approvals": 52,
-        "h1b_denials": 2,
-        "approval_rate_pct": 96.29629629629628,
-        "median_salary_offered": 183195,
-        "latest_funding_stage": "Series C",
-        "latest_funding_date": "2020-12-09",
-        "top_job_titles_sponsored": "['Technical Lead', 'Lead BI Engineer', 'Sr. Software Engineer III', 'Sr. Mobile Engineer III', 'Offensive Security Engineer']"
-      }
-    }
-  },
-  {
-    "role_id": "referral-override",
-    "company": "Household Robotics Co",
-    "title": "Software Engineer (prototyping) — referral",
-    "fit": {
-      "p": 0.72,
-      "source": "model-judgment"
-    },
-    "liveness": {
-      "factor": 1,
-      "source": "record"
-    },
-    "timeline": {
-      "factor": 0.85,
-      "source": "your-input"
-    },
-    "override": {
-      "decision": "Consider",
-      "reason": "Classmate on the team says they just opened a cap-exempt req; the 80-days mapping has no record yet because DOL/Form-D data lags the hiring plan."
-    },
-    "sponsorship": {
-      "p": 0.2,
-      "tier": "Unknown",
-      "source": "record",
-      "evidence": {
-        "matched": false,
-        "dataset": "80-days-to-stay/SEC_DOL_H1b_data_mapped.csv",
-        "note": "not found in the 80-days mapping",
-        "h1b_approvals": null,
-        "h1b_denials": null,
-        "approval_rate_pct": null,
-        "median_salary_offered": null,
-        "latest_funding_stage": null,
-        "latest_funding_date": null,
-        "top_job_titles_sponsored": null
+        "note": "1250 H-1B approvals, 98% rate",
+        "h1b_approvals": 1250,
+        "h1b_denials": 22,
+        "approval_rate_pct": 98.27044025157232,
+        "median_salary_offered": 158371,
+        "latest_funding_stage": "Series D+",
+        "latest_funding_date": "2024-04-08",
+        "top_job_titles_sponsored": "['Software Engineer', 'Backend Engineer', 'Risk Strategist', 'Product Manager', 'Engineering Manager']"
       }
     }
   }
