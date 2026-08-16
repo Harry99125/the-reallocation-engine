@@ -209,3 +209,11 @@ private emails, or sensitive application notes.
 - **Portable ATS fixture:** the old fork branch supplied a generated résumé PDF outside the capstone diff. The clean branch instead renders the tracked anonymized Markdown into `.build/ats-paste-test/` at test/run time; no résumé PDF is committed as source of truth. Commands and the paired recipe/card advanced together to v0.8.0.
 - **Output:** `reports/generated/zening-teng-contribution/step5.md` contains the requirement audit, maintainer-ready PR description, explicit limitation, and human publication sequence.
 - **Blockers:** named-human Step 3 attestation, Step 4 honest run, final rerun after those changes, GitHub authentication, push, actual PR creation, and returned PR URL. No external state was changed.
+
+## 2026-08-15 -- Step 6 employer-facing portfolio case study
+
+- **Assignment fit:** created `reports/generated/zening-teng-contribution/step6.md` as an employer-facing Markdown case study rather than a grader narrative. It covers the specific user/problem, plain-language architecture, one primary measurable result, verified-vs-inferred boundary, named failure modes, one explicit limitation, and a runnable demo.
+- **Primary metric:** 2/2 named gate-as-vote mutation witnesses were caught. Supporting script outputs remain 6/6 production cases and 40/40 assertions; ATS positive 13/13 fields and 1/1 order; deliberate ATS break 7/13 fields and 0/1 order with verdict FAIL; regression suites 11 ATS, 10 gate, and 4 evidence tests.
+- **Provenance:** every portfolio number is copied from `step3.md` and its named public audit JSON. The case study distinguishes controlled local evidence and parser output from commercial-ATS behavior, résumé truth, live-job truth, visa legality, and human application judgment.
+- **Demo boundary:** no PR link or screen recording is claimed. The artifact uses the assignment's runnable-snippet option with commands already maintained in the root README.
+- **Privacy:** the case study contains no real résumé content, private output, contact information, application activity, or `data/ats/` record.

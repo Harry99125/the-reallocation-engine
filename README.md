@@ -47,6 +47,7 @@ Capstone step reports:
 - [`step2.md`](reports/generated/zening-teng-contribution/step2.md) — build and two-customer-pair evidence
 - [`step3.md`](reports/generated/zening-teng-contribution/step3.md) — verified-data and ethics-gate evidence
 - [`step5.md`](reports/generated/zening-teng-contribution/step5.md) — PR-readiness audit and PR-description draft
+- [`step6.md`](reports/generated/zening-teng-contribution/step6.md) — employer-facing engineering case study
 
 Read the current reports from PowerShell:
 
@@ -55,6 +56,7 @@ Get-Content "reports\generated\zening-teng-contribution\step1.md"
 Get-Content "reports\generated\zening-teng-contribution\step2.md"
 Get-Content "reports\generated\zening-teng-contribution\step3.md"
 Get-Content "reports\generated\zening-teng-contribution\step5.md"
+Get-Content "reports\generated\zening-teng-contribution\step6.md"
 ```
 
 ### Check Step 5 PR readiness
