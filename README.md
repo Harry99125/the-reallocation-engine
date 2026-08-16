@@ -38,8 +38,8 @@ Detailed module documentation:
 
 - Résumé paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
 - Gate-behavior harness: [`scripts/score/README.md`](scripts/score/README.md)
-- AI recipe: [`recipes/harness.md`](recipes/harness.md)
-- Human card: [`recipes/harness.card.md`](recipes/harness.card.md)
+- AI recipe: [`recipes/Zening-AIRecipe.md`](recipes/Zening-AIRecipe.md)
+- Human card: [`recipes/Zening.Humancard.md`](recipes/Zening.Humancard.md)
 
 Capstone step reports:
 
@@ -175,7 +175,7 @@ node scripts/conformance.mjs scripts/score data/examples/gate-behavior-cases.jso
 ### Check the complete Step 2 contribution
 
 ```powershell
-node scripts/conformance.mjs recipes/harness.md recipes/harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 ### Generate and inspect the Step 3 verified-data evidence
@@ -206,7 +206,7 @@ npm.cmd run doctor -- --strict
 Check all Step 3 contribution artifacts for conformance:
 
 ```powershell
-node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/harness.md recipes/harness.card.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
+node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
 ```
 
 ## Table of Contents

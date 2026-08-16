@@ -8,5 +8,5 @@ For the operating principle behind this separation, see [AI does AI things; huma
 
 The first complete two-customer pair is:
 
-- AI recipe: [`harness.md`](harness.md)
-- Human card: [`harness.card.md`](harness.card.md)
+- AI recipe: [`Zening-AIRecipe.md`](Zening-AIRecipe.md)
+- Human card: [`Zening.Humancard.md`](Zening.Humancard.md)

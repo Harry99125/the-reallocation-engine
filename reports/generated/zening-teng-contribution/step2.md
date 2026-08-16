@@ -1,68 +1,85 @@
-# Step 2 — Contribution Build
+# Step 2 — What I Built
 
-## Outcome
+## Short version
 
-The unified contribution is built and runnable. It contains the ATS paste-test submodule, the gate-behavior submodule, one AI recipe, and one human card. The original fork-based Step 2 implementation is preserved at commit `f4d0da7`; the upstream-based PR branch carries the same implementation contract in clean-port commit `7809f4b` without the fork's unrelated history.
+I built both parts of the contribution and connected them to the real project.
 
-## Working contribution
+The first part checks whether a résumé survives PDF text extraction. The second part checks whether the role scorer treats liveness and timeline as hard gates. Both parts have automated tests and saved reports.
 
-| Handoff claim | Observed result | Script | Record |
-|---|---|---|---|
-| ATS regression suite | 11/11 tests passed | `scripts/resumes/ats-parse-test.test.mjs` | `logs/RUN_LOG.md`, Step 2 entry |
-| Public ATS positive control | 13/13 required fields and 1/1 order check passed | `scripts/resumes/ats-parse-test.mjs` | `reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json` |
-| ATS deliberate break | 7/13 fields and 0/1 order check passed; overall verdict `FAIL` | `scripts/resumes/ats-parse-test.mjs` | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.json` |
-| Gate regression suite | 10/10 tests passed | `scripts/score/gate-behavior.test.mjs` | `logs/RUN_LOG.md`, Step 2 entry |
-| Production gate contract | 6/6 cases and 40/40 assertions passed | `scripts/score/gate-behavior-harness.mjs` and production `role-scorer.mjs` | `reports/generated/gate-behavior/gate-behavior-audit.json` |
-| Named gate-as-vote mutation | Zero-liveness witness became `0.80 / Apply`; zero-timeline witness became `0.85 / Apply`; both were caught as failures | `scripts/score/gate-behavior-core.mjs` | `reports/generated/gate-behavior/gate-behavior-audit.json` |
-| Targeted Step 2 conformance | 22 contribution files conformed | `scripts/conformance.mjs` | `logs/RUN_LOG.md`, Step 2 entry |
+## Part 1: ATS résumé checker
 
-These figures are script outputs copied from the named audit/run records, not estimates or model judgments.
+The checker accepts a PDF or Markdown file.
 
-## Two-customer pair
+For a normal résumé, it extracts the text and looks for basic problems such as empty output, broken characters, and unusual reading order. The output goes to `private/` by default.
 
-The current pair is:
+For a controlled test, it can also compare the PDF with a list of expected names, job titles, dates, and headings. Each field receives `PASS` or `FAIL`.
 
-- AI customer: `recipes/harness.md`
-- Human customer: `recipes/harness.card.md`
+The public test uses an anonymous résumé. I also made an incomplete version on purpose. The complete version passes. The incomplete version fails and shows exactly which fields are missing.
 
-The AI recipe contains the assignment's nine required sections: executive summary, required reads, phase gates, primary stored tools, workflow, output contract, verification checks, logging rules, and stop conditions. The human card states purpose, capabilities and limits, dependencies, annotated commands, outputs, success conditions, and named failures including drift and verified-data contract violation.
+## Part 2: gate-behavior checker
 
-The original Step 2 pair shipped together as v0.1.0 in commit `f4d0da7`. Later evidence, report-contract, and portable-fixture maintenance advanced both files together; their current matching v0.8.0 is authoritative for present commands.
+The scorer should work like this:
 
-## Main maintained files
+```text
+final score = liveness × timeline × weighted score
+```
 
-- `scripts/resumes/ats-parse-test.mjs`
-- `scripts/resumes/ats-parse-test.test.mjs`
-- `scripts/score/gate-behavior-core.mjs`
-- `scripts/score/gate-behavior-harness.mjs`
-- `scripts/score/gate-behavior.test.mjs`
-- `scripts/score/role-scorer.mjs`
-- `data/examples/aarav-patel-ats-expected.json`
-- `data/examples/ats-paste-test-broken-render.md`
-- `data/examples/gate-behavior-cases.json`
-- `resumes/aarav-patel-cv.md` as the public source rendered to an ignored temporary PDF at test time
-- The paired recipe and card named above
+If liveness or timeline is zero, the final score must be zero and the result must be `Skip`.
 
-## Failure behavior demonstrated
+The test sends six controlled cases through the real scorer. It also runs a deliberately wrong version where the gates are treated like normal scores. That wrong version produces believable `Apply` results, so the test must catch it.
 
-- Missing or reordered résumé evidence produces deterministic `FAIL`, not a fluent success message.
-- Expectation/source drift is a contract error rather than a weakened match.
-- A gate-as-vote implementation fails the contract even when its result looks plausible.
-- A private/external résumé cannot write public output through the generic command.
-- Machine PASS retains `HUMAN_REVIEW_REQUIRED`; it cannot promote itself to adequate or verified.
+## Test results
 
-## What Step 2 did not establish
+These numbers came from the saved test reports.
 
-- Universal compatibility with commercial ATS products
-- Factual truth or quality of a real résumé
-- Truth of upstream sponsorship, liveness, role-quality, or timeline inputs for a real job
-- Calibration of scorer weights
-- A final human Apply/Consider/Skip decision
+| Test | Result |
+|---|---:|
+| ATS automated tests | 11/11 passed |
+| Public résumé fields | 13/13 passed |
+| Public résumé order check | 1/1 passed |
+| Broken résumé fields | 7/13 passed |
+| Broken résumé order check | 0/1 passed; final result `FAIL` |
+| Gate automated tests | 10/10 passed |
+| Production gate cases | 6/6 passed |
+| Production gate assertions | 40/40 passed |
+| Deliberately wrong gate cases | 2/2 caught |
 
-## Step status
+The wrong gate version returned `0.80 / Apply` when liveness was zero and `0.85 / Apply` when timeline was zero. The test rejected both results.
 
-**Complete.** Code, public fixtures, positive controls, deliberate breaks, machine/human audits, and the two-customer pair are present and tested. Step 3 provides the separate verified-data boundary and ethics evidence.
+## AI recipe and human card
 
-## Record note
+The two modules share one pair of instructions:
 
-This report was added after Step 2 at the student's request for one plainly named report per material capstone step. Historical results above trace to the original audits, run log, and commit rather than being recreated from memory.
+- AI recipe: `recipes/Zening-AIRecipe.md`
+- Human card: `recipes/Zening.Humancard.md`
+
+The recipe gives the full run order, checks, outputs, and stop rules. The card is the shorter version for a person. It explains what the tools do, how to run them, and what can go wrong.
+
+Both files use version `0.10.0` and point to each other.
+
+## Main code
+
+- ATS program: `scripts/resumes/ats-parse-test.mjs`
+- ATS tests: `scripts/resumes/ats-parse-test.test.mjs`
+- Gate logic: `scripts/score/gate-behavior-core.mjs`
+- Gate report program: `scripts/score/gate-behavior-harness.mjs`
+- Gate tests: `scripts/score/gate-behavior.test.mjs`
+- Production scorer: `scripts/score/role-scorer.mjs`
+
+The public test records are under `data/examples/`. The saved reports are under `reports/generated/`.
+
+## What the tests can catch
+
+- A résumé field is missing or appears in the wrong order.
+- The expected field list no longer matches the public source résumé.
+- A gate is changed into a normal weighted score.
+- A private résumé tries to write a public report.
+- A machine report tries to sound more certain than the evidence allows.
+
+## What this step did not prove
+
+The ATS test does not represent every commercial ATS. It does not judge whether a résumé is true or well written. The gate test does not prove that live job, sponsorship, or visa inputs are correct. A person still makes the final application decision.
+
+## Status
+
+Step 2 is complete. Step 3 checks where every important number came from.

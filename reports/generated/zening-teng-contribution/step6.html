@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Zening Teng's software engineering case study: verification infrastructure for ATS parsing and hard eligibility gates in The Reallocation Engine.">
-  <title>Keeping Hard Gates Hard — Zening Teng</title>
+  <meta name="description" content="Zening Teng's software engineering case study about an ATS résumé checker and a hard-gate test for The Reallocation Engine.">
+  <title>Two Safety Checks for the Reallocation Engine — Zening Teng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
@@ -638,7 +638,7 @@
 
   <header class="site-header">
     <div class="shell site-header__inner">
-      <a class="brand" href="#top">Zening Teng / Verification systems</a>
+      <a class="brand" href="#top">Zening Teng / Software case study</a>
       <nav aria-label="Case study sections">
         <ul>
           <li><a href="#problem">Problem</a></li>
@@ -656,13 +656,13 @@
       <div class="hero">
         <div>
           <p class="eyebrow">Software engineering case study</p>
-          <h1>Keeping hard gates hard</h1>
-          <p class="lede">Verification infrastructure for an evidence-first job-search engine: deterministic résumé extraction checks, executable scoring contracts, and an adversarial test for the bug that looks reasonable until it costs a candidate time.</p>
-          <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Contract testing</p>
+          <h1>Two safety checks for a job-search tool</h1>
+          <p class="lede">I built a résumé PDF checker and a test that keeps two important scoring gates from turning into normal weighted scores.</p>
+          <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Automated testing</p>
         </div>
         <aside class="metric-hero" aria-label="Primary result">
           <span class="metric-hero__number">2 / 2</span>
-          <p><strong>Named gate-as-vote witnesses caught.</strong> The wrong implementation returned plausible <code>Apply</code> recommendations; the contract rejected both.</p>
+          <p><strong>Wrong gate results caught.</strong> The bad version returned believable <code>Apply</code> answers. The tests rejected both.</p>
         </aside>
       </div>
     </div>
@@ -673,10 +673,10 @@
           <p class="section-index">01 / Problem</p>
         </div>
         <div>
-          <h2>Confidence can be structurally wrong</h2>
-          <p>An early-career international candidate on an OPT timeline cannot afford to spend a day on an application that should have been rejected in seconds. Two hidden failures distort that allocation decision.</p>
-          <p>A résumé PDF can look polished while its extracted text drops a heading, separates a date from its role, or scrambles section order. At the same time, a scoring engine can treat job-posting liveness or visa timing as ordinary weighted preferences. That lets strong secondary signals rescue a role that should have been vetoed.</p>
-          <p>The repository described both contracts. It did not yet have an automated control that passed on production behavior and failed on the exact gate-as-vote bug the project names.</p>
+          <h2>A result can look right and still be wrong</h2>
+          <p>An international student has limited time to apply for jobs. A bad system can waste that time in two ways.</p>
+          <p>A résumé can look correct on screen while its PDF text is missing a heading, date, or job title. The scorer can also treat job liveness or visa timing like normal scores. That mistake can turn a job that should be skipped into an <code>Apply</code>.</p>
+          <p>The project explained both rules, but it did not have automated tests for both of them.</p>
         </div>
       </div>
     </section>
@@ -687,20 +687,20 @@
           <p class="section-index">02 / Build</p>
         </div>
         <div>
-          <h2>One system, three verification layers</h2>
-          <p>I developed a unified contribution that turns both risks into executable contracts. The implementation separates extraction mechanics, scoring behavior, and evidence provenance so each layer can fail closed without claiming the human decision.</p>
+          <h2>What I built</h2>
+          <p>I kept the work in three small parts. Each part has one clear job.</p>
           <ol class="architecture" aria-label="Three-layer verification architecture">
             <li>
-              <h3>ATS parse layer</h3>
-              <p>Render public Markdown to a temporary PDF, extract with PDF.js, and verify source-backed names, titles, dates, headings, and reading order.</p>
+              <h3>Résumé checker</h3>
+              <p>Turn public Markdown into a temporary PDF, extract its text with PDF.js, and check names, titles, dates, headings, and order.</p>
             </li>
             <li>
-              <h3>Gate contract layer</h3>
-              <p>Run a six-case truth table through the production scorer, then inject a deliberate mutation that changes hard multipliers into weighted votes.</p>
+              <h3>Gate checker</h3>
+              <p>Run six controlled cases through the real scorer, then run a wrong version that changes hard gates into weighted scores.</p>
             </li>
             <li>
-              <h3>Evidence layer</h3>
-              <p>Reconcile counts, trace numeric output to scripts and records, block private paths, and retain <code>HUMAN_REVIEW_REQUIRED</code>.</p>
+              <h3>Evidence checker</h3>
+              <p>Check the totals, show where the numbers came from, block private files, and keep the final decision with a person.</p>
             </li>
           </ol>
         </div>
@@ -713,41 +713,41 @@
           <p class="section-index">03 / Results</p>
         </div>
         <div>
-          <h2>The test fails for the right reason</h2>
-          <p>The primary improvement is not that the happy path runs. It is that the harness detects the named failure while the production implementation passes the same contract.</p>
+          <h2>The tests catch the wrong answer</h2>
+          <p>The real scorer passes. The deliberately wrong scorer fails. That proves the tests can see the bug they were written to catch.</p>
           <div class="metrics" aria-label="Verified metrics">
-            <div class="metric"><strong>2 / 2</strong><span>Gate-as-vote mutation witnesses caught</span></div>
-            <div class="metric"><strong>40 / 40</strong><span>Production gate assertions passed</span></div>
-            <div class="metric"><strong>13 / 13</strong><span>Required résumé fields in the positive control</span></div>
-            <div class="metric"><strong>7 / 13</strong><span>Fields in the deliberate break, correctly yielding <code>FAIL</code></span></div>
+            <div class="metric"><strong>2 / 2</strong><span>Wrong gate examples caught</span></div>
+            <div class="metric"><strong>40 / 40</strong><span>Real scorer checks passed</span></div>
+            <div class="metric"><strong>13 / 13</strong><span>Fields found in the complete résumé</span></div>
+            <div class="metric"><strong>7 / 13</strong><span>Fields found in the broken résumé, giving <code>FAIL</code></span></div>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Witness</th>
-                  <th>Correct contract</th>
-                  <th>Deliberately wrong result</th>
-                  <th>Harness result</th>
+                  <th>Case</th>
+                  <th>Correct result</th>
+                  <th>Wrong result</th>
+                  <th>Test</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>Zero liveness, strong votes</td>
-                  <td>Composite <code>0</code>, <code>Skip</code></td>
+                  <td>Liveness is zero</td>
+                  <td><code>0</code>, <code>Skip</code></td>
                   <td><code>0.80</code>, <code>Apply</code></td>
-                  <td>Mutation caught</td>
+                  <td>Caught</td>
                 </tr>
                 <tr>
-                  <td>Zero timeline, strong votes</td>
-                  <td>Composite <code>0</code>, <code>Skip</code></td>
+                  <td>Timeline is zero</td>
+                  <td><code>0</code>, <code>Skip</code></td>
                   <td><code>0.85</code>, <code>Apply</code></td>
-                  <td>Mutation caught</td>
+                  <td>Caught</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p class="source-line">Source · Public machine audits and Step 3 evidence</p>
+          <p class="source-line">Source · Saved test reports and Step 3 evidence</p>
         </div>
       </div>
     </section>
@@ -758,29 +758,29 @@
           <p class="section-index">04 / Boundary</p>
         </div>
         <div>
-          <h2>Verified is smaller than plausible</h2>
-          <p>Controlled gate values are labeled local evidence. Parser identity is an external dependency record. Counts and verdicts are script output. Real-world facts the harness cannot observe remain missing.</p>
+          <h2>What the programs know</h2>
+          <p>The programs check code and saved files. They do not know whether the real world matches those inputs.</p>
           <div class="boundary">
             <article class="can">
-              <h3>The machine verifies</h3>
+              <h3>The programs check</h3>
               <ul>
                 <li>PDF.js produced a nonempty text layer.</li>
                 <li>Declared fields are present and ordered.</li>
-                <li>Production arithmetic matches the truth table.</li>
-                <li>Zero gates force composite zero and <code>Skip</code>.</li>
-                <li>The named mutation fails.</li>
-                <li>Public counts reconcile to JSON records.</li>
+                <li>The real scorer matches the controlled cases.</li>
+                <li>A zero gate produces zero and <code>Skip</code>.</li>
+                <li>The known bad version fails.</li>
+                <li>The totals match the JSON records.</li>
               </ul>
             </article>
             <article class="cannot">
-              <h3>The machine does not know</h3>
+              <h3>The programs do not know</h3>
               <ul>
-                <li>Whether a commercial ATS parses identically.</li>
-                <li>Whether résumé claims are true or persuasive.</li>
-                <li>Whether visual design is professionally effective.</li>
-                <li>Whether a live posting or visa timeline is current.</li>
-                <li>Whether scorer weights are calibrated.</li>
-                <li>Whether the candidate should apply.</li>
+                <li>Whether every commercial ATS reads the same PDF.</li>
+                <li>Whether résumé claims are true or convincing.</li>
+                <li>Whether the résumé design looks professional.</li>
+                <li>Whether a real job or visa timeline is current.</li>
+                <li>Whether the scoring weights are good.</li>
+                <li>Whether a person should apply.</li>
               </ul>
             </article>
           </div>
@@ -794,17 +794,17 @@
           <p class="section-index">05 / Failure modes</p>
         </div>
         <div>
-          <h2>Failure paths are part of the interface</h2>
+          <h2>Problems I tested</h2>
           <ul class="failure-grid">
-            <li><strong>Gate-as-vote regression</strong><span>A zero gate returns a nonzero composite or a non-<code>Skip</code> decision. The suite blocks handoff.</span></li>
-            <li><strong>Expectation drift</strong><span>A declared field no longer matches its source line. Verification stops with a contract error.</span></li>
-            <li><strong>Missing or scrambled extraction</strong><span>The audit names each absent or reordered field and exits nonzero.</span></li>
-            <li><strong>Private-data escape</strong><span>Public output from a real résumé is rejected; staged and tracked paths are scanned.</span></li>
-            <li><strong>Parser pass mistaken for quality</strong><span>Mechanical success retains a human review requirement for content and visual adequacy.</span></li>
-            <li><strong>Recipe/card drift</strong><span>The AI procedure and human operating card share one version and must change together.</span></li>
+            <li><strong>Gate becomes a score</strong><span>A zero gate returns a nonzero result or something other than <code>Skip</code>. The test fails.</span></li>
+            <li><strong>Expected data changes</strong><span>An expected field no longer matches its public source line. The program stops.</span></li>
+            <li><strong>Missing or mixed-up text</strong><span>The report names every missing or reordered field and returns a failure.</span></li>
+            <li><strong>Private data leaks</strong><span>Real résumé output cannot be written into the public report folders.</span></li>
+            <li><strong>A parser pass sounds like a quality score</strong><span>The report still tells a person to review the content and design.</span></li>
+            <li><strong>Instructions stop matching</strong><span>The AI recipe and human card share one version and must change together.</span></li>
           </ul>
           <aside class="limitation">
-            <p>A PDF.js pass is not proof that Workday, iCIMS, or another commercial ATS will parse identically. A correct gate formula is only as truthful as the liveness and timeline records supplied to it.</p>
+            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot fix bad job or visa data.</p>
           </aside>
         </div>
       </div>
@@ -816,27 +816,27 @@
           <p class="section-index">06 / Demo</p>
         </div>
         <div>
-          <h2>Run the contracts locally</h2>
-          <p>The demo uses public fixtures and produces no real résumé or application data. From the repository root on PowerShell:</p>
+          <h2>Run the tests</h2>
+          <p>The demo uses public test files and no real résumé or application data. Run these commands from the project root:</p>
           <div class="demo-grid">
             <pre class="terminal" aria-label="PowerShell demo commands">npm.cmd run test:ats-parse
 npm.cmd run test:gate-behavior
 npm.cmd run test:capstone-step3</pre>
             <aside class="demo-result">
-              <h3>Expected handoff</h3>
+              <h3>Expected results</h3>
               <ul>
                 <li>11 / 11 ATS tests</li>
                 <li>10 / 10 gate tests</li>
                 <li>4 / 4 evidence tests</li>
-                <li>Production passes</li>
-                <li>Mutation is caught</li>
+                <li>The real scorer passes</li>
+                <li>The wrong scorer is caught</li>
               </ul>
             </aside>
           </div>
           <div class="actions">
-            <a class="button" href="../../../scripts/resumes/ats-parse-test.mjs">Review ATS harness</a>
-            <a class="button button--secondary" href="../../../scripts/score/gate-behavior-core.mjs">Review gate contract</a>
-            <a class="button button--secondary" href="step3.md">Read verified-data evidence</a>
+            <a class="button" href="../../../scripts/resumes/ats-parse-test.mjs">Read ATS code</a>
+            <a class="button button--secondary" href="../../../scripts/score/gate-behavior-core.mjs">Read gate code</a>
+            <a class="button button--secondary" href="step3.md">Read Step 3 evidence</a>
           </div>
         </div>
       </div>
@@ -845,8 +845,8 @@ npm.cmd run test:capstone-step3</pre>
 
   <footer class="site-footer">
     <div class="shell site-footer__inner">
-      <p>Zening Teng · Reallocation Verification Harness</p>
-      <p>Mechanics verified. Adequacy remains a human decision.</p>
+      <p>Zening Teng · Reallocation Engine safety checks</p>
+      <p>The programs check the code. A person still makes the final decision.</p>
     </div>
   </footer>
 </body>

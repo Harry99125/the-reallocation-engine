@@ -233,3 +233,13 @@ private emails, or sensitive application notes.
 - **Regression:** ATS tests passed 11/11, gate tests passed 10/10, and Step 3 evidence-gate tests passed 4/4. The regenerated public ATS control passed 13/13 fields and 1/1 order check; the deliberate break exited 1 as required with 7/13 fields and 0/1 order check. The production gate contract passed 6/6 cases and again caught the gate-as-vote mutation.
 - **Repository gates:** targeted conformance passed for 22 contribution files; full `npm.cmd run verify` and strict doctor passed. Regenerated Step 3 evidence reported privacy PASS and honesty/provenance PASS while retaining `REQUIRED_BEFORE_STEP_4` for the human attestation.
 - **Boundary:** no recipe behavior, evidence input, private-data policy, attestation state, or claimed capability changed. Human adequacy remains pending.
+
+## 2026-08-16 -- Rewrite capstone reports in plain language
+
+- **Scope:** rewrote the existing human reports `step1.md`, `step2.md`, `step3.md`, `step5.md`, and `step6.md`, plus the text in `step6.html`. Step 4 was not created because the named-human Step 3 review is still open and no honest run has occurred.
+- **Writing change:** replaced long template-style sentences with short first-person explanations. Step 1 and Step 5 now use no tables. Step 2 uses one results table, Step 6 uses two results tables, and Step 3 keeps its three evidence tables because the assignment requires check status, field-by-field source labels, and number traces.
+- **Generator change:** simplified the Step 3 Markdown renderer and its boundary wording in `scripts/verified-data-evidence.mjs`, then regenerated `step3.md` and `step3.json`. Machine logic, evidence labels, counts, privacy rules, and the open human-attestation state did not change.
+- **Site QA:** rendered and inspected the updated Step 6 site in Chromium at 1440 × 900 light mode and 390 × 844 dark mode. The shorter copy remains readable with no observed overlap, clipping, or page-level horizontal overflow.
+- **Checks:** ATS tests passed 11/11, gate tests passed 10/10, Step 3 tests passed 4/4, and targeted conformance passed for the five Markdown reports plus the Step 3 generator.
+- **Privacy:** no private résumé text, contact information, or application data was added to any report.
+- **User filename change preserved:** while the reports were being rewritten, the active pair was renamed to `recipes/Zening-AIRecipe.md` and `recipes/Zening.Humancard.md`. Updated both files' internal pair paths, current links, and documented commands; advanced both together to version 0.10.0. Historical log entries keep the filenames that were true for those earlier runs.

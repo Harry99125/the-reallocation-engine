@@ -1,42 +1,44 @@
-# Step 1 — Contribution Selection
+# Step 1 — What I Chose
 
-## Decision
+## My choice
 
-The selected contribution is **Reallocation Verification Harness**, one unified validation contribution with two tightly scoped submodules:
+I chose to build one contribution with two parts:
 
-- Chapter 11/16 gate-behavior harness: prove that liveness and timeline are multipliers and catch the named gate-as-vote failure.
-- Chapter 13 ATS paste-test harness: extract résumé PDF/Markdown text and report deterministic field/order results.
+- An ATS résumé checker from Chapter 13.
+- A gate-behavior test from Chapters 11 and 16.
 
-This scope came from the student's explicit project choice (`your-input`). The unified packaging decision also came from the student: one recipe/card pair covers both submodules.
+I kept them together because they solve the same kind of problem. In both cases, an output can look fine while the system is actually wrong.
 
-## Why this clears the selection bar
+The ATS checker looks at the text that comes out of a PDF. The gate test checks that job liveness and visa timing stay hard gates in the scorer.
 
-| Assignment bar | Planned implementation | Boundary |
-|---|---|---|
-| Real repository contribution | Maintained scripts under lowercase `scripts/`, fixtures under `data/examples/`, audits under `reports/generated/` | No prompt-only or finding-shaped substitute |
-| Every number traces | ATS figures derive from extracted-text records; gate figures derive from a controlled truth table and production scorer output | Controlled values are `local-evidence`, not real job records |
-| Two-customer pair | One imperative AI recipe plus one human `.card.md` | Both are versioned and updated together |
-| Phase gates | Privacy, provenance, regression, positive-control, deliberate-break, conformance, and human-review handoffs | Every failure path stops the workflow |
-| Audits and logging | JSON machine audits, Markdown human reports, and `logs/RUN_LOG.md` entries | Reports do not replace underlying records |
-| Privacy | Real résumé inputs and derived artifacts remain under gitignored private paths | No personal résumé content enters this report |
-| Honest limitation | The harnesses verify mechanics, not universal ATS behavior, résumé truth, live-job truth, visa legality, or whether to apply | Missing evidence remains missing |
+## Why I chose it
 
-## Relevant chapters and sources
+This was a good size for the capstone. It was small enough to test carefully, but it fixed two gaps that the book names directly.
 
-- `chapters/11-the-bayesian-role-scorer.md`
-- `chapters/13-resumes-that-survive-the-filter.md`
-- `chapters/16-the-build-and-the-honest-run.md`
-- Capstone assignment supplied by the student
-- Repository governance: `SNICKERDOODLE.md`, `DOMAIN.md`, `_MANIFEST.md`, and `DATA_CONTRACT.md`
+It also meets the project rules:
 
-## Scope boundary
+- The work is real code under `scripts/`.
+- The tests use public sample records under `data/examples/`.
+- Every reported number comes from a saved audit or test run.
+- The workflow has an AI recipe and a human card.
+- Failed checks stop the run instead of being hidden.
+- Real résumé data stays private and out of Git.
+- The reports say what the programs cannot know.
 
-The contribution tests two dangerous seams in the engine. It does not build a new external data connector, calculate real sponsorship probabilities, give immigration advice, certify every commercial ATS, or make the final application decision.
+## Chapters used
 
-## Step status
+- Chapter 11: the role scorer and hard gates.
+- Chapter 13: résumé PDFs and ATS parsing.
+- Chapter 16: honest runs and the gate-as-vote bug.
 
-**Complete.** The student selected and retained this scope. Implementation evidence is summarized in `step2.md`.
+I also followed the repository rules in `SNICKERDOODLE.md`, `DOMAIN.md`, `_MANIFEST.md`, and `DATA_CONTRACT.md`.
 
-## Record note
+## What this contribution does not do
 
-This report was added after implementation at the student's request for one plainly named report per material capstone step. It summarizes the recorded selection; it is not presented as contemporaneous terminal output.
+It does not tell someone whether a résumé is good. It does not prove that every commercial ATS will read a PDF the same way. It does not check live sponsorship or visa records. It also does not decide whether a person should apply for a job.
+
+Those decisions still need real records and a person.
+
+## Status
+
+Step 1 is complete. The build is explained in `step2.md`.
