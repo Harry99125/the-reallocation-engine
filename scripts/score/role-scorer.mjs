@@ -23,6 +23,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 
 // ───────────────────────────────────────────────────────────────────────────
 // CONFIG — every weight/threshold carries its provenance. Defaults reproduce
@@ -30,7 +31,7 @@ import path from 'node:path';
 // chapter (its footnote flags them against the system design document); do not
 // treat them as settled — confirm before publication.
 // ───────────────────────────────────────────────────────────────────────────
-const CONFIG = {
+export const CONFIG = {
   weights: {
     sponsorship: 0.35,   // [Ch.11] stated. Profile-conditional (see applyProfile).
     fit: 0.30,           // [Ch.11] stated. Model judgment.
@@ -53,7 +54,7 @@ const SRC = { record: 'record', model: 'model-judgment', input: 'your-input' };
 // ── profile-conditional weighting (design doc: weights are a function of the
 //    profile, not constants). If the candidate doesn't need sponsorship, the
 //    sponsorship term stops being a binding constraint and its weight → 0. ──
-function applyProfile(weights, profile) {
+export function applyProfile(weights, profile) {
   const w = { ...weights };
   const auth = (profile?.authorization || '').toLowerCase();
   const needsSponsor = profile == null ? true
@@ -65,7 +66,7 @@ function applyProfile(weights, profile) {
 const num = (x) => (typeof x === 'number' && isFinite(x) ? x : null);
 const fmt = (x) => (x == null ? '—' : Number(x).toFixed(3));
 
-function scoreRole(role, weights, needsSponsor) {
+export function scoreRole(role, weights, needsSponsor) {
   // collect votes present on the record, each with value + source
   const votes = [];
   const push = (key, obj, defSrc) => {
@@ -94,7 +95,9 @@ function scoreRole(role, weights, needsSponsor) {
   let rec, reason;
   if (closedGate) {
     rec = 'Skip';
-    reason = `gated: ${closedGate.key} ≈ ${fmt(closedGate.factor)} (a closed gate zeroes the composite regardless of votes)`;
+    reason = closedGate.factor === 0
+      ? `gated: ${closedGate.key} ≈ ${fmt(closedGate.factor)} (a closed gate zeroes the composite regardless of votes)`
+      : `gated: ${closedGate.key} ≈ ${fmt(closedGate.factor)} ≤ closed-gate boundary ${CONFIG.gate_zero} (hard-stop Skip regardless of votes)`;
   } else if (composite >= CONFIG.apply_threshold) {
     const tier = (role.sponsorship?.tier || '').toLowerCase();
     const softSponsor = needsSponsor && tier && CONFIG.soft_sponsorship_tiers.includes(tier);
@@ -138,7 +141,7 @@ function scoreRole(role, weights, needsSponsor) {
   };
 }
 
-function renderMarkdown(scored, meta) {
+export function renderMarkdown(scored, meta) {
   const o = [];
   o.push(`# Role Scorer report — ${meta.when}`);
   o.push(`\n*Bayesian Role Scorer (Ch.11). Weights: sponsorship ${meta.w.sponsorship}, fit ${meta.w.fit}, role_quality ${meta.w.role_quality} [role_quality weight is **[VERIFY]** — not pinned by the chapter]. Threshold ${CONFIG.apply_threshold}. ${meta.needsSponsor ? 'Profile requires sponsorship.' : 'Profile does NOT require sponsorship → sponsorship weight 0.'}*\n`);
@@ -156,8 +159,7 @@ function renderMarkdown(scored, meta) {
   return o.join('\n') + '\n';
 }
 
-function main() {
-  const args = process.argv.slice(2);
+export function main(args = process.argv.slice(2)) {
   const src = args.find((a) => !a.startsWith('--'));
   if (!src || !fs.existsSync(src)) { console.error('Usage: role-scorer.mjs <roles.json> [--profile p.json] [--out-dir dir] [--md report.md]'); process.exit(2); }
   const pi = args.indexOf('--profile'); const profile = pi >= 0 ? JSON.parse(fs.readFileSync(args[pi + 1], 'utf8')) : null;
@@ -182,4 +184,7 @@ function main() {
   for (const s of scored) if (s.override?._warning) console.warn(`  ! ${s.company}: ${s.override._warning}`);
 }
 
-main();
+const invokedAsScript = process.argv[1]
+  && pathToFileURL(path.resolve(process.argv[1])).href === import.meta.url;
+
+if (invokedAsScript) main();

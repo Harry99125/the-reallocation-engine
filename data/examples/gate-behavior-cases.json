@@ -1,0 +1,133 @@
+{
+  "schema_version": "1.0.0",
+  "fixture_id": "ch11-ch16-gate-contract",
+  "sources": [
+    "chapters/11-the-bayesian-role-scorer.md",
+    "chapters/16-the-build-and-the-honest-run.md"
+  ],
+  "contract": "weighted votes are summed first; liveness and timeline are multipliers, and a factor of zero must produce a zero composite and Skip",
+  "cases": [
+    {
+      "id": "open-gates-control",
+      "purpose": "positive control: strong votes may Apply only when both gates are open",
+      "role": {
+        "role_id": "open-gates-control",
+        "company": "Anonymized Sample Company",
+        "title": "Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 1.0, "source": "record" },
+        "timeline": { "factor": 1.0, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.65,
+        "recommendation": "Apply",
+        "gate_product": 1.0,
+        "closed_gate": null
+      }
+    },
+    {
+      "id": "liveness-zero-high-votes",
+      "purpose": "named mutation witness: a ghost posting cannot be rescued by perfect votes",
+      "mutation_witness": true,
+      "role": {
+        "role_id": "liveness-zero-high-votes",
+        "company": "Anonymized Sample Company",
+        "title": "Ghost Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 0.0, "source": "record" },
+        "timeline": { "factor": 1.0, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.0,
+        "recommendation": "Skip",
+        "gate_product": 0.0,
+        "closed_gate": "liveness"
+      }
+    },
+    {
+      "id": "timeline-zero-high-votes",
+      "purpose": "named mutation witness: an impossible timeline cannot be rescued by perfect votes",
+      "mutation_witness": true,
+      "role": {
+        "role_id": "timeline-zero-high-votes",
+        "company": "Anonymized Sample Company",
+        "title": "Out-of-window Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 1.0, "source": "record" },
+        "timeline": { "factor": 0.0, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.0,
+        "recommendation": "Skip",
+        "gate_product": 0.0,
+        "closed_gate": "timeline"
+      }
+    },
+    {
+      "id": "both-gates-zero-high-votes",
+      "purpose": "both closed gates still produce one hard-stop outcome",
+      "role": {
+        "role_id": "both-gates-zero-high-votes",
+        "company": "Anonymized Sample Company",
+        "title": "Closed Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 0.0, "source": "record" },
+        "timeline": { "factor": 0.0, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.0,
+        "recommendation": "Skip",
+        "gate_product": 0.0,
+        "closed_gate": "liveness"
+      }
+    },
+    {
+      "id": "fractional-gates-scale",
+      "purpose": "nonzero gates scale the vote sum multiplicatively",
+      "role": {
+        "role_id": "fractional-gates-scale",
+        "company": "Anonymized Sample Company",
+        "title": "Constrained Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 0.5, "source": "record" },
+        "timeline": { "factor": 0.8, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.26,
+        "recommendation": "Consider",
+        "gate_product": 0.4,
+        "closed_gate": null
+      }
+    },
+    {
+      "id": "closed-gate-policy-boundary",
+      "purpose": "the configured closed-gate boundary is a hard stop even when its factor is not exactly zero",
+      "role": {
+        "role_id": "closed-gate-policy-boundary",
+        "company": "Anonymized Sample Company",
+        "title": "Boundary Sample Role",
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
+        "fit": { "p": 1.0, "source": "model-judgment" },
+        "role_quality": { "p": 1.0, "source": "record" },
+        "liveness": { "factor": 0.05, "source": "record" },
+        "timeline": { "factor": 1.0, "source": "your-input" }
+      },
+      "expected": {
+        "composite": 0.0325,
+        "recommendation": "Skip",
+        "gate_product": 0.05,
+        "closed_gate": "liveness"
+      }
+    }
+  ]
+}

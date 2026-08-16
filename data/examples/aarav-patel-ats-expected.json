@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0.0",
+  "document_id": "aarav-patel-cv",
+  "source_markdown": "resumes/aarav-patel-cv.md",
+  "fields": [
+    {
+      "id": "name",
+      "category": "name",
+      "expected": "Aarav Patel",
+      "match": "line",
+      "source_line": 1
+    },
+    {
+      "id": "heading-experience",
+      "category": "heading",
+      "expected": "Experience",
+      "match": "line",
+      "source_line": 5
+    },
+    {
+      "id": "title-dassault-1",
+      "category": "title",
+      "expected": "Dassault Systemes | Software Engineer",
+      "match": "line",
+      "occurrence": 1,
+      "source_line": 7
+    },
+    {
+      "id": "date-dassault-1",
+      "category": "date",
+      "expected": "Jan 2026 - May 2026",
+      "match": "line-contains",
+      "source_line": 9
+    },
+    {
+      "id": "title-dassault-2",
+      "category": "title",
+      "expected": "Dassault Systemes | Software Engineer",
+      "match": "line",
+      "occurrence": 2,
+      "source_line": 14
+    },
+    {
+      "id": "date-dassault-2",
+      "category": "date",
+      "expected": "Jan 2025 - Aug 2025",
+      "match": "line-contains",
+      "source_line": 16
+    },
+    {
+      "id": "title-infosys",
+      "category": "title",
+      "expected": "Infosys Limited | Software Engineer",
+      "match": "line",
+      "source_line": 22
+    },
+    {
+      "id": "date-infosys",
+      "category": "date",
+      "expected": "Jun 2021 - Jul 2023",
+      "match": "line-contains",
+      "source_line": 24
+    },
+    {
+      "id": "heading-skills",
+      "category": "heading",
+      "expected": "Technical Skills",
+      "match": "line",
+      "source_line": 31
+    },
+    {
+      "id": "heading-projects",
+      "category": "heading",
+      "expected": "Projects",
+      "match": "line",
+      "source_line": 40
+    },
+    {
+      "id": "heading-education",
+      "category": "heading",
+      "expected": "Education",
+      "match": "line",
+      "source_line": 56
+    },
+    {
+      "id": "date-northeastern",
+      "category": "date",
+      "expected": "Sep 2023 - Dec 2025",
+      "match": "line-contains",
+      "source_line": 60
+    },
+    {
+      "id": "date-dharmsinh",
+      "category": "date",
+      "expected": "Sep 2017 - May 2021",
+      "match": "line-contains",
+      "source_line": 64
+    }
+  ],
+  "order_checks": [
+    {
+      "id": "document-linear-order",
+      "fields": [
+        "name",
+        "heading-experience",
+        "title-dassault-1",
+        "date-dassault-1",
+        "title-dassault-2",
+        "date-dassault-2",
+        "title-infosys",
+        "date-infosys",
+        "heading-skills",
+        "heading-projects",
+        "heading-education",
+        "date-northeastern",
+        "date-dharmsinh"
+      ]
+    }
+  ]
+}

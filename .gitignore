@@ -64,6 +64,7 @@ data/BLS/db_30_2_mysql/
 !/private/.gitkeep
 # Belt-and-suspenders: keep résumé artifacts out even if dropped outside private/.
 # (data/ats/ self-manages via its own .gitignore — don't blanket-ignore it here.)
+/resumes/*.pdf
 **/*.resume.pdf
 **/resume.pdf
 resume.json

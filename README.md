@@ -20,6 +20,106 @@ The book is for international students on the clock, for the advisors and Humani
 
 This repository is one *domain* governed by **Snickerdoodle** (`SNICKERDOODLE.md`) — an agent-operating-system that treats a project as a contract between human judgment and AI execution, with named principles, hard gates cleared by a logged human, and a `DRAFT`-to-`VERIFIED` lifecycle. Start with `_MANIFEST.md` (the read-first map); `DOMAIN.md` describes what is runnable today, and `logs/RUN_LOG.md` records what has actually been run.
 
+## Capstone command reference
+
+Working rule for this capstone: every new user-facing command must be added to
+this section or its linked subsystem README before it is sent in chat. Private
+names and paths are represented with placeholders; personal data never enters
+this public README. Commands below use PowerShell-compatible `npm.cmd` because
+this Windows host blocks `npm.ps1`.
+
+Detailed module documentation:
+
+- Résumé paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
+- Gate-behavior harness: [`scripts/score/README.md`](scripts/score/README.md)
+- AI recipe: [`recipes/reallocation-verification-harness.md`](recipes/reallocation-verification-harness.md)
+- Human card: [`recipes/reallocation-verification-harness.card.md`](recipes/reallocation-verification-harness.card.md)
+
+### Inspect any résumé PDF or Markdown file
+
+```powershell
+npm.cmd run resumes:paste-test -- "resumes\<resume>.pdf"
+npm.cmd run resumes:paste-test -- "resumes\<resume>.md"
+```
+
+The default output is private:
+
+```powershell
+Get-Content "private\ats-paste-test\<resume-name>\inspection-audit.md"
+Get-Content "private\ats-paste-test\<resume-name>\paste-test.txt"
+$LASTEXITCODE
+```
+
+### Run the ATS paste-test regression suite
+
+```powershell
+npm.cmd run test:ats-parse
+```
+
+### Run evidence-backed field verification on the public sample
+
+```powershell
+npm.cmd run resumes:paste-test -- "output\resumes\aarav-patel-cv.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
+```
+
+### Run the ATS deliberate-break sample
+
+Render the intentionally incomplete public résumé and verify that the strict
+paste-test rejects it. The second command must exit `1`; that failure is the
+expected evidence.
+
+```powershell
+npm.cmd run resumes:pdf -- "data\examples\ats-paste-test-broken-render.md" ".build\ats-paste-test\broken-render.pdf"
+npm.cmd run resumes:paste-test -- ".build\ats-paste-test\broken-render.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\break-attempt"
+$LASTEXITCODE
+```
+
+### Render a Markdown résumé to PDF
+
+```powershell
+npm.cmd run resumes:pdf -- "resumes\aarav-patel-cv.md"
+```
+
+### Check the résumé harness files for conformance
+
+```powershell
+node scripts/conformance.mjs scripts/resumes data/examples/aarav-patel-ats-expected.json reports/generated/ats-paste-test package.json
+```
+
+### Run the Chapter 11/16 gate-behavior harness
+
+Generate the public machine audit and human-readable report:
+
+```powershell
+npm.cmd run gate:behavior
+Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
+$LASTEXITCODE
+```
+
+Run the regression and mutation-detection tests:
+
+```powershell
+npm.cmd run test:gate-behavior
+```
+
+Confirm that the original scorer CLI still runs after its testability refactor:
+
+```powershell
+npm.cmd run score -- "data\examples\ch11-roles.json" --out-dir ".build\gate-behavior-scorer-check" --md ".build\gate-behavior-scorer-check\role-scores.md"
+```
+
+Check the gate-harness files for conformance:
+
+```powershell
+node scripts/conformance.mjs scripts/score data/examples/gate-behavior-cases.json reports/generated/gate-behavior package.json README.md
+```
+
+### Check the complete Step 2 contribution
+
+```powershell
+node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+```
+
 ## Table of Contents
 
 ### Front matter

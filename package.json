@@ -12,6 +12,8 @@
     "build-instructions": "node scripts/build-instructions.mjs",
     "to-markdown": "node scripts/to-markdown.mjs",
     "score": "node scripts/score/role-scorer.mjs",
+    "gate:behavior": "node scripts/score/gate-behavior-harness.mjs",
+    "test:gate-behavior": "node --test scripts/score/gate-behavior.test.mjs",
     "ats:dedup": "node scripts/ats/dedup-tracker.mjs",
     "ats:liveness": "node scripts/ats/check-liveness.mjs",
     "ats:merge": "node scripts/ats/merge-tracker.mjs",
@@ -19,6 +21,8 @@
     "ats:scan": "node scripts/ats/scan.mjs",
     "ats:verify": "node scripts/ats/verify-pipeline.mjs",
     "resumes:pdf": "node scripts/resumes/generate-pdf.mjs",
+    "resumes:paste-test": "node scripts/resumes/ats-parse-test.mjs",
+    "test:ats-parse": "node --test scripts/resumes/ats-parse-test.test.mjs",
     "svg-to-png": "node scripts/svg-to-png.mjs",
     "audit:layout": "node scripts/svg-layout-audit.mjs",
     "postsvg-to-png": "node scripts/svg-layout-audit.mjs images || true"
@@ -26,6 +30,7 @@
   "dependencies": {
     "glob": "^10.0.0",
     "js-yaml": "^4.1.1",
+    "pdfjs-dist": "^6.2.108",
     "playwright": "^1.58.1",
     "sharp": "^0.33.0"
   }

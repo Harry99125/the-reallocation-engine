@@ -1,0 +1,13 @@
+Aarav Patel
+Fictional deliberate-break fixture. This render intentionally omits required
+roles and dates from the canonical resumes/aarav-patel-cv.md expectation
+record. It exists to prove that the paste-test harness fails closed.
+EXPERIENCE
+Dassault Systemes | Software Engineer
+Waltham, MA | Jan 2026 - May 2026
+TECHNICAL SKILLS
+Languages: Go, JavaScript, TypeScript
+PROJECTS
+CVE-GPT
+EDUCATION
+Northeastern University
