@@ -1,54 +1,108 @@
 {
   "schema_version": "1.0.0",
   "harness": "gate-behavior",
-  "generated": "2026-08-16T07:42:31.937Z",
+  "generated": "2026-08-16T10:12:12.207Z",
   "fixture": "data/examples/gate-behavior-cases.json",
   "sources": [
     "chapters/11-the-bayesian-role-scorer.md",
-    "chapters/16-the-build-and-the-honest-run.md"
+    "chapters/16-the-build-and-the-honest-run.md",
+    "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
   ],
-  "contract": "weighted votes are summed first; liveness and timeline are multipliers, and a factor of zero must produce a zero composite and Skip",
+  "contract": "the database-derived pre-gate value is multiplied by liveness and timeline; a contract control of zero must produce a zero composite and Skip",
+  "contract_parameters": {
+    "sponsorship_weight": {
+      "value": 0.35,
+      "source": "chapters/11-the-bayesian-role-scorer.md",
+      "status": "STORED_PROJECT_RULE_NOT_DATABASE_OBSERVATION"
+    },
+    "apply_threshold": {
+      "value": 0.3,
+      "source": "chapters/11-the-bayesian-role-scorer.md and scripts/score/role-scorer.mjs",
+      "status": "CURRENT_PROJECT_CONFIG_CHAPTER_DESCRIBES_THRESHOLD_AS_NEAR"
+    },
+    "gate_control_values": {
+      "values": [
+        0,
+        1
+      ],
+      "source": "chapters/11-the-bayesian-role-scorer.md and chapters/16-the-build-and-the-honest-run.md",
+      "status": "CONTRACT_TEST_CONTROLS_NOT_REAL_WORLD_OBSERVATIONS"
+    }
+  },
+  "database_evidence": {
+    "source": {
+      "path": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv",
+      "sha256": "b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb"
+    },
+    "scan": {
+      "data_records": 30369,
+      "columns": 20,
+      "complete_h1b_records": 1557,
+      "approval_rate_arithmetic_mismatches": 0
+    },
+    "selected_record": {
+      "selection_rule": "first complete H-1B record in stored CSV order; no company was hand-picked",
+      "data_record_number": 80,
+      "company_name": "1LIFE HEALTHCARE INC",
+      "total_approvals": 2,
+      "total_denials": 0,
+      "approval_rate_percent": 100,
+      "recomputed_approval_rate_percent": 100,
+      "normalized_approval_rate": 1,
+      "arithmetic_status": "PASS"
+    },
+    "harness_use": {
+      "status": "RECORD_DERIVED_PROXY_ONLY",
+      "scorer_field": "sponsorship.p",
+      "record_field": "Approval_Rate divided by 100",
+      "meaning": "historical H-1B petition approval-rate proxy used only to create a nonzero pre-gate score"
+    },
+    "not_implemented": {
+      "full_sponsorship_probability": "NOT_IMPLEMENTED_MISSING_LCA_RATE_COMPANY_SIZE_AND_PINNED_THRESHOLDS",
+      "real_job_liveness": "NOT_IMPLEMENTED_NO_PUBLIC_ATS_OBSERVATION_IN_DATABASE",
+      "personal_visa_timeline": "NOT_IMPLEMENTED_PRIVATE_PERSONAL_RECORD_REQUIRED",
+      "real_role_recommendation": "NOT_IMPLEMENTED_TEST_SCENARIO_IS_NOT_A_JOB_POSTING"
+    },
+    "limitations": [
+      "The stored mapped CSV does not include the raw DOL/USCIS employer rows or match metadata, so the company join remains unverified.",
+      "Historical petition approval rate is not the same thing as the Chapter 7 full sponsorship probability."
+    ]
+  },
   "machine_result": "PASS",
   "human_decision": "HUMAN_REVIEW_REQUIRED",
   "production": {
     "implementation": "production-role-scorer",
     "verdict": "PASS",
     "summary": {
-      "cases_passed": 6,
-      "cases_total": 6,
-      "checks_passed": 40,
-      "checks_total": 40
+      "cases_passed": 3,
+      "cases_total": 3,
+      "checks_passed": 19,
+      "checks_total": 19
     },
     "cases": [
       {
         "id": "open-gates-control",
-        "purpose": "positive control: strong votes may Apply only when both gates are open",
+        "purpose": "positive control: open gates preserve the database-derived pre-gate value",
         "mutation_witness": false,
         "status": "PASS",
         "expected": {
-          "composite": 0.65,
-          "recommendation": "Apply",
+          "composite": 0.35,
+          "recommendation": null,
           "gate_product": 1,
           "closed_gate": null
         },
         "observed": {
-          "composite": 0.65,
-          "recommendation": "Apply",
-          "reason": "composite 0.650 ≥ 0.3, gates healthy",
+          "composite": 0.35,
+          "recommendation": "NOT_ASSERTED_TEST_CONTROL",
+          "reason": "NOT_REPORTED_FOR_OPEN_CONTROL",
           "gate_product": 1
         },
         "checks": [
           {
             "id": "composite",
             "status": "PASS",
-            "expected": 0.65,
-            "observed": 0.65
-          },
-          {
-            "id": "recommendation",
-            "status": "PASS",
-            "expected": "Apply",
-            "observed": "Apply"
+            "expected": 0.35,
+            "observed": 0.35
           },
           {
             "id": "gate-product",
@@ -61,9 +115,7 @@
             "status": "PASS",
             "expected": "liveness and timeline absent from weighted votes",
             "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
+              "sponsorship"
             ]
           },
           {
@@ -93,8 +145,8 @@
         ]
       },
       {
-        "id": "liveness-zero-high-votes",
-        "purpose": "named mutation witness: a ghost posting cannot be rescued by perfect votes",
+        "id": "liveness-zero-database-vote",
+        "purpose": "named mutation witness: zero liveness must erase the database-derived pre-gate value",
         "mutation_witness": true,
         "status": "PASS",
         "expected": {
@@ -133,9 +185,7 @@
             "status": "PASS",
             "expected": "liveness and timeline absent from weighted votes",
             "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
+              "sponsorship"
             ]
           },
           {
@@ -171,8 +221,8 @@
         ]
       },
       {
-        "id": "timeline-zero-high-votes",
-        "purpose": "named mutation witness: an impossible timeline cannot be rescued by perfect votes",
+        "id": "timeline-zero-database-vote",
+        "purpose": "named mutation witness: zero timeline must erase the database-derived pre-gate value",
         "mutation_witness": true,
         "status": "PASS",
         "expected": {
@@ -211,9 +261,7 @@
             "status": "PASS",
             "expected": "liveness and timeline absent from weighted votes",
             "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
+              "sponsorship"
             ]
           },
           {
@@ -247,234 +295,6 @@
             "observed": "gated: timeline ≈ 0.000 (a closed gate zeroes the composite regardless of votes)"
           }
         ]
-      },
-      {
-        "id": "both-gates-zero-high-votes",
-        "purpose": "both closed gates still produce one hard-stop outcome",
-        "mutation_witness": false,
-        "status": "PASS",
-        "expected": {
-          "composite": 0,
-          "recommendation": "Skip",
-          "gate_product": 0,
-          "closed_gate": "liveness"
-        },
-        "observed": {
-          "composite": 0,
-          "recommendation": "Skip",
-          "reason": "gated: liveness ≈ 0.000 (a closed gate zeroes the composite regardless of votes)",
-          "gate_product": 0
-        },
-        "checks": [
-          {
-            "id": "composite",
-            "status": "PASS",
-            "expected": 0,
-            "observed": 0
-          },
-          {
-            "id": "recommendation",
-            "status": "PASS",
-            "expected": "Skip",
-            "observed": "Skip"
-          },
-          {
-            "id": "gate-product",
-            "status": "PASS",
-            "expected": 0,
-            "observed": 0
-          },
-          {
-            "id": "gates-stay-out-of-votes",
-            "status": "PASS",
-            "expected": "liveness and timeline absent from weighted votes",
-            "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
-            ]
-          },
-          {
-            "id": "gate-trace-shape",
-            "status": "PASS",
-            "expected": [
-              "liveness",
-              "timeline"
-            ],
-            "observed": [
-              "liveness",
-              "timeline"
-            ]
-          },
-          {
-            "id": "gate-trace-values",
-            "status": "PASS",
-            "expected": [
-              0,
-              0
-            ],
-            "observed": [
-              0,
-              0
-            ]
-          },
-          {
-            "id": "closed-gate-reason",
-            "status": "PASS",
-            "expected": "reason begins with gated: liveness",
-            "observed": "gated: liveness ≈ 0.000 (a closed gate zeroes the composite regardless of votes)"
-          }
-        ]
-      },
-      {
-        "id": "fractional-gates-scale",
-        "purpose": "nonzero gates scale the vote sum multiplicatively",
-        "mutation_witness": false,
-        "status": "PASS",
-        "expected": {
-          "composite": 0.26,
-          "recommendation": "Consider",
-          "gate_product": 0.4,
-          "closed_gate": null
-        },
-        "observed": {
-          "composite": 0.26,
-          "recommendation": "Consider",
-          "reason": "composite 0.260 in the Consider band [0.2, 0.3)",
-          "gate_product": 0.4
-        },
-        "checks": [
-          {
-            "id": "composite",
-            "status": "PASS",
-            "expected": 0.26,
-            "observed": 0.26
-          },
-          {
-            "id": "recommendation",
-            "status": "PASS",
-            "expected": "Consider",
-            "observed": "Consider"
-          },
-          {
-            "id": "gate-product",
-            "status": "PASS",
-            "expected": 0.4,
-            "observed": 0.4
-          },
-          {
-            "id": "gates-stay-out-of-votes",
-            "status": "PASS",
-            "expected": "liveness and timeline absent from weighted votes",
-            "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
-            ]
-          },
-          {
-            "id": "gate-trace-shape",
-            "status": "PASS",
-            "expected": [
-              "liveness",
-              "timeline"
-            ],
-            "observed": [
-              "liveness",
-              "timeline"
-            ]
-          },
-          {
-            "id": "gate-trace-values",
-            "status": "PASS",
-            "expected": [
-              0.5,
-              0.8
-            ],
-            "observed": [
-              0.5,
-              0.8
-            ]
-          }
-        ]
-      },
-      {
-        "id": "closed-gate-policy-boundary",
-        "purpose": "the configured closed-gate boundary is a hard stop even when its factor is not exactly zero",
-        "mutation_witness": false,
-        "status": "PASS",
-        "expected": {
-          "composite": 0.0325,
-          "recommendation": "Skip",
-          "gate_product": 0.05,
-          "closed_gate": "liveness"
-        },
-        "observed": {
-          "composite": 0.0325,
-          "recommendation": "Skip",
-          "reason": "gated: liveness ≈ 0.050 ≤ closed-gate boundary 0.05 (hard-stop Skip regardless of votes)",
-          "gate_product": 0.05
-        },
-        "checks": [
-          {
-            "id": "composite",
-            "status": "PASS",
-            "expected": 0.0325,
-            "observed": 0.0325
-          },
-          {
-            "id": "recommendation",
-            "status": "PASS",
-            "expected": "Skip",
-            "observed": "Skip"
-          },
-          {
-            "id": "gate-product",
-            "status": "PASS",
-            "expected": 0.05,
-            "observed": 0.05
-          },
-          {
-            "id": "gates-stay-out-of-votes",
-            "status": "PASS",
-            "expected": "liveness and timeline absent from weighted votes",
-            "observed": [
-              "sponsorship",
-              "fit",
-              "role_quality"
-            ]
-          },
-          {
-            "id": "gate-trace-shape",
-            "status": "PASS",
-            "expected": [
-              "liveness",
-              "timeline"
-            ],
-            "observed": [
-              "liveness",
-              "timeline"
-            ]
-          },
-          {
-            "id": "gate-trace-values",
-            "status": "PASS",
-            "expected": [
-              0.05,
-              1
-            ],
-            "observed": [
-              0.05,
-              1
-            ]
-          },
-          {
-            "id": "closed-gate-reason",
-            "status": "PASS",
-            "expected": "reason begins with gated: liveness",
-            "observed": "gated: liveness ≈ 0.050 ≤ closed-gate boundary 0.05 (hard-stop Skip regardless of votes)"
-          }
-        ]
       }
     ]
   },
@@ -485,7 +305,7 @@
     "detection": "PASS",
     "witnesses": [
       {
-        "id": "liveness-zero-high-votes",
+        "id": "liveness-zero-database-vote",
         "mutation_status": "FAIL",
         "expected": {
           "composite": 0,
@@ -494,9 +314,9 @@
           "closed_gate": "liveness"
         },
         "mutation_observed": {
-          "composite": 0.8,
+          "composite": 1.35,
           "recommendation": "Apply",
-          "reason": "mutated formula: liveness and timeline counted as weighted votes (0.800)",
+          "reason": "mutated formula: liveness and timeline counted as weighted votes (1.350)",
           "gate_product": null
         },
         "failed_checks": [
@@ -510,7 +330,7 @@
         ]
       },
       {
-        "id": "timeline-zero-high-votes",
+        "id": "timeline-zero-database-vote",
         "mutation_status": "FAIL",
         "expected": {
           "composite": 0,
@@ -519,9 +339,9 @@
           "closed_gate": "timeline"
         },
         "mutation_observed": {
-          "composite": 0.85,
+          "composite": 1.35,
           "recommendation": "Apply",
-          "reason": "mutated formula: liveness and timeline counted as weighted votes (0.850)",
+          "reason": "mutated formula: liveness and timeline counted as weighted votes (1.350)",
           "gate_product": null
         },
         "failed_checks": [
@@ -540,40 +360,34 @@
       "verdict": "FAIL",
       "summary": {
         "cases_passed": 0,
-        "cases_total": 6,
-        "checks_passed": 1,
-        "checks_total": 40
+        "cases_total": 3,
+        "checks_passed": 0,
+        "checks_total": 19
       },
       "cases": [
         {
           "id": "open-gates-control",
-          "purpose": "positive control: strong votes may Apply only when both gates are open",
+          "purpose": "positive control: open gates preserve the database-derived pre-gate value",
           "mutation_witness": false,
           "status": "FAIL",
           "expected": {
-            "composite": 0.65,
-            "recommendation": "Apply",
+            "composite": 0.35,
+            "recommendation": null,
             "gate_product": 1,
             "closed_gate": null
           },
           "observed": {
-            "composite": 1,
-            "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (1.000)",
+            "composite": 2.35,
+            "recommendation": "NOT_ASSERTED_TEST_CONTROL",
+            "reason": "NOT_REPORTED_FOR_OPEN_CONTROL",
             "gate_product": null
           },
           "checks": [
             {
               "id": "composite",
               "status": "FAIL",
-              "expected": 0.65,
-              "observed": 1
-            },
-            {
-              "id": "recommendation",
-              "status": "PASS",
-              "expected": "Apply",
-              "observed": "Apply"
+              "expected": 0.35,
+              "observed": 2.35
             },
             {
               "id": "gate-product",
@@ -614,8 +428,8 @@
           ]
         },
         {
-          "id": "liveness-zero-high-votes",
-          "purpose": "named mutation witness: a ghost posting cannot be rescued by perfect votes",
+          "id": "liveness-zero-database-vote",
+          "purpose": "named mutation witness: zero liveness must erase the database-derived pre-gate value",
           "mutation_witness": true,
           "status": "FAIL",
           "expected": {
@@ -625,9 +439,9 @@
             "closed_gate": "liveness"
           },
           "observed": {
-            "composite": 0.8,
+            "composite": 1.35,
             "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (0.800)",
+            "reason": "mutated formula: liveness and timeline counted as weighted votes (1.350)",
             "gate_product": null
           },
           "checks": [
@@ -635,7 +449,7 @@
               "id": "composite",
               "status": "FAIL",
               "expected": 0,
-              "observed": 0.8
+              "observed": 1.35
             },
             {
               "id": "recommendation",
@@ -683,13 +497,13 @@
               "id": "closed-gate-reason",
               "status": "FAIL",
               "expected": "reason begins with gated: liveness",
-              "observed": "mutated formula: liveness and timeline counted as weighted votes (0.800)"
+              "observed": "mutated formula: liveness and timeline counted as weighted votes (1.350)"
             }
           ]
         },
         {
-          "id": "timeline-zero-high-votes",
-          "purpose": "named mutation witness: an impossible timeline cannot be rescued by perfect votes",
+          "id": "timeline-zero-database-vote",
+          "purpose": "named mutation witness: zero timeline must erase the database-derived pre-gate value",
           "mutation_witness": true,
           "status": "FAIL",
           "expected": {
@@ -699,9 +513,9 @@
             "closed_gate": "timeline"
           },
           "observed": {
-            "composite": 0.85,
+            "composite": 1.35,
             "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (0.850)",
+            "reason": "mutated formula: liveness and timeline counted as weighted votes (1.350)",
             "gate_product": null
           },
           "checks": [
@@ -709,7 +523,7 @@
               "id": "composite",
               "status": "FAIL",
               "expected": 0,
-              "observed": 0.85
+              "observed": 1.35
             },
             {
               "id": "recommendation",
@@ -757,223 +571,7 @@
               "id": "closed-gate-reason",
               "status": "FAIL",
               "expected": "reason begins with gated: timeline",
-              "observed": "mutated formula: liveness and timeline counted as weighted votes (0.850)"
-            }
-          ]
-        },
-        {
-          "id": "both-gates-zero-high-votes",
-          "purpose": "both closed gates still produce one hard-stop outcome",
-          "mutation_witness": false,
-          "status": "FAIL",
-          "expected": {
-            "composite": 0,
-            "recommendation": "Skip",
-            "gate_product": 0,
-            "closed_gate": "liveness"
-          },
-          "observed": {
-            "composite": 0.65,
-            "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (0.650)",
-            "gate_product": null
-          },
-          "checks": [
-            {
-              "id": "composite",
-              "status": "FAIL",
-              "expected": 0,
-              "observed": 0.65
-            },
-            {
-              "id": "recommendation",
-              "status": "FAIL",
-              "expected": "Skip",
-              "observed": "Apply"
-            },
-            {
-              "id": "gate-product",
-              "status": "FAIL",
-              "expected": 0,
-              "observed": null
-            },
-            {
-              "id": "gates-stay-out-of-votes",
-              "status": "FAIL",
-              "expected": "liveness and timeline absent from weighted votes",
-              "observed": [
-                "sponsorship",
-                "fit",
-                "role_quality",
-                "liveness",
-                "timeline"
-              ]
-            },
-            {
-              "id": "gate-trace-shape",
-              "status": "FAIL",
-              "expected": [
-                "liveness",
-                "timeline"
-              ],
-              "observed": []
-            },
-            {
-              "id": "gate-trace-values",
-              "status": "FAIL",
-              "expected": [
-                0,
-                0
-              ],
-              "observed": []
-            },
-            {
-              "id": "closed-gate-reason",
-              "status": "FAIL",
-              "expected": "reason begins with gated: liveness",
-              "observed": "mutated formula: liveness and timeline counted as weighted votes (0.650)"
-            }
-          ]
-        },
-        {
-          "id": "fractional-gates-scale",
-          "purpose": "nonzero gates scale the vote sum multiplicatively",
-          "mutation_witness": false,
-          "status": "FAIL",
-          "expected": {
-            "composite": 0.26,
-            "recommendation": "Consider",
-            "gate_product": 0.4,
-            "closed_gate": null
-          },
-          "observed": {
-            "composite": 0.87,
-            "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (0.870)",
-            "gate_product": null
-          },
-          "checks": [
-            {
-              "id": "composite",
-              "status": "FAIL",
-              "expected": 0.26,
-              "observed": 0.87
-            },
-            {
-              "id": "recommendation",
-              "status": "FAIL",
-              "expected": "Consider",
-              "observed": "Apply"
-            },
-            {
-              "id": "gate-product",
-              "status": "FAIL",
-              "expected": 0.4,
-              "observed": null
-            },
-            {
-              "id": "gates-stay-out-of-votes",
-              "status": "FAIL",
-              "expected": "liveness and timeline absent from weighted votes",
-              "observed": [
-                "sponsorship",
-                "fit",
-                "role_quality",
-                "liveness",
-                "timeline"
-              ]
-            },
-            {
-              "id": "gate-trace-shape",
-              "status": "FAIL",
-              "expected": [
-                "liveness",
-                "timeline"
-              ],
-              "observed": []
-            },
-            {
-              "id": "gate-trace-values",
-              "status": "FAIL",
-              "expected": [
-                0.5,
-                0.8
-              ],
-              "observed": []
-            }
-          ]
-        },
-        {
-          "id": "closed-gate-policy-boundary",
-          "purpose": "the configured closed-gate boundary is a hard stop even when its factor is not exactly zero",
-          "mutation_witness": false,
-          "status": "FAIL",
-          "expected": {
-            "composite": 0.0325,
-            "recommendation": "Skip",
-            "gate_product": 0.05,
-            "closed_gate": "liveness"
-          },
-          "observed": {
-            "composite": 0.81,
-            "recommendation": "Apply",
-            "reason": "mutated formula: liveness and timeline counted as weighted votes (0.810)",
-            "gate_product": null
-          },
-          "checks": [
-            {
-              "id": "composite",
-              "status": "FAIL",
-              "expected": 0.0325,
-              "observed": 0.81
-            },
-            {
-              "id": "recommendation",
-              "status": "FAIL",
-              "expected": "Skip",
-              "observed": "Apply"
-            },
-            {
-              "id": "gate-product",
-              "status": "FAIL",
-              "expected": 0.05,
-              "observed": null
-            },
-            {
-              "id": "gates-stay-out-of-votes",
-              "status": "FAIL",
-              "expected": "liveness and timeline absent from weighted votes",
-              "observed": [
-                "sponsorship",
-                "fit",
-                "role_quality",
-                "liveness",
-                "timeline"
-              ]
-            },
-            {
-              "id": "gate-trace-shape",
-              "status": "FAIL",
-              "expected": [
-                "liveness",
-                "timeline"
-              ],
-              "observed": []
-            },
-            {
-              "id": "gate-trace-values",
-              "status": "FAIL",
-              "expected": [
-                0.05,
-                1
-              ],
-              "observed": []
-            },
-            {
-              "id": "closed-gate-reason",
-              "status": "FAIL",
-              "expected": "reason begins with gated: liveness",
-              "observed": "mutated formula: liveness and timeline counted as weighted votes (0.810)"
+              "observed": "mutated formula: liveness and timeline counted as weighted votes (1.350)"
             }
           ]
         }

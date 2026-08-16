@@ -18,7 +18,8 @@ This was a good size for the capstone. It was small enough to test carefully, bu
 It also meets the project rules:
 
 - The work is real code under `scripts/`.
-- The tests use public sample records under `data/examples/`.
+- The ATS test uses a public sample under `data/examples/`.
+- The gate test reads the stored H-1B database instead of using a hand-written company score.
 - Every reported number comes from a saved audit or test run.
 - The workflow has an AI recipe and a human card.
 - Failed checks stop the run instead of being hidden.
@@ -35,7 +36,7 @@ I also followed the repository rules in `SNICKERDOODLE.md`, `DOMAIN.md`, `_MANIF
 
 ## What this contribution does not do
 
-It does not tell someone whether a résumé is good. It does not prove that every commercial ATS will read a PDF the same way. It does not check live sponsorship or visa records. It also does not decide whether a person should apply for a job.
+It does not tell someone whether a résumé is good. It does not prove that every commercial ATS will read a PDF the same way. The database has historical H-1B approval records, but it does not have enough verified fields to calculate the full sponsorship probability. It also does not contain a current job-liveness record or a person's visa timeline. The missing results stay `NOT IMPLEMENTED`.
 
 Those decisions still need real records and a person.
 

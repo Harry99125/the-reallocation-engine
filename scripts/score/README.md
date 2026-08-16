@@ -14,11 +14,17 @@ a deliberately broken gate-as-vote mutation.
 
 ## Run the gate handoff
 
-```bash
-npm run gate:behavior
+```powershell
+npm.cmd run gate:behavior
 ```
 
-The command writes two public, anonymized artifacts:
+By default, the harness reads
+`data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv`. It selects the first
+complete H-1B record in stored file order, checks the saved approval rate
+against approvals and denials, and uses the normalized historical rate only to
+create a nonzero pre-gate value. It does not invent a company score.
+
+The command writes two public artifacts:
 
 - `reports/generated/gate-behavior/gate-behavior-audit.json` for machines.
 - `reports/generated/gate-behavior/gate-behavior-audit.md` for people.
@@ -29,24 +35,25 @@ means the fixture could not be read, validated, or written.
 
 ## Run the regression suite
 
-```bash
-npm run test:gate-behavior
+```powershell
+npm.cmd run test:gate-behavior
 ```
 
 The independent fixture in `data/examples/gate-behavior-cases.json` covers:
 
 | Case | Expected behavior |
 |---|---|
-| Both gates open | The composite retains the weighted vote sum. |
-| Liveness zero, perfect votes | Composite `0`; machine recommendation `Skip`. |
-| Timeline zero, perfect votes | Composite `0`; machine recommendation `Skip`. |
-| Both gates zero | Composite `0`; machine recommendation `Skip`. |
-| Fractional gates | The gate factors multiply the vote sum. |
-| Closed-gate policy boundary | The scorer hard-stops at the configured boundary. |
+| Both gates open | The composite retains the database-derived pre-gate value. |
+| Liveness zero | Composite `0`; machine recommendation `Skip`. |
+| Timeline zero | Composite `0`; machine recommendation `Skip`. |
 
-The two zero-gate cases are mutation witnesses: under the deliberately broken
-formula, their strong votes incorrectly rescue them to `Apply`. The harness must
-report those witnesses as caught or the overall machine result fails.
+The two zero-gate cases are mutation witnesses. The deliberately broken formula
+adds the gates like votes, so each closed-gate case incorrectly remains nonzero.
+The harness must reject both witnesses or the overall machine result fails.
+
+The gate values `0` and `1` come from the Chapter 11/16 test contract. They are
+test controls, not claims that a real posting is open or that a real person's
+visa timeline works.
 
 ## Check the original scorer command
 
@@ -54,14 +61,15 @@ The harness imports the scorer's pure function. This smoke check confirms the
 existing CLI remains runnable after that testability refactor while keeping its
 temporary output out of the tracked reports:
 
-```bash
-npm run score -- data/examples/ch11-roles.json --out-dir .build/gate-behavior-scorer-check --md .build/gate-behavior-scorer-check/role-scores.md
+```powershell
+npm.cmd run score -- "data\examples\ch11-roles.json" --out-dir ".build\gate-behavior-scorer-check" --md ".build\gate-behavior-scorer-check\role-scores.md"
 ```
 
 ## Scope boundary
 
-This harness proves the scorer's mechanics. It cannot prove that an upstream
-posting-liveness observation is current or that a person's timeline factor is
-correct. Those inputs and the final go/no-go decision still require human
-review; the report therefore keeps `HUMAN_REVIEW_REQUIRED` even after all
+This harness proves the scorer's mechanics. The stored CSV has historical H-1B
+fields, but it does not provide a complete Chapter 7 sponsorship probability,
+a public ATS observation, or a personal visa timeline. Those outputs are marked
+`NOT_IMPLEMENTED`. The stored entity join also lacks raw match evidence, so it
+remains unverified. The report keeps `HUMAN_REVIEW_REQUIRED` even after all
 machine checks pass.

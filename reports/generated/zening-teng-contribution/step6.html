@@ -661,7 +661,7 @@
         <div>
           <p class="eyebrow">Software engineering case study</p>
           <h1>Two safety checks for a job-search tool</h1>
-          <p class="lede">I built a résumé PDF checker and a test that keeps two important scoring gates from turning into normal weighted scores.</p>
+          <p class="lede">I built a résumé PDF checker and a database-backed test that keeps two important scoring gates from turning into normal scores.</p>
           <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Automated testing</p>
         </div>
         <aside class="metric-hero" aria-label="Primary result">
@@ -700,14 +700,14 @@
             </li>
             <li>
               <h3>Gate checker</h3>
-              <p>Run six controlled cases through the real scorer, then run a wrong version that changes hard gates into weighted scores.</p>
+              <p>Read and check a stored H-1B record, run three Chapter gate cases through the real scorer, then run a wrong version that adds hard gates like scores.</p>
             </li>
             <li>
               <h3>Evidence checker</h3>
               <p>Check the totals, show where the numbers came from, block private files, and keep the final decision with a person.</p>
             </li>
           </ol>
-          <p>After the Step 3 review, I ran the résumé checker on the approved real résumé. Its content and results stayed private. The public résumé on this page is only a repeatable code fixture, not the real input.</p>
+          <p>The real résumé run stayed private. After Zening Teng approved recipe 0.12.0 and the current database hash, I reran the database-backed gate harness and both public ATS cases. Step 4 records that post-approval run.</p>
         </div>
       </div>
     </section>
@@ -722,7 +722,7 @@
           <p>The real scorer passes. The deliberately wrong scorer fails. That proves the tests can see the bug they were written to catch.</p>
           <div class="metrics" aria-label="Verified metrics">
             <div class="metric"><strong>2 / 2</strong><span>Wrong gate examples caught</span></div>
-            <div class="metric"><strong>40 / 40</strong><span>Real scorer checks passed</span></div>
+            <div class="metric"><strong>19 / 19</strong><span>Real scorer checks passed</span></div>
             <div class="metric"><strong>13 / 13</strong><span>Fields found in the complete résumé</span></div>
             <div class="metric"><strong>7 / 13</strong><span>Fields found in the broken résumé, giving <code>FAIL</code></span></div>
           </div>
@@ -740,19 +740,20 @@
                 <tr>
                   <td>Liveness is zero</td>
                   <td><code>0</code>, <code>Skip</code></td>
-                  <td><code>0.80</code>, <code>Apply</code></td>
+                  <td><code>1.35</code>, <code>Apply</code></td>
                   <td>Caught</td>
                 </tr>
                 <tr>
                   <td>Timeline is zero</td>
                   <td><code>0</code>, <code>Skip</code></td>
-                  <td><code>0.85</code>, <code>Apply</code></td>
+                  <td><code>1.35</code>, <code>Apply</code></td>
                   <td>Caught</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p class="source-line">Source · Saved test reports, Step 3 evidence, and Step 4 honest run</p>
+          <p>The gate run read 30,369 stored rows and found 1,557 complete H-1B records with 0 approval-rate arithmetic mismatches. These are fresh script counts. The historical rate is only a mechanical proxy, not a full sponsorship probability.</p>
+          <p class="source-line">Source · Stored SEC/H-1B CSV, saved test reports, Step 3 evidence, and Step 4 honest run</p>
         </div>
       </div>
     </section>
@@ -771,7 +772,8 @@
               <ul>
                 <li>PDF.js produced a nonempty text layer.</li>
                 <li>Declared fields are present and ordered.</li>
-                <li>The real scorer matches the controlled cases.</li>
+                <li>The stored H-1B rate matches approvals and denials.</li>
+                <li>The real scorer matches the database-backed gate cases.</li>
                 <li>A zero gate produces zero and <code>Skip</code>.</li>
                 <li>The known bad version fails.</li>
                 <li>The totals match the JSON records.</li>
@@ -784,6 +786,8 @@
                 <li>Whether résumé claims are true or convincing.</li>
                 <li>Whether the résumé design looks professional.</li>
                 <li>Whether a real job or visa timeline is current.</li>
+                <li>Whether the mapped company join is correct.</li>
+                <li>The full sponsorship probability.</li>
                 <li>Whether the scoring weights are good.</li>
                 <li>Whether a person should apply.</li>
               </ul>
@@ -807,9 +811,10 @@
             <li><strong>Private data leaks</strong><span>Real résumé output cannot be written into the public report folders.</span></li>
             <li><strong>A parser pass sounds like a quality score</strong><span>The report still tells a person to review the content and design.</span></li>
             <li><strong>Instructions stop matching</strong><span>The AI recipe and human card share one version and must change together.</span></li>
+            <li><strong>Database evidence drifts</strong><span>A changed file hash or approval-rate mismatch stops the evidence check.</span></li>
           </ul>
           <aside class="limitation">
-            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot fix bad job or visa data.</p>
+            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot verify the stored company join, create the missing sponsorship inputs, or fix bad job and visa data. Missing results stay NOT IMPLEMENTED.</p>
           </aside>
         </div>
       </div>

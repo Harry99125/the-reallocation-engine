@@ -1,41 +1,58 @@
 # Gate Behavior Harness — Chapter 11 / Chapter 16
 
-- Generated: 2026-08-16T07:42:31.937Z
-- Machine handoff result: **PASS**
-- Human decision: **HUMAN_REVIEW_REQUIRED**
-- Production cases: 6/6 passed
-- Production assertions: 40/40 passed
-- Deliberate gate-as-vote mutation detected: **PASS**
+Generated: 2026-08-16T10:12:12.207Z
+
+Machine handoff result: **PASS**. Human decision: **HUMAN_REVIEW_REQUIRED**.
+
+The production scorer passed 3 of 3 cases and 19 of 19 assertions. The deliberate gate-as-vote bug was **CAUGHT**.
+
+## Database record used
+
+Source: `data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv`
+
+SHA-256: `b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb`
+
+The script read 30369 stored rows and 20 columns. It found 1557 complete H-1B records and 0 approval-rate arithmetic mismatches.
+
+It used stored record 80: **1LIFE HEALTHCARE INC**. The record says 2 approvals, 0 denials, and an approval rate of 100.0000%. Recomputing approvals divided by total petitions gives 100.0000%, so the arithmetic check is **PASS**.
+
+Selection rule: first complete H-1B record in stored CSV order; no company was hand-picked.
+
+**Important:** the normalized historical approval rate is used only as a nonzero, database-derived proxy for this mechanical gate test. It is not the complete Chapter 7 sponsorship probability and it is not a recommendation about this company.
 
 ## Executable contract
 
 `composite = (sum of weighted votes) × liveness × timeline`
 
-Liveness and timeline remain outside the vote list. An exact zero in either gate must produce composite `0` and machine recommendation `Skip`, even with perfect sponsorship and fit.
+The 0 and 1 gate values are Chapter 11/16 contract controls, not claims about a live job or a real visa timeline. A zero in either gate must produce composite `0` and `Skip`.
+
+The sponsorship coefficient 0.35 and current production Apply threshold 0.3 come from the Chapter 11 project rule and scorer configuration. They are algorithm settings, not database observations or new calibration findings.
 
 ## Production scorer results
 
-| Case | Liveness × timeline behavior | Expected | Observed | Result |
-|---|---|---|---|---|
-| open-gates-control | positive control: strong votes may Apply only when both gates are open | 0.6500 / Apply | 0.6500 / Apply | **PASS** |
-| liveness-zero-high-votes | named mutation witness: a ghost posting cannot be rescued by perfect votes | 0.0000 / Skip | 0.0000 / Skip | **PASS** |
-| timeline-zero-high-votes | named mutation witness: an impossible timeline cannot be rescued by perfect votes | 0.0000 / Skip | 0.0000 / Skip | **PASS** |
-| both-gates-zero-high-votes | both closed gates still produce one hard-stop outcome | 0.0000 / Skip | 0.0000 / Skip | **PASS** |
-| fractional-gates-scale | nonzero gates scale the vote sum multiplicatively | 0.2600 / Consider | 0.2600 / Consider | **PASS** |
-| closed-gate-policy-boundary | the configured closed-gate boundary is a hard stop even when its factor is not exactly zero | 0.0325 / Skip | 0.0325 / Skip | **PASS** |
+- **open-gates-control: PASS.** positive control: open gates preserve the database-derived pre-gate value Expected 0.3500 / not asserted for the open control; observed 0.3500 / NOT_ASSERTED_TEST_CONTROL.
+
+- **liveness-zero-database-vote: PASS.** named mutation witness: zero liveness must erase the database-derived pre-gate value Expected 0.0000 / Skip; observed 0.0000 / Skip.
+
+- **timeline-zero-database-vote: PASS.** named mutation witness: zero timeline must erase the database-derived pre-gate value Expected 0.0000 / Skip; observed 0.0000 / Skip.
 
 ## Deliberate break: gate-as-vote
 
-The sentinel implementation intentionally adds liveness and timeline as weighted terms. The two high-vote witnesses below would receive a plausible-looking Apply if that named capstone bug reached production.
+The sentinel is intentionally wrong. It adds the two contract gates as votes instead of multiplying by them. These are test outputs, not real role scores.
 
-| Witness | Contract expected | Mutated result | Failed assertions | Detection |
-|---|---|---|---|---|
-| liveness-zero-high-votes | 0.0000 / Skip | 0.8000 / Apply | composite, recommendation, gate-product, gates-stay-out-of-votes, gate-trace-shape, gate-trace-values, closed-gate-reason | **CAUGHT** |
-| timeline-zero-high-votes | 0.0000 / Skip | 0.8500 / Apply | composite, recommendation, gate-product, gates-stay-out-of-votes, gate-trace-shape, gate-trace-values, closed-gate-reason | **CAUGHT** |
+- **liveness-zero-database-vote: CAUGHT.** Contract expected 0.0000 / Skip; broken code returned 1.3500 / Apply. Failed checks: composite, recommendation, gate-product, gates-stay-out-of-votes, gate-trace-shape, gate-trace-values, closed-gate-reason.
 
-## Evidence and limits
+- **timeline-zero-database-vote: CAUGHT.** Contract expected 0.0000 / Skip; broken code returned 1.3500 / Apply. Failed checks: composite, recommendation, gate-product, gates-stay-out-of-votes, gate-trace-shape, gate-trace-values, closed-gate-reason.
 
-- Fixture: `data/examples/gate-behavior-cases.json`
-- Contract sources: `chapters/11-the-bayesian-role-scorer.md` and `chapters/16-the-build-and-the-honest-run.md`.
-- This harness verifies scorer mechanics. It does not establish whether an upstream liveness observation or a personal timeline factor is true.
-- Weight calibration and the final go/no-go decision remain human judgments.
+## Not implemented
+
+- Full sponsorship probability: **NOT_IMPLEMENTED_MISSING_LCA_RATE_COMPANY_SIZE_AND_PINNED_THRESHOLDS**.
+- Real job liveness: **NOT_IMPLEMENTED_NO_PUBLIC_ATS_OBSERVATION_IN_DATABASE**.
+- Personal visa timeline: **NOT_IMPLEMENTED_PRIVATE_PERSONAL_RECORD_REQUIRED**.
+- Real role recommendation: **NOT_IMPLEMENTED_TEST_SCENARIO_IS_NOT_A_JOB_POSTING**.
+
+## Limits
+
+- The stored mapped CSV does not include the raw DOL/USCIS employer rows or match metadata, so the company join remains unverified.
+- Historical petition approval rate is not the same thing as the Chapter 7 full sponsorship probability.
+- The harness proves scorer mechanics only. A person still owns the final adequacy decision.

@@ -1,133 +1,42 @@
 {
-  "schema_version": "1.0.0",
+  "schema_version": "2.0.0",
   "fixture_id": "ch11-ch16-gate-contract",
   "sources": [
     "chapters/11-the-bayesian-role-scorer.md",
-    "chapters/16-the-build-and-the-honest-run.md"
+    "chapters/16-the-build-and-the-honest-run.md",
+    "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
   ],
-  "contract": "weighted votes are summed first; liveness and timeline are multipliers, and a factor of zero must produce a zero composite and Skip",
+  "contract": "the database-derived pre-gate value is multiplied by liveness and timeline; a contract control of zero must produce a zero composite and Skip",
+  "data_rule": "the harness reads the first complete H-1B record in stored CSV order; this file does not contain a hand-written company score",
   "cases": [
     {
       "id": "open-gates-control",
-      "purpose": "positive control: strong votes may Apply only when both gates are open",
-      "role": {
-        "role_id": "open-gates-control",
-        "company": "Anonymized Sample Company",
-        "title": "Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 1.0, "source": "local-evidence" },
-        "timeline": { "factor": 1.0, "source": "local-evidence" }
+      "purpose": "positive control: open gates preserve the database-derived pre-gate value",
+      "contract_gates": {
+        "liveness": 1,
+        "timeline": 1
       },
-      "expected": {
-        "composite": 0.65,
-        "recommendation": "Apply",
-        "gate_product": 1.0,
-        "closed_gate": null
-      }
+      "expected_closed_gate": null
     },
     {
-      "id": "liveness-zero-high-votes",
-      "purpose": "named mutation witness: a ghost posting cannot be rescued by perfect votes",
+      "id": "liveness-zero-database-vote",
+      "purpose": "named mutation witness: zero liveness must erase the database-derived pre-gate value",
       "mutation_witness": true,
-      "role": {
-        "role_id": "liveness-zero-high-votes",
-        "company": "Anonymized Sample Company",
-        "title": "Ghost Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 0.0, "source": "local-evidence" },
-        "timeline": { "factor": 1.0, "source": "local-evidence" }
+      "contract_gates": {
+        "liveness": 0,
+        "timeline": 1
       },
-      "expected": {
-        "composite": 0.0,
-        "recommendation": "Skip",
-        "gate_product": 0.0,
-        "closed_gate": "liveness"
-      }
+      "expected_closed_gate": "liveness"
     },
     {
-      "id": "timeline-zero-high-votes",
-      "purpose": "named mutation witness: an impossible timeline cannot be rescued by perfect votes",
+      "id": "timeline-zero-database-vote",
+      "purpose": "named mutation witness: zero timeline must erase the database-derived pre-gate value",
       "mutation_witness": true,
-      "role": {
-        "role_id": "timeline-zero-high-votes",
-        "company": "Anonymized Sample Company",
-        "title": "Out-of-window Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 1.0, "source": "local-evidence" },
-        "timeline": { "factor": 0.0, "source": "local-evidence" }
+      "contract_gates": {
+        "liveness": 1,
+        "timeline": 0
       },
-      "expected": {
-        "composite": 0.0,
-        "recommendation": "Skip",
-        "gate_product": 0.0,
-        "closed_gate": "timeline"
-      }
-    },
-    {
-      "id": "both-gates-zero-high-votes",
-      "purpose": "both closed gates still produce one hard-stop outcome",
-      "role": {
-        "role_id": "both-gates-zero-high-votes",
-        "company": "Anonymized Sample Company",
-        "title": "Closed Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 0.0, "source": "local-evidence" },
-        "timeline": { "factor": 0.0, "source": "local-evidence" }
-      },
-      "expected": {
-        "composite": 0.0,
-        "recommendation": "Skip",
-        "gate_product": 0.0,
-        "closed_gate": "liveness"
-      }
-    },
-    {
-      "id": "fractional-gates-scale",
-      "purpose": "nonzero gates scale the vote sum multiplicatively",
-      "role": {
-        "role_id": "fractional-gates-scale",
-        "company": "Anonymized Sample Company",
-        "title": "Constrained Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 0.5, "source": "local-evidence" },
-        "timeline": { "factor": 0.8, "source": "local-evidence" }
-      },
-      "expected": {
-        "composite": 0.26,
-        "recommendation": "Consider",
-        "gate_product": 0.4,
-        "closed_gate": null
-      }
-    },
-    {
-      "id": "closed-gate-policy-boundary",
-      "purpose": "the configured closed-gate boundary is a hard stop even when its factor is not exactly zero",
-      "role": {
-        "role_id": "closed-gate-policy-boundary",
-        "company": "Anonymized Sample Company",
-        "title": "Boundary Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
-        "fit": { "p": 1.0, "source": "local-evidence" },
-        "role_quality": { "p": 1.0, "source": "local-evidence" },
-        "liveness": { "factor": 0.05, "source": "local-evidence" },
-        "timeline": { "factor": 1.0, "source": "local-evidence" }
-      },
-      "expected": {
-        "composite": 0.0325,
-        "recommendation": "Skip",
-        "gate_product": 0.05,
-        "closed_gate": "liveness"
-      }
+      "expected_closed_gate": "timeline"
     }
   ]
 }

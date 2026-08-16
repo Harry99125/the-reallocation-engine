@@ -1,11 +1,11 @@
 ---
 status: RUNNABLE-SAMPLE
 todos_open: 0
-last_gate: "step4-honest-run, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
+last_gate: "step4-honest-run-v0.12.0, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
 attestation: null
-recipe_version: 0.11.0
+recipe_version: 0.12.0
 pair: recipes/Zening-AIRecipe.md
-pair_version: 0.11.0
+pair_version: 0.12.1
 type: human-card
 ---
 
@@ -25,6 +25,7 @@ It is a validation contribution, not an end-to-end job-scoring system.
 - Exact-zero liveness or timeline forces the production composite to zero and machine recommendation to `Skip`.
 - Liveness and timeline are recorded as gates rather than weighted votes.
 - The test suite rejects the deliberate gate-as-vote implementation.
+- The gate input came from the stored H-1B CSV, its file hash is recorded, and the selected approval rate matches approvals divided by total petitions.
 
 ## What It Cannot Verify
 
@@ -33,6 +34,7 @@ It is a validation contribution, not an end-to-end job-scoring system.
 - Whether a visually attractive résumé is persuasive or ready to submit.
 - Whether an upstream liveness observation is current or a timeline input is legally correct.
 - Whether sponsorship, fit, role quality, or the configured weights are valid for a real role.
+- The full Chapter 7 sponsorship probability. The CSV lacks required inputs and the stored company join lacks raw match evidence.
 - Whether a person should apply. That remains a human decision.
 
 ## Dependencies
@@ -46,6 +48,8 @@ It is a validation contribution, not an end-to-end job-scoring system.
 | `data/examples/aarav-patel-ats-expected.json` | Independent, source-line-traced strict expectation record. |
 | `data/examples/ats-paste-test-broken-render.md` | Public incomplete résumé used for the deliberate break. |
 | `data/examples/gate-behavior-cases.json` | Independent Chapter 11/16 gate truth table. |
+| `data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv` | Stored business record used to create the nonzero pre-gate value; not proof of the full sponsorship probability. |
+| `scripts/score/gate-database-evidence.mjs` | Hashes and reads the CSV, selects the first complete H-1B record in stored order, and checks its approval-rate arithmetic. |
 | `scripts/score/role-scorer.mjs` | Production scoring function under test. |
 | `scripts/verified-data-evidence.mjs` | Reconciles every reported metric, traces numeric leaves, and checks the Step 3 privacy/mechanical-honesty gate. |
 | `recipes/Zening-AIRecipe.md` | Exact execution contract paired with this card. |
@@ -61,7 +65,7 @@ npm.cmd run test:ats-parse
 npm.cmd run test:gate-behavior
 ```
 
-The first command checks parser normalization, field/order failures, provenance drift, generic inspection, and the public PDF integration. The second checks the six-case gate truth table, exact-zero gates, fractional scaling, policy boundary, mutation detection, and CLI report writing.
+The first command checks parser normalization, field/order failures, provenance drift, generic inspection, and the public PDF integration. The second reads the stored H-1B database, checks its selected record, runs the three gate cases, catches the deliberate mutation, and checks CLI report writing.
 
 ### 2. Public ATS positive control
 
@@ -88,7 +92,7 @@ Expect the strict verification command and `$LASTEXITCODE` to show deterministic
 npm.cmd run gate:behavior
 ```
 
-Expect exit `0` only when production passes every contract assertion and both gate-as-vote witnesses are caught.
+Expect exit `0` only when the stored database record reconciles, production passes every contract assertion, and both gate-as-vote witnesses are caught. The output must also say that real liveness, personal timeline, full sponsorship probability, and a real-role recommendation are `NOT IMPLEMENTED`.
 
 ### 5. Read the reports
 
@@ -101,7 +105,7 @@ Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
 ### 6. Check the complete contribution
 
 ```powershell
-node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 Conformance proves the files parse and compile. It does not clear human adequacy.
@@ -116,7 +120,7 @@ npm.cmd run test:capstone-step3
 npm.cmd run doctor -- --strict
 ```
 
-Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`. Read the boundary table and the three Markdown audits before recording the named Step 3 review. The current assignment review is recorded in `logs/zening-teng-step3-review.json`; it does not change lifecycle status to `VERIFIED`.
+Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`. The current human review is stored in `logs/zening-teng-step3-review-v0.12.0.json` and binds to recipe 0.12.0 plus the database hash. It does not change lifecycle status to `VERIFIED`.
 
 ### Optional private résumé inspection
 
@@ -145,11 +149,11 @@ Confirm that it says the real résumé ran privately, does not publish private c
 | `reports/generated/ats-paste-test/aarav-patel/paste-test-audit.md` | Human-readable per-field and order result. |
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.json` | Machine-readable expected failure. |
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.md` | Human-readable deliberate-break evidence. |
-| `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine-readable production contract and mutation results. |
-| `reports/generated/gate-behavior/gate-behavior-audit.md` | Human-readable gate handoff and limits. |
+| `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine-readable database source check, production contract, mutation results, and missing-input boundary. |
+| `reports/generated/gate-behavior/gate-behavior-audit.md` | Human-readable database record, gate handoff, `NOT_IMPLEMENTED` fields, and limits. |
 | `reports/generated/zening-teng-contribution/step3.json` | Machine-readable Step 3 checks, complete boundary, and exhaustive numeric-leaf trace. |
 | `reports/generated/zening-teng-contribution/step3.md` | Human-readable Step 3 evidence and named-review handoff. |
-| `logs/zening-teng-step3-review.json` | Named Step 3 assignment-review record; not lifecycle self-attestation. |
+| `logs/zening-teng-step3-review-v0.12.0.json` | Current named Step 3 review bound to recipe 0.12.0 and the database hash; not lifecycle self-attestation. |
 | `reports/generated/zening-teng-contribution/step4.md` | Honest-run report with private details withheld and public evidence shown. |
 | `reports/generated/zening-teng-contribution/step1.md` | Human-readable contribution-selection and scope record. |
 | `reports/generated/zening-teng-contribution/step2.md` | Human-readable build, pair, failure, and limitation summary traced to original evidence. |
@@ -164,9 +168,10 @@ Confirm that it says the real résumé ran privately, does not publish private c
 - The incomplete résumé fails deterministically and explains the missing/order evidence.
 - Production gate behavior passes every case and assertion.
 - The deliberate gate-as-vote implementation produces plausible but wrong nonzero Apply results for both closed-gate witnesses, and the harness marks both caught.
+- The gate report names the CSV, records its hash, checks the stored rate, calls the rate a historical proxy only, and does not invent the missing full sponsorship, liveness, or timeline inputs.
 - Reports retain a human-review boundary; no script claims universal ATS compatibility, factual résumé truth, or a real-job decision.
-- The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and includes the named assignment review.
-- Step 4 records the approved private run without publishing private content or counts, and keeps the final judgment with a person.
+- The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and records the current named review.
+- Step 4 contains the post-approval gate and public ATS reruns while keeping private résumé content and counts unpublished.
 
 ## Failure Modes
 
@@ -176,7 +181,7 @@ Confirm that it says the real résumé ran privately, does not publish private c
 
 3. **Recipe/card drift.** Commands, output paths, exit meanings, limits, or `pair_version` differ between this card and the AI recipe. Stop using both documents until they are reconciled and updated in the same commit.
 
-4. **Verified-data contract violation.** Synthetic gate inputs, heuristic inventory, or model judgment are reported as real external records; or a number is copied from prose rather than read from a fresh script output. Reject the report, correct the provenance label, regenerate it, and record the violation.
+4. **Verified-data contract violation.** A company score is typed into the fixture, a historical approval rate is called full sponsorship probability, a missing live/personal input is replaced with a number, or a result is copied from prose instead of a fresh script output. Reject the report, restore the database read or `NOT_IMPLEMENTED` value, regenerate it, and record the violation.
 
 5. **Parser PASS mistaken for universal ATS certification.** PDF.js extracts readable text, but another ATS may parse it differently. Keep the result scoped to the named parser and require a human paste/read check before submission.
 
@@ -193,6 +198,8 @@ Confirm that it says the real résumé ran privately, does not publish private c
 11. **Untraced-number or provenance-label drift.** A new numeric output is added without a script/record trace, or a controlled fixture value is mislabeled as a real record/model judgment. The Step 3 gate must fail; update the boundary/trace logic and regenerate before any run.
 
 12. **Ethics gate run too late.** A real/private run happens before privacy and honesty evidence pass and a named human reviews it. Treat the run as invalid, do not publish its output, and repeat the gate before any replacement run.
+
+13. **Database or entity-join drift.** The CSV is missing, its hash changes, the approval-rate arithmetic fails, or someone treats the mapped company identity as verified despite missing raw match evidence. Stop the gate run, inspect the database and join audit, and do not publish a real-company finding.
 
 ## Maintenance and Update Trigger
 

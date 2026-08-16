@@ -1,11 +1,11 @@
 ---
 status: RUNNABLE-SAMPLE
 todos_open: 0
-last_gate: "step4-honest-run, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
+last_gate: "step4-honest-run-v0.12.0, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
 attestation: null
-recipe_version: 0.11.0
-pair: recipes/Zening.Humancard.md
-pair_version: 0.11.0
+recipe_version: 0.12.0
+pair: recipes/Zening.card.md
+pair_version: 0.12.1
 ---
 
 # Reallocation Verification Harness — AI Recipe
@@ -17,7 +17,7 @@ Run the two capstone validation modules as one contribution:
 1. Chapter 13 résumé paste-test: extract PDF text, inspect parser mechanics, and optionally verify independently declared name/title/date/heading fields and their order.
 2. Chapter 11/16 gate-behavior harness: prove liveness and timeline remain multiplicative gates and detect the named gate-as-vote mutation.
 
-Use public anonymized fixtures for the reproducible sample run. Keep every real résumé and every artifact derived from it under `private/` or another gitignored private path. This recipe verifies the two harnesses; it does not score a résumé against a real job, verify upstream sponsorship data, or clear human adequacy.
+Use the public résumé fixture for the reproducible ATS run. For the gate run, read the stored `SEC_DOL_H1b_data_mapped.csv` database and use its first complete H-1B record in file order. Keep every real résumé and every artifact derived from it under `private/` or another gitignored private path. This recipe verifies the two harnesses; it does not produce a complete sponsorship probability, real liveness result, personal timeline result, or real-job recommendation.
 
 ## 2. Required Reads
 
@@ -33,7 +33,7 @@ Read these files in order before running any command:
 8. `chapters/16-the-build-and-the-honest-run.md`
 9. `scripts/resumes/README.md`
 10. `scripts/score/README.md`
-11. `recipes/Zening.Humancard.md`
+11. `recipes/Zening.card.md`
 
 Treat the recipe and card as one versioned pair. If their `pair_version`, commands, outputs, or failure descriptions differ, stop for documentation drift.
 
@@ -43,10 +43,10 @@ Do not advance past a failed gate.
 
 | Gate | Testable handoff condition | Failure path |
 |---|---|---|
-| 1. Scope and provenance | The run declares `public-sample` or `private-resume`; every input path is named; public sample expectations trace to source Markdown; gate expectations trace to Chapters 11 and 16. | Stop and label the missing source. Do not substitute remembered fields or invented factors. |
-| 2. Privacy and honesty | Public mode contains no private input. Private mode writes only under `private/`. No real résumé, extracted text, or `data/ats/` content is staged. Synthetic gate values are identified as controlled test inputs, not external records. | Stop before running or publishing. Move derived private output under `private/`; remove it from the proposed commit scope; record the blocker without personal details. |
+| 1. Scope and provenance | The run declares `public-sample` or `private-resume`; every input path is named; ATS expectations trace to source Markdown; the gate business input traces to the stored H-1B CSV; gate controls trace to Chapters 11 and 16. | Stop and label the missing source. Do not substitute remembered fields, hand-written company scores, or invented factors. |
+| 2. Privacy and honesty | Public mode contains no private input. Private mode writes only under `private/`. No real résumé, extracted text, or `data/ats/` content is staged. The gate report says that its H-1B rate is only a stored historical proxy and marks unavailable real inputs `NOT_IMPLEMENTED`. | Stop before running or publishing. Move private output under `private/`; do not turn missing liveness, timeline, or sponsorship inputs into numbers. |
 | 3. Regression | Both maintained test suites exit `0`. | Stop. Record the failing test and do not regenerate success evidence. |
-| 4. Positive controls | Public ATS strict verification reports all 13 declared fields and the order check passing. Production gate contract reports 6/6 cases and 40/40 assertions passing. | Stop. Treat any mismatch as a contract or fixture drift until explained and fixed. |
+| 4. Positive controls | Public ATS strict verification reports all declared fields and the order check passing. The gate database hash and approval-rate arithmetic reconcile, and every production gate case/assertion passes. | Stop. Treat any mismatch as data drift, contract drift, or a code failure until explained and fixed. |
 | 5. Deliberate breaks | The incomplete résumé exits `1` with missing/order failures. The gate-as-vote sentinel is rejected and both zero-gate witnesses are caught. | Stop. A missed break means the harness cannot detect its named failure and Step 2 is not complete. |
 | 6. Output and conformance | JSON audits parse, Markdown reports exist, targeted conformance exits `0`, and the run has a privacy-safe `RUN_LOG.md` entry. | Stop. Invalid or unlogged output is not gradeable evidence. |
 | 7. Human adequacy | A named human reads the extracted text, positive report, break report, and gate report and records what was observed. | Leave status at `RUNNABLE-SAMPLE`; do not self-attest or claim `VERIFIED`. |
@@ -61,6 +61,7 @@ Use only these maintained tools for this workflow:
 | `scripts/resumes/ats-parse-test.test.mjs` | Résumé harness unit/integration regression suite | Temporary test output only |
 | `scripts/resumes/generate-pdf.mjs` | Render the public broken Markdown fixture to a rebuildable PDF | `.build/ats-paste-test/` |
 | `scripts/score/role-scorer.mjs` | Production Chapter 11 scoring function used by the contract harness | No output when imported by tests |
+| `scripts/score/gate-database-evidence.mjs` | Read, hash, and check the stored H-1B database; select the first complete record without hand-picking a company | Included in the gate audit |
 | `scripts/score/gate-behavior-core.mjs` | Evaluate the independent truth table and the deliberate gate-as-vote mutation | None |
 | `scripts/score/gate-behavior-harness.mjs` | Generate gate machine audit and human report | `reports/generated/gate-behavior/` |
 | `scripts/score/gate-behavior.test.mjs` | Gate regression, mutation, and CLI integration tests | Temporary test output only |
@@ -68,7 +69,7 @@ Use only these maintained tools for this workflow:
 | `scripts/verified-data-evidence.test.mjs` | Prove the Step 3 gate blocks a private staged path, invented count, and provenance mislabel | Temporary test output only |
 | `scripts/conformance.mjs` | Parse/compile the contribution artifacts | None |
 
-No stored tool in this contribution converts a résumé plus a job description into a real-job recommendation. Report that capability as not implemented in this contribution.
+No stored tool in this contribution computes the full Chapter 7 sponsorship probability or converts a résumé plus a job description into a real-job recommendation. Report those capabilities, real ATS liveness, and the personal visa timeline as `NOT_IMPLEMENTED`.
 
 ## 5. Workflow
 
@@ -115,7 +116,7 @@ Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
 6. Run targeted conformance:
 
 ```powershell
-node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 7. Generate the Step 3 verified-data evidence, then read the report:
@@ -133,7 +134,7 @@ npm.cmd run test:capstone-step3
 npm.cmd run doctor -- --strict
 ```
 
-9. A named human reads the Step 3 report and its three underlying audits. Record the reviewer's name, date, decision, and accepted limits. The current assignment review is in `logs/zening-teng-step3-review.json`. Keep lifecycle `attestation: null` because this assignment approval is not a self-issued `VERIFIED` attestation.
+9. A named human reads the Step 3 report and its three underlying audits. Record the recipe version, gate-database SHA-256, reviewer's name, date, decision, reviewed records, and accepted limits. The current approval is in `logs/zening-teng-step3-review-v0.12.0.json`; the older unbound record remains historical. Keep lifecycle `attestation: null` because assignment approval is not a self-issued `VERIFIED` attestation.
 
 10. Append the run result to `logs/RUN_LOG.md` using the template below. Include actual observed counts and exit codes; do not copy numbers from this recipe without reading the new output.
 
@@ -168,11 +169,11 @@ The report must say that the real résumé ran privately without publishing its 
 | `reports/generated/ats-paste-test/aarav-patel/paste-test-audit.md` | Human | summary, per-field table, order checks, parser details, limits | Human-readable view; not an adequacy verdict |
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.json` | Machine | FAIL verdict plus missing and order failures | Deliberate-break evidence |
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.md` | Human | visible failed fields/order and limits | Human-readable break evidence |
-| `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine | production case/assertion counts, per-check evidence, mutation result, witness failures | Chapter 11/16 mechanical handoff evidence |
-| `reports/generated/gate-behavior/gate-behavior-audit.md` | Human | executable contract, production table, deliberate mutation table, limits | Human-readable handoff; remains `HUMAN_REVIEW_REQUIRED` |
+| `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine | database path/hash/record check, production case/assertion counts, mutation result, witness failures, missing inputs | Chapter 11/16 mechanical handoff evidence |
+| `reports/generated/gate-behavior/gate-behavior-audit.md` | Human | database source, executable contract, production results, deliberate mutation, `NOT_IMPLEMENTED` fields, limits | Human-readable handoff; remains `HUMAN_REVIEW_REQUIRED` |
 | `reports/generated/zening-teng-contribution/step3.json` | Machine | boundary rows, ethics checks, metric reconciliation, exhaustive numeric-leaf trace, missing knowledge | Step 3 machine evidence; not a human signature |
 | `reports/generated/zening-teng-contribution/step3.md` | Human | ethics-gate evidence, verified-vs-inferred table, figure-to-script-to-record trace, limitations, review handoff | Must be read by a named human before Step 4 |
-| `logs/zening-teng-step3-review.json` | Machine and human | named reviewer, date, source, decision, reviewed records, accepted limits | Assignment gate record; not lifecycle self-attestation |
+| `logs/zening-teng-step3-review-v0.12.0.json` | Machine and human | recipe version, database hash, named reviewer, date, source, decision, reviewed records, accepted limits | Current assignment gate record; not lifecycle self-attestation |
 | `reports/generated/zening-teng-contribution/step4.md` | Human | real private-run statement, public terminal evidence, plausibility audit, deliberate breaks, metric readout, unknowns | Honest-run record with private details withheld |
 | `reports/generated/zening-teng-contribution/step1.md` | Human | selected contribution, selection-bar mapping, source chapters, scope boundary | Retrospective selection record requested by the student |
 | `reports/generated/zening-teng-contribution/step2.md` | Human | implementation results, two-customer pair, failure behavior, limits | Retrospective build summary traced to original audits/log/commit |
@@ -195,7 +196,7 @@ Exit-code contract:
 | VH-03 | ATS provenance | Expectation values still match their declared source Markdown lines; any drift exits `2`. |
 | VH-04 | ATS deliberate break | Strict audit exits `1`, has a FAIL verdict, and exposes missing and/or scrambled required evidence. |
 | VH-05 | Gate regression | Test runner exits `0`; exact-zero liveness and timeline tests pass. |
-| VH-06 | Production gate contract | Production reports 6/6 cases and 40/40 assertions passing. |
+| VH-06 | Production gate contract | The current database-backed production cases and assertions all pass; read the fresh audit for counts. |
 | VH-07 | Gate mutation | Deliberate gate-as-vote implementation fails the contract; both named witnesses show nonzero Apply results and are marked caught. |
 | VH-08 | Vote/gate trace separation | Production trace lists liveness and timeline under gates and excludes both from weighted votes. |
 | VH-09 | Privacy | No private résumé, extraction, expectation file, or `data/ats/` personal output enters the public contribution. |
@@ -203,9 +204,9 @@ Exit-code contract:
 | VH-11 | Pair drift | Recipe and card have identical `pair_version`, commands, output paths, and exit-code meanings. |
 | VH-12 | Conformance | Targeted conformance exits `0` for code, JSON fixtures/audits, reports, recipe, card, package, and README. |
 | VH-13 | Every number traces | Step 3 JSON enumerates every numeric leaf from both ATS audits and the gate audit with a permitted label, producing script, and record. |
-| VH-14 | Ethics gate | No private/data-ATS/résumé-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; controlled values are labeled `local-evidence`. |
-| VH-15 | No self-attestation | The named Step 3 assignment review is recorded, while the gate audit remains `HUMAN_REVIEW_REQUIRED` and lifecycle `attestation` remains null. |
-| VH-16 | Honest run | Step 4 records the approved private résumé run without private content or counts, and includes public terminal evidence, a plausibility audit, both break attempts, metric records, and unknowns. |
+| VH-14 | Ethics gate | No private/data-ATS/résumé-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; the stored database hash/rate reconcile; missing real inputs remain `NOT_IMPLEMENTED`. |
+| VH-15 | No self-attestation | The current Step 3 review binds to recipe 0.12.0 and the database hash; the gate audit remains `HUMAN_REVIEW_REQUIRED` and lifecycle `attestation` remains null. |
+| VH-16 | Honest run | After the current review, Step 4 records a fresh gate run plus the approved private résumé evidence without private content or counts, and includes terminal evidence, a plausibility audit, both break attempts, metric records, and unknowns. |
 
 ## 8. Logging Rules
 
@@ -216,7 +217,7 @@ Use this template:
 ```markdown
 ## YYYY-MM-DD -- Reallocation verification harness
 
-- **Recipe:** `reallocation-verification-harness` v0.11.0
+- **Recipe:** `reallocation-verification-harness` v0.12.0
 - **Mode:** public-sample | private-resume
 - **Inputs:** public fixture paths, or "approved private résumé; details withheld"
 - **Commands:** stored command names that actually ran
@@ -235,6 +236,7 @@ Never log a real name, email, phone number, résumé text, target company, appli
 Stop immediately when any of these is true:
 
 - A required read, stored script, fixture, source Markdown, expectation record, or public PDF is missing.
+- The H-1B database is missing, its hash does not match the generated audit, or the selected approval rate does not recompute from approvals and denials.
 - The expectation/source contract drifts or cannot be verified.
 - A real résumé or derived artifact would be written outside `private/` or another approved gitignored private path.
 - A private path or `data/ats/` personal artifact is staged or tracked.
@@ -242,6 +244,7 @@ Stop immediately when any of these is true:
 - The ATS deliberate break exits `0` or `2` instead of the expected deterministic `1`.
 - Either gate mutation witness is not caught.
 - Liveness or timeline appears in the weighted-vote trace.
+- A historical H-1B approval rate is described as the full sponsorship probability, or a missing live/personal input is replaced with a number.
 - A JSON audit fails to parse, a Markdown report is missing, or conformance fails.
 - Step 3 finds an untraced number, a non-approved provenance label, a count/verdict mismatch, a staged private path, a tracked private leak, or a non-clean strict doctor result.
 - Recipe and card commands, versions, outputs, or limits differ.

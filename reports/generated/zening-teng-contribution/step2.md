@@ -28,7 +28,13 @@ final score = liveness × timeline × weighted score
 
 If liveness or timeline is zero, the final score must be zero and the result must be `Skip`.
 
-The test sends six controlled cases through the real scorer. It also runs a deliberately wrong version where the gates are treated like normal scores. That wrong version produces believable `Apply` results, so the test must catch it.
+The test does not contain a hand-written company score. It reads `data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv`, records the file hash, and selects the first complete H-1B record in stored file order. It checks that the stored approval rate agrees with approvals divided by total petitions.
+
+The historical approval rate is normalized only to create a nonzero value before the gates. It is a test proxy, not the full sponsorship probability.
+
+The harness sends three cases through the real scorer: both gates open, liveness zero, and timeline zero. The gate values 0 and 1 come from the Chapter 11/16 test contract. They are not statements about a real job or a real visa timeline.
+
+The harness also runs a deliberately wrong version where the gates are added like normal scores. The test must reject it.
 
 ## Test results
 
@@ -42,28 +48,33 @@ These numbers came from the saved test reports.
 | Broken résumé fields | 7/13 passed |
 | Broken résumé order check | 0/1 passed; final result `FAIL` |
 | Gate automated tests | 10/10 passed |
-| Production gate cases | 6/6 passed |
-| Production gate assertions | 40/40 passed |
+| Production gate cases | 3/3 passed |
+| Production gate assertions | 19/19 passed |
 | Deliberately wrong gate cases | 2/2 caught |
 
-The wrong gate version returned `0.80 / Apply` when liveness was zero and `0.85 / Apply` when timeline was zero. The test rejected both results.
+The database scan read 30,369 rows and 20 columns. It found 1,557 complete H-1B records and 0 approval-rate arithmetic mismatches. These counts came from the fresh gate run, not from this report.
+
+The selected stored record was record 80, `1LIFE HEALTHCARE INC`: 2 approvals, 0 denials, and a stored approval rate of 100%. The script recomputed 100%, so the arithmetic check passed. The repository does not include the raw employer-match evidence, so the company join is still unverified.
+
+The deliberately wrong gate version returned `1.35 / Apply` for both closed-gate witnesses. These are outputs from intentionally broken test code, not real company recommendations. The harness rejected both results.
 
 ## AI recipe and human card
 
 The two modules share one pair of instructions:
 
 - AI recipe: `recipes/Zening-AIRecipe.md`
-- Human card: `recipes/Zening.Humancard.md`
+- Human card: `recipes/Zening.card.md`
 
 The recipe gives the full run order, checks, outputs, and stop rules. The card is the shorter version for a person. It explains what the tools do, how to run them, and what can go wrong.
 
-Both files use version `0.11.0` and point to each other.
+Both files point to each other and use pair version `0.12.1`. The tested recipe logic remains version `0.12.0`.
 
 ## Main code
 
 - ATS program: `scripts/resumes/ats-parse-test.mjs`
 - ATS tests: `scripts/resumes/ats-parse-test.test.mjs`
 - Gate logic: `scripts/score/gate-behavior-core.mjs`
+- Gate database reader: `scripts/score/gate-database-evidence.mjs`
 - Gate report program: `scripts/score/gate-behavior-harness.mjs`
 - Gate tests: `scripts/score/gate-behavior.test.mjs`
 - Production scorer: `scripts/score/role-scorer.mjs`
@@ -80,7 +91,9 @@ The public test records are under `data/examples/`. The saved reports are under 
 
 ## What this step did not prove
 
-The ATS test does not represent every commercial ATS. It does not judge whether a résumé is true or well written. The gate test does not prove that live job, sponsorship, or visa inputs are correct. A person still makes the final application decision.
+The ATS test does not represent every commercial ATS. It does not judge whether a résumé is true or well written.
+
+The gate database has historical H-1B fields, but it cannot verify the full sponsorship probability, current job liveness, or a personal visa timeline. Those outputs are `NOT IMPLEMENTED`. A person still makes the final application decision.
 
 ## Status
 

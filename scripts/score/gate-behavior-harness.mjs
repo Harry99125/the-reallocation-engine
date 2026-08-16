@@ -5,6 +5,11 @@ import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 import { assessGateHarness } from './gate-behavior-core.mjs';
+import {
+  DEFAULT_DATABASE,
+  loadGateDatabaseEvidence,
+  materializeDatabaseBackedFixture,
+} from './gate-database-evidence.mjs';
 import { CONFIG, scoreRole } from './role-scorer.mjs';
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -24,53 +29,71 @@ function formatNumber(value) {
 }
 
 function renderMarkdown(audit) {
+  const database = audit.database_evidence;
+  const record = database.selected_record;
   const lines = [
     '# Gate Behavior Harness — Chapter 11 / Chapter 16',
     '',
-    `- Generated: ${audit.generated}`,
-    `- Machine handoff result: **${audit.machine_result}**`,
-    `- Human decision: **${audit.human_decision}**`,
-    `- Production cases: ${audit.production.summary.cases_passed}/${audit.production.summary.cases_total} passed`,
-    `- Production assertions: ${audit.production.summary.checks_passed}/${audit.production.summary.checks_total} passed`,
-    `- Deliberate gate-as-vote mutation detected: **${audit.deliberate_break.detection}**`,
+    `Generated: ${audit.generated}`,
+    '',
+    `Machine handoff result: **${audit.machine_result}**. Human decision: **${audit.human_decision}**.`,
+    '',
+    `The production scorer passed ${audit.production.summary.cases_passed} of ${audit.production.summary.cases_total} cases and ${audit.production.summary.checks_passed} of ${audit.production.summary.checks_total} assertions. The deliberate gate-as-vote bug was **${audit.deliberate_break.detection === 'PASS' ? 'CAUGHT' : 'MISSED'}**.`,
+    '',
+    '## Database record used',
+    '',
+    `Source: \`${database.source.path}\``,
+    '',
+    `SHA-256: \`${database.source.sha256}\``,
+    '',
+    `The script read ${database.scan.data_records} stored rows and ${database.scan.columns} columns. It found ${database.scan.complete_h1b_records} complete H-1B records and ${database.scan.approval_rate_arithmetic_mismatches} approval-rate arithmetic mismatches.`,
+    '',
+    `It used stored record ${record.data_record_number}: **${record.company_name}**. The record says ${record.total_approvals} approvals, ${record.total_denials} denials, and an approval rate of ${formatNumber(record.approval_rate_percent)}%. Recomputing approvals divided by total petitions gives ${formatNumber(record.recomputed_approval_rate_percent)}%, so the arithmetic check is **${record.arithmetic_status}**.`,
+    '',
+    `Selection rule: ${record.selection_rule}.`,
+    '',
+    '**Important:** the normalized historical approval rate is used only as a nonzero, database-derived proxy for this mechanical gate test. It is not the complete Chapter 7 sponsorship probability and it is not a recommendation about this company.',
     '',
     '## Executable contract',
     '',
     '`composite = (sum of weighted votes) × liveness × timeline`',
     '',
-    'Liveness and timeline remain outside the vote list. An exact zero in either gate must produce composite `0` and machine recommendation `Skip`, even with perfect sponsorship and fit.',
+    'The 0 and 1 gate values are Chapter 11/16 contract controls, not claims about a live job or a real visa timeline. A zero in either gate must produce composite `0` and `Skip`.',
+    '',
+    `The sponsorship coefficient ${audit.contract_parameters.sponsorship_weight.value} and current production Apply threshold ${audit.contract_parameters.apply_threshold.value} come from the Chapter 11 project rule and scorer configuration. They are algorithm settings, not database observations or new calibration findings.`,
     '',
     '## Production scorer results',
-    '',
-    '| Case | Liveness × timeline behavior | Expected | Observed | Result |',
-    '|---|---|---|---|---|',
   ];
 
   for (const entry of audit.production.cases) {
-    lines.push(`| ${entry.id} | ${entry.purpose} | ${formatNumber(entry.expected.composite)} / ${entry.expected.recommendation} | ${formatNumber(entry.observed.composite)} / ${entry.observed.recommendation} | **${entry.status}** |`);
+    const expectedRecommendation = entry.expected.recommendation ?? 'not asserted for the open control';
+    lines.push('', `- **${entry.id}: ${entry.status}.** ${entry.purpose} Expected ${formatNumber(entry.expected.composite)} / ${expectedRecommendation}; observed ${formatNumber(entry.observed.composite)} / ${entry.observed.recommendation}.`);
   }
 
   lines.push(
     '',
     '## Deliberate break: gate-as-vote',
     '',
-    'The sentinel implementation intentionally adds liveness and timeline as weighted terms. The two high-vote witnesses below would receive a plausible-looking Apply if that named capstone bug reached production.',
-    '',
-    '| Witness | Contract expected | Mutated result | Failed assertions | Detection |',
-    '|---|---|---|---|---|',
+    'The sentinel is intentionally wrong. It adds the two contract gates as votes instead of multiplying by them. These are test outputs, not real role scores.',
   );
   for (const witness of audit.deliberate_break.witnesses) {
-    lines.push(`| ${witness.id} | ${formatNumber(witness.expected.composite)} / ${witness.expected.recommendation} | ${formatNumber(witness.mutation_observed.composite)} / ${witness.mutation_observed.recommendation} | ${witness.failed_checks.join(', ')} | **${witness.mutation_status === 'FAIL' ? 'CAUGHT' : 'MISSED'}** |`);
+    lines.push('', `- **${witness.id}: ${witness.mutation_status === 'FAIL' ? 'CAUGHT' : 'MISSED'}.** Contract expected ${formatNumber(witness.expected.composite)} / ${witness.expected.recommendation}; broken code returned ${formatNumber(witness.mutation_observed.composite)} / ${witness.mutation_observed.recommendation}. Failed checks: ${witness.failed_checks.join(', ')}.`);
   }
 
   lines.push(
     '',
-    '## Evidence and limits',
+    '## Not implemented',
     '',
-    `- Fixture: \`${audit.fixture}\``,
-    '- Contract sources: `chapters/11-the-bayesian-role-scorer.md` and `chapters/16-the-build-and-the-honest-run.md`.',
-    '- This harness verifies scorer mechanics. It does not establish whether an upstream liveness observation or a personal timeline factor is true.',
-    '- Weight calibration and the final go/no-go decision remain human judgments.',
+    `- Full sponsorship probability: **${database.not_implemented.full_sponsorship_probability}**.`,
+    `- Real job liveness: **${database.not_implemented.real_job_liveness}**.`,
+    `- Personal visa timeline: **${database.not_implemented.personal_visa_timeline}**.`,
+    `- Real role recommendation: **${database.not_implemented.real_role_recommendation}**.`,
+    '',
+    '## Limits',
+    '',
+    `- ${database.limitations[0]}`,
+    `- ${database.limitations[1]}`,
+    '- The harness proves scorer mechanics only. A person still owns the final adequacy decision.',
     '',
   );
   return lines.join('\n');
@@ -79,7 +102,10 @@ function renderMarkdown(audit) {
 export async function main(args = process.argv.slice(2)) {
   const fixturePath = option(args, '--fixture', DEFAULT_FIXTURE);
   const outDir = option(args, '--out-dir', DEFAULT_OUTPUT);
-  const fixture = JSON.parse(await readFile(fixturePath, 'utf8'));
+  const databasePath = option(args, '--database', DEFAULT_DATABASE);
+  const template = JSON.parse(await readFile(fixturePath, 'utf8'));
+  const databaseEvidence = await loadGateDatabaseEvidence(databasePath);
+  const fixture = materializeDatabaseBackedFixture(template, databaseEvidence, CONFIG.weights);
   const productionScore = (role) => scoreRole(role, CONFIG.weights, true);
   const result = assessGateHarness(productionScore, fixture);
   const generated = new Date().toISOString();
@@ -90,6 +116,24 @@ export async function main(args = process.argv.slice(2)) {
     fixture: path.relative(REPO_ROOT, fixturePath).replaceAll('\\', '/'),
     sources: fixture.sources,
     contract: fixture.contract,
+    contract_parameters: {
+      sponsorship_weight: {
+        value: CONFIG.weights.sponsorship,
+        source: 'chapters/11-the-bayesian-role-scorer.md',
+        status: 'STORED_PROJECT_RULE_NOT_DATABASE_OBSERVATION',
+      },
+      apply_threshold: {
+        value: CONFIG.apply_threshold,
+        source: 'chapters/11-the-bayesian-role-scorer.md and scripts/score/role-scorer.mjs',
+        status: 'CURRENT_PROJECT_CONFIG_CHAPTER_DESCRIBES_THRESHOLD_AS_NEAR',
+      },
+      gate_control_values: {
+        values: [0, 1],
+        source: 'chapters/11-the-bayesian-role-scorer.md and chapters/16-the-build-and-the-honest-run.md',
+        status: 'CONTRACT_TEST_CONTROLS_NOT_REAL_WORLD_OBSERVATIONS',
+      },
+    },
+    database_evidence: databaseEvidence,
     ...result,
   };
 
@@ -100,9 +144,16 @@ export async function main(args = process.argv.slice(2)) {
   await writeFile(markdownPath, renderMarkdown(audit), 'utf8');
 
   console.log(`${audit.machine_result === 'PASS' ? 'PASS' : 'FAIL'} gate contract: production ${audit.production.summary.cases_passed}/${audit.production.summary.cases_total} cases; gate-as-vote mutation ${audit.deliberate_break.detection === 'PASS' ? 'caught' : 'missed'}`);
+  console.log(`Database: ${audit.database_evidence.source.path} (${audit.database_evidence.source.sha256})`);
+  console.log(`Record: ${recordSummary(audit.database_evidence.selected_record)}`);
+  console.log('NOT IMPLEMENTED: real liveness, personal timeline, full sponsorship probability, or real-role recommendation');
   console.log(`Human decision: ${audit.human_decision}`);
   console.log(path.relative(process.cwd(), markdownPath));
   return audit.machine_result === 'PASS' ? 0 : 1;
+}
+
+function recordSummary(record) {
+  return `${record.company_name}; approvals ${record.total_approvals}; denials ${record.total_denials}; stored rate ${formatNumber(record.approval_rate_percent)}%`;
 }
 
 const invokedAsScript = process.argv[1]

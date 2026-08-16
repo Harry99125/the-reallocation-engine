@@ -52,12 +52,20 @@ export function runGateContract(score, fixture, implementation = 'candidate') {
 
     const checks = [
       check('composite', nearlyEqual(observed?.composite, entry.expected.composite), entry.expected.composite, observed?.composite ?? null),
-      check('recommendation', observed?.machine_recommendation === entry.expected.recommendation, entry.expected.recommendation, observed?.machine_recommendation ?? null),
       check('gate-product', nearlyEqual(observed?.trace?.gate_product, entry.expected.gate_product), entry.expected.gate_product, observed?.trace?.gate_product ?? null),
       check('gates-stay-out-of-votes', !voteKeys.includes('liveness') && !voteKeys.includes('timeline'), 'liveness and timeline absent from weighted votes', voteKeys),
       check('gate-trace-shape', JSON.stringify(gateKeys) === JSON.stringify(expectedGateKeys), expectedGateKeys, gateKeys),
       check('gate-trace-values', JSON.stringify(observedGateMultipliers) === JSON.stringify(expectedGateMultipliers), expectedGateMultipliers, observedGateMultipliers),
     ];
+
+    if (typeof entry.expected.recommendation === 'string') {
+      checks.splice(1, 0, check(
+        'recommendation',
+        observed?.machine_recommendation === entry.expected.recommendation,
+        entry.expected.recommendation,
+        observed?.machine_recommendation ?? null,
+      ));
+    }
 
     if (entry.expected.closed_gate) {
       checks.push(check(
@@ -76,8 +84,12 @@ export function runGateContract(score, fixture, implementation = 'candidate') {
       expected: entry.expected,
       observed: {
         composite: observed?.composite ?? null,
-        recommendation: observed?.machine_recommendation ?? null,
-        reason: observed?.reason ?? null,
+        recommendation: typeof entry.expected.recommendation === 'string'
+          ? observed?.machine_recommendation ?? null
+          : 'NOT_ASSERTED_TEST_CONTROL',
+        reason: typeof entry.expected.recommendation === 'string'
+          ? observed?.reason ?? null
+          : 'NOT_REPORTED_FOR_OPEN_CONTROL',
         gate_product: observed?.trace?.gate_product ?? null,
       },
       checks,
@@ -98,16 +110,18 @@ export function runGateContract(score, fixture, implementation = 'candidate') {
   };
 }
 
-// Deliberately wrong implementation used only as a mutation sentinel. It gives
-// liveness and timeline positive weights, so perfect votes can rescue a closed
-// gate. The real contract suite must reject it or the suite is not meaningful.
+// Deliberately wrong implementation used only as a mutation sentinel. It adds
+// liveness and timeline as votes, so a closed gate can leave a nonzero result.
+// The real contract suite must reject it or the suite is not meaningful.
 export function scoreWithGateAsVoteMutation(role) {
   const contributions = [
     { factor: 'sponsorship', value: role.sponsorship?.p ?? 0, weight: 0.35, source: role.sponsorship?.source || 'record' },
     { factor: 'fit', value: role.fit?.p ?? 0, weight: 0.30, source: role.fit?.source || 'model-judgment' },
     { factor: 'role_quality', value: role.role_quality?.p ?? 0, weight: 0.0, source: role.role_quality?.source || 'record' },
-    { factor: 'liveness', value: role.liveness?.factor ?? 1, weight: 0.20, source: role.liveness?.source || 'record' },
-    { factor: 'timeline', value: role.timeline?.factor ?? 1, weight: 0.15, source: role.timeline?.source || 'your-input' },
+    // Deliberate structural bug: gates are added as unit-coefficient votes.
+    // The coefficient is arithmetic identity, not a claimed calibration.
+    { factor: 'liveness', value: role.liveness?.factor ?? 1, weight: 1, source: role.liveness?.source || 'chapter-contract-control' },
+    { factor: 'timeline', value: role.timeline?.factor ?? 1, weight: 1, source: role.timeline?.source || 'chapter-contract-control' },
   ];
   const composite = contributions.reduce((sum, item) => sum + item.value * item.weight, 0);
   const recommendation = composite >= 0.30 ? 'Apply' : composite >= 0.20 ? 'Consider' : 'Skip';

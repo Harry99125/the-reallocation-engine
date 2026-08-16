@@ -2,8 +2,8 @@
   "schema_version": "1.0.0",
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
-  "recipe_version": "0.11.0",
-  "generated": "2026-08-16T07:52:33.739Z",
+  "recipe_version": "0.12.0",
+  "generated": "2026-08-16T10:38:05.297Z",
   "machine_result": "PASS",
   "human_attestation": {
     "status": "RECORDED",
@@ -11,7 +11,7 @@
     "recorded_on": "2026-08-16",
     "decision": "APPROVED_FOR_STEP_4",
     "source": "your-input",
-    "record": "logs/zening-teng-step3-review.json"
+    "record": "logs/zening-teng-step3-review-v0.12.0.json"
   },
   "ethics_gate": {
     "privacy": "PASS",
@@ -25,10 +25,13 @@
     "gate": "reports/generated/gate-behavior/gate-behavior-audit.json",
     "atsManifest": "data/examples/aarav-patel-ats-expected.json",
     "gateFixture": "data/examples/gate-behavior-cases.json",
-    "step3Review": "logs/zening-teng-step3-review.json",
+    "gateDatabase": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv",
+    "gateJoinAudit": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped-join-validation-audit.md",
+    "step3Review": "logs/zening-teng-step3-review-v0.12.0.json",
     "atsScript": "scripts/resumes/ats-parse-test.mjs",
     "gateScript": "scripts/score/gate-behavior-harness.mjs",
     "gateCore": "scripts/score/gate-behavior-core.mjs",
+    "gateDatabaseScript": "scripts/score/gate-database-evidence.mjs",
     "scorer": "scripts/score/role-scorer.mjs"
   },
   "checks": [
@@ -71,22 +74,36 @@
       "id": "honesty:gate-production-reconciles",
       "status": "PASS",
       "expected": "production counts recompute and verdict is PASS",
-      "observed": "6/6 cases; 40/40 assertions",
+      "observed": "3/3 cases; 19/19 assertions",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
     },
     {
       "id": "honesty:mutation-is-caught",
       "status": "PASS",
       "expected": "wrong gate-as-vote implementation fails; every named witness is caught",
-      "observed": "liveness-zero-high-votes:0.8/Apply/FAIL; timeline-zero-high-votes:0.85/Apply/FAIL",
+      "observed": "liveness-zero-database-vote:1.35/Apply/FAIL; timeline-zero-database-vote:1.35/Apply/FAIL",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
     },
     {
-      "id": "honesty:controlled-input-labels",
+      "id": "honesty:database-record-reconciles",
       "status": "PASS",
-      "expected": "every controlled gate factor labeled local-evidence",
-      "observed": "local-evidence",
+      "expected": "stored database hash and selected H-1B record arithmetic reconcile",
+      "observed": "b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb; 1LIFE HEALTHCARE INC; PASS",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "id": "honesty:contract-controls",
+      "status": "PASS",
+      "expected": "every liveness/timeline test control is a Chapter 11/16 zero-or-one contract value",
+      "observed": "1, 0",
       "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "id": "honesty:not-implemented-visible",
+      "status": "PASS",
+      "expected": "missing real inputs and the unverified entity join are stated, not replaced with scores",
+      "observed": "NOT_IMPLEMENTED_MISSING_LCA_RATE_COMPANY_SIZE_AND_PINNED_THRESHOLDS | NOT_IMPLEMENTED_NO_PUBLIC_ATS_OBSERVATION_IN_DATABASE | NOT_IMPLEMENTED_PRIVATE_PERSONAL_RECORD_REQUIRED | NOT_IMPLEMENTED_TEST_SCENARIO_IS_NOT_A_JOB_POSTING",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
     },
     {
       "id": "honesty:no-self-attestation",
@@ -98,9 +115,9 @@
     {
       "id": "honesty:named-review-record",
       "status": "PASS",
-      "expected": "a separate named-human record approves Step 4",
+      "expected": "a separate named-human record approves recipe 0.12.0 and database b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb",
       "observed": "Zening Teng; 2026-08-16; APPROVED_FOR_STEP_4",
-      "record": "logs/zening-teng-step3-review.json"
+      "record": "logs/zening-teng-step3-review-v0.12.0.json"
     },
     {
       "id": "honesty:ats-limitation-visible",
@@ -225,10 +242,38 @@
     },
     {
       "output": "Gate schema_version, harness, fixture, sources, contract",
-      "label": "local-evidence",
-      "record": "Gate test cases and Chapters 11 and 16",
+      "label": "record",
+      "record": "Gate test cases, Chapters 11 and 16, and the stored H-1B database",
       "machine_can_verify": "The report points to the saved test file and chapters",
       "human_keeps": "Whether these rules are enough for a real decision"
+    },
+    {
+      "output": "Gate sponsorship weight, Apply threshold, and zero/one controls",
+      "label": "record",
+      "record": "Chapter 11, Chapter 16, and the stored production scorer configuration",
+      "machine_can_verify": "The run used the same saved algorithm settings and contract controls",
+      "human_keeps": "Whether the approximate threshold and weight are adequately calibrated"
+    },
+    {
+      "output": "Gate database path, SHA-256, row/column counts, complete-record count, arithmetic mismatches",
+      "label": "script-output",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv",
+      "machine_can_verify": "The stored bytes, schema, record count, and approval-rate arithmetic",
+      "human_keeps": "Whether the mapped company identities are trustworthy enough to use"
+    },
+    {
+      "output": "Gate selected H-1B record: company, approvals, denials, approval rate",
+      "label": "record",
+      "record": "First complete H-1B record in stored CSV order",
+      "machine_can_verify": "The values occur in the selected stored record and the rate recomputes",
+      "human_keeps": "Whether the entity join is correct; raw match evidence is missing"
+    },
+    {
+      "output": "Gate normalized H-1B rate used as sponsorship.p",
+      "label": "script-output",
+      "record": "Stored Approval_Rate divided by 100",
+      "machine_can_verify": "The unit conversion and scorer arithmetic",
+      "human_keeps": "It is only a mechanical proxy, not full P(sponsorship)"
     },
     {
       "output": "Gate generated timestamp",
@@ -242,13 +287,13 @@
       "label": "local-evidence",
       "record": "Gate report program and gate-behavior-cases.json",
       "machine_can_verify": "The case names and test labels were copied correctly",
-      "human_keeps": "Whether the six cases cover enough situations"
+      "human_keeps": "Whether the three gate cases cover enough situations"
     },
     {
       "output": "Gate production cases[*].expected.* and expected check values",
-      "label": "local-evidence",
-      "record": "Expected values in gate-behavior-cases.json",
-      "machine_can_verify": "The test file is valid and the results match it",
+      "label": "script-output",
+      "record": "Database record plus Chapter 11/16 contract controls in gate-behavior-cases.json",
+      "machine_can_verify": "The expected values recompute from the stored record and contract controls",
       "human_keeps": "Whether important real situations are missing"
     },
     {
@@ -287,9 +332,9 @@
       "human_keeps": "The named review and final approval"
     },
     {
-      "output": "Real résumé truth, universal ATS compatibility, live posting truth, visa legality, final Apply decision",
+      "output": "Real résumé truth, universal ATS compatibility, current posting truth, full sponsorship probability, visa legality, final Apply decision",
       "label": "missing",
-      "record": "These two tools do not have those records",
+      "record": "The reports explicitly mark these records NOT IMPLEMENTED or unavailable",
       "machine_can_verify": "The reports do not claim to know these things",
       "human_keeps": "Find other evidence or leave the answer unknown"
     },
@@ -319,20 +364,25 @@
       "verdict": "FAIL"
     },
     "gate": {
-      "cases_passed": 6,
-      "cases_total": 6,
-      "checks_passed": 40,
-      "checks_total": 40,
+      "cases_passed": 3,
+      "cases_total": 3,
+      "checks_passed": 19,
+      "checks_total": 19,
+      "database_company": "1LIFE HEALTHCARE INC",
+      "database_approvals": 2,
+      "database_denials": 0,
+      "database_rate_percent": 100,
+      "database_arithmetic_status": "PASS",
       "witnesses": [
         {
-          "id": "liveness-zero-high-votes",
-          "composite": 0.8,
+          "id": "liveness-zero-database-vote",
+          "composite": 1.35,
           "recommendation": "Apply",
           "status": "FAIL"
         },
         {
-          "id": "timeline-zero-high-votes",
-          "composite": 0.85,
+          "id": "timeline-zero-database-vote",
+          "composite": 1.35,
           "recommendation": "Apply",
           "status": "FAIL"
         }
@@ -1030,8 +1080,120 @@
     },
     {
       "report": "gate-behavior",
+      "json_path": "contract_parameters.sponsorship_weight.value",
+      "value": 0.35,
+      "label": "record",
+      "script": "scripts/score/gate-behavior-harness.mjs",
+      "record": "chapters/11-the-bayesian-role-scorer.md, chapters/16-the-build-and-the-honest-run.md, and scripts/score/role-scorer.mjs"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "contract_parameters.apply_threshold.value",
+      "value": 0.3,
+      "label": "record",
+      "script": "scripts/score/gate-behavior-harness.mjs",
+      "record": "chapters/11-the-bayesian-role-scorer.md, chapters/16-the-build-and-the-honest-run.md, and scripts/score/role-scorer.mjs"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "contract_parameters.gate_control_values.values[*]",
+      "value": 0,
+      "label": "record",
+      "script": "scripts/score/gate-behavior-harness.mjs",
+      "record": "chapters/11-the-bayesian-role-scorer.md, chapters/16-the-build-and-the-honest-run.md, and scripts/score/role-scorer.mjs"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "contract_parameters.gate_control_values.values[*]",
+      "value": 1,
+      "label": "record",
+      "script": "scripts/score/gate-behavior-harness.mjs",
+      "record": "chapters/11-the-bayesian-role-scorer.md, chapters/16-the-build-and-the-honest-run.md, and scripts/score/role-scorer.mjs"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.scan.data_records",
+      "value": 30369,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.scan.columns",
+      "value": 20,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.scan.complete_h1b_records",
+      "value": 1557,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.scan.approval_rate_arithmetic_mismatches",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.data_record_number",
+      "value": 80,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.total_approvals",
+      "value": 2,
+      "label": "record",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.total_denials",
+      "value": 0,
+      "label": "record",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.approval_rate_percent",
+      "value": 100,
+      "label": "record",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.recomputed_approval_rate_percent",
+      "value": 100,
+      "label": "record",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "database_evidence.selected_record.normalized_approval_rate",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv"
+    },
+    {
+      "report": "gate-behavior",
       "json_path": "production.summary.cases_passed",
-      "value": 6,
+      "value": 3,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1039,7 +1201,7 @@
     {
       "report": "gate-behavior",
       "json_path": "production.summary.cases_total",
-      "value": 6,
+      "value": 3,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1047,7 +1209,7 @@
     {
       "report": "gate-behavior",
       "json_path": "production.summary.checks_passed",
-      "value": 40,
+      "value": 19,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1055,7 +1217,7 @@
     {
       "report": "gate-behavior",
       "json_path": "production.summary.checks_total",
-      "value": 40,
+      "value": 19,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1063,23 +1225,23 @@
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.composite",
-      "value": 0.65,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "value": 0.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.gate_product",
       "value": 1,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].observed.composite",
-      "value": 0.65,
+      "value": 0.35,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1095,15 +1257,15 @@
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
-      "value": 0.65,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "value": 0.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].observed",
-      "value": 0.65,
+      "value": 0.35,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1112,9 +1274,9 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
       "value": 1,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1160,113 +1322,17 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.composite",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.gate_product",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.composite",
-      "value": 0,
       "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.gate_product",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 1,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 1,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.composite",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.gate_product",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1288,9 +1354,9 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1304,9 +1370,9 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1319,7 +1385,7 @@
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 1,
+      "value": 0,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1327,14 +1393,6 @@
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
       "value": 1,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
@@ -1344,6 +1402,14 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].observed[*]",
       "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1352,17 +1418,17 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.composite",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].expected.gate_product",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1384,9 +1450,9 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1400,214 +1466,14 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].observed",
       "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.composite",
-      "value": 0.26,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.gate_product",
-      "value": 0.4,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.composite",
-      "value": 0.26,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.gate_product",
-      "value": 0.4,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0.26,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0.26,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0.4,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0.4,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0.5,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0.8,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0.5,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0.8,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.composite",
-      "value": 0.0325,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].expected.gate_product",
-      "value": 0.05,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.composite",
-      "value": 0.0325,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].observed.gate_product",
-      "value": 0.05,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0.0325,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0.0325,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected",
-      "value": 0.05,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed",
-      "value": 0.05,
-      "label": "script-output",
-      "script": "scripts/score/role-scorer.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].expected[*]",
-      "value": 0.05,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1622,8 +1488,8 @@
     },
     {
       "report": "gate-behavior",
-      "json_path": "production.cases[*].checks[*].observed[*]",
-      "value": 0.05,
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1632,6 +1498,14 @@
       "report": "gate-behavior",
       "json_path": "production.cases[*].checks[*].observed[*]",
       "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0,
       "label": "script-output",
       "script": "scripts/score/role-scorer.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1640,22 +1514,22 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].expected.composite",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].expected.gate_product",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].mutation_observed.composite",
-      "value": 0.8,
+      "value": 1.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1664,22 +1538,22 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].expected.composite",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].expected.gate_product",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.witnesses[*].mutation_observed.composite",
-      "value": 0.85,
+      "value": 1.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1695,7 +1569,7 @@
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.summary.cases_total",
-      "value": 6,
+      "value": 3,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1703,7 +1577,7 @@
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.summary.checks_passed",
-      "value": 1,
+      "value": 0,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1711,7 +1585,7 @@
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.summary.checks_total",
-      "value": 40,
+      "value": 19,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1719,23 +1593,23 @@
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].expected.composite",
-      "value": 0.65,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "value": 0.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
       "value": 1,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 1,
+      "value": 2.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1743,15 +1617,15 @@
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0.65,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "value": 0.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 1,
+      "value": 2.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1760,78 +1634,14 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
       "value": 1,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
       "value": 1,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 1,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 0.8,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 0.8,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1848,22 +1658,22 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].expected.composite",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 0.85,
+      "value": 1.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1872,14 +1682,14 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 0.85,
+      "value": 1.35,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
@@ -1888,9 +1698,73 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
       "value": 0,
-      "label": "local-evidence",
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 1.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 1.35,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-database-evidence.mjs",
+      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv and data/examples/gate-behavior-cases.json"
     },
     {
       "report": "gate-behavior",
@@ -1904,198 +1778,6 @@
       "report": "gate-behavior",
       "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
       "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 0.65,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 0.65,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
-      "value": 0.26,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
-      "value": 0.4,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 0.87,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0.26,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 0.87,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0.4,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0.5,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0.8,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
-      "value": 0.0325,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
-      "value": 0.05,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
-      "value": 0.81,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0.0325,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
-      "value": 0.81,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
-      "value": 0.05,
-      "label": "local-evidence",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "data/examples/gate-behavior-cases.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 0.05,
-      "label": "script-output",
-      "script": "scripts/score/gate-behavior-core.mjs",
-      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
-    },
-    {
-      "report": "gate-behavior",
-      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
-      "value": 1,
       "label": "script-output",
       "script": "scripts/score/gate-behavior-core.mjs",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"

@@ -2,7 +2,9 @@
 
 ## Short answer
 
-I completed the honest run on August 16, 2026, after Zening Teng approved the Step 3 review.
+I completed the current honest run on August 16, 2026, after Zening Teng reviewed the database-backed reports and approved recipe 0.12.0 with database SHA-256 `b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb`.
+
+After that approval, I reran the database-backed gate harness, the public ATS positive case, and the deliberate ATS break. Step 3 then regenerated with privacy PASS, honesty/provenance PASS, and the current named review recorded.
 
 I ran the ATS checker against the approved real résumé. That run stayed under `private/`. I did not copy the résumé, extracted text, file path, or résumé-derived counts into this public report.
 
@@ -47,7 +49,10 @@ That failing command returned exit code `1`. For this one deliberate break, exit
 The gate harness printed:
 
 ```text
-PASS gate contract: production 6/6 cases; gate-as-vote mutation caught
+PASS gate contract: production 3/3 cases; gate-as-vote mutation caught
+Database: data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv (b04a2f21ddc9214cbec9ba6943a8d4dd245c5fbc9e13cef74d6d989d8bc7ecbb)
+Record: 1LIFE HEALTHCARE INC; approvals 2; denials 0; stored rate 100.0000%
+NOT IMPLEMENTED: real liveness, personal timeline, full sponsorship probability, or real-role recommendation
 Human decision: HUMAN_REVIEW_REQUIRED
 reports\generated\gate-behavior\gate-behavior-audit.md
 ```
@@ -58,14 +63,19 @@ The full records are the [complete PDF audit](../ats-paste-test/aarav-patel/past
 
 I did not only look for green test output. I checked whether the results made sense.
 
-- With both gates open, the scorer returned `0.65 / Apply`.
+- The script read 30,369 database rows and 20 columns.
+- It found 1,557 complete H-1B records and 0 approval-rate arithmetic mismatches.
+- It selected the first complete record in stored file order instead of choosing a company by hand.
+- That stored record had 2 approvals, 0 denials, and a 100% approval rate. The script recomputed 100%.
+- With both contract gates open, the scorer kept the database-derived pre-gate value at `0.35`.
 - With liveness at zero, it returned `0 / Skip`.
 - With timeline at zero, it returned `0 / Skip`.
-- With both gates at zero, it still returned `0 / Skip`.
-- With partial gates, it scaled the score to `0.26 / Consider`.
-- At the configured closed-gate boundary, it returned `0.0325 / Skip`.
 
-Those values come from the six production cases in `reports/generated/gate-behavior/gate-behavior-audit.json`. They are controlled test values, not live job or visa data.
+Those values come from the database file, the Chapter 11 sponsorship weight, the Chapter 11/16 zero-or-one gate contract, and the scorer output saved in `reports/generated/gate-behavior/gate-behavior-audit.json`.
+
+The `0.35` result is only a mechanical test value. The source database stores a historical H-1B approval rate, not the full sponsorship probability. The test also does not have a current ATS observation or a personal visa timeline. The report says `NOT IMPLEMENTED` instead of creating those values.
+
+The stored entity join is another limit. The repository does not contain the raw employer names or match metadata needed to verify that join. I therefore did not present this as a real-company recommendation.
 
 The ATS results also make sense. The complete public fixture passed all declared checks. The incomplete fixture lost six required fields and failed the order check. The program did not turn that incomplete evidence into a pass.
 
@@ -75,7 +85,7 @@ I used two real break attempts.
 
 First, I removed content from the public PDF fixture. The checker reported `7/13` fields, `0/1` order checks, `FAIL`, and exit code `1`.
 
-Second, I changed the gate formula on purpose so liveness and timeline acted like weighted scores. With liveness closed, the wrong code returned `0.80 / Apply`. With timeline closed, it returned `0.85 / Apply`. The harness rejected both witnesses.
+Second, I changed the gate formula on purpose so liveness and timeline were added like scores. With either gate closed, the wrong code returned `1.35 / Apply`. These were deliberately broken test outputs, not real application decisions. The harness rejected both witnesses.
 
 These results are recorded in the broken PDF audit and the gate audit linked above.
 
@@ -87,6 +97,8 @@ The machine could not know whether:
 - the résumé statements are true or strong;
 - the résumé looks professional;
 - a real posting is still open;
+- the stored company-to-H-1B join is correct;
+- the historical approval rate is enough to estimate full sponsorship probability;
 - a real visa timeline is legally correct;
 - the scorer's weights fit one person's search;
 - the person should apply.
@@ -95,6 +107,6 @@ Those are not hidden failures. They are the limit of this contribution.
 
 ## Result
 
-Step 4 is complete as an honest run.
+Step 4 is complete for recipe 0.12.0.
 
-The public controls passed, both deliberate failures were caught, and the approved real résumé was inspected privately. The result still requires human judgment and does not claim universal ATS compatibility or a real-job recommendation.
+The approved real résumé was inspected privately. After the current review, the public controls were rerun, both deliberate failures were caught, and Step 3 reconciled the new records. The result still requires human judgment and does not claim universal ATS compatibility or a real-job recommendation.

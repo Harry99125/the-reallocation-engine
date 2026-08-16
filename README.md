@@ -39,7 +39,7 @@ Detailed module documentation:
 - Résumé paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
 - Gate-behavior harness: [`scripts/score/README.md`](scripts/score/README.md)
 - AI recipe: [`recipes/Zening-AIRecipe.md`](recipes/Zening-AIRecipe.md)
-- Human card: [`recipes/Zening.Humancard.md`](recipes/Zening.Humancard.md)
+- Human card: [`recipes/Zening.card.md`](recipes/Zening.card.md)
 
 Capstone step reports:
 
@@ -85,8 +85,9 @@ git fetch upstream main
 git diff --name-only upstream/main...HEAD
 ```
 
-The Step 3 human review and Step 4 are now recorded. After the final local checks,
-authenticate and publish the assignment-compliant branch to the student's fork:
+The database-backed Step 3 machine gate passes. The current named review binds
+to recipe 0.12.0 and the database hash, and Step 4 was rerun after that review.
+After the final local checks, the branch can be pushed:
 
 ```powershell
 gh auth login
@@ -148,7 +149,12 @@ node scripts/conformance.mjs scripts/resumes data/examples/aarav-patel-ats-expec
 
 ### Run the Chapter 11/16 gate-behavior harness
 
-Generate the public machine audit and human-readable report:
+Generate the public machine audit and human-readable report. This command reads
+the stored H-1B database at
+`data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv`; it does not use a
+hand-written company score. The report prints the database path, file hash,
+selected record, arithmetic check, and the real inputs that remain
+`NOT_IMPLEMENTED`:
 
 ```powershell
 npm.cmd run gate:behavior
@@ -177,15 +183,17 @@ node scripts/conformance.mjs scripts/score data/examples/gate-behavior-cases.jso
 ### Check the complete Step 2 contribution
 
 ```powershell
-node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 ### Generate and inspect the Step 3 verified-data evidence
 
 This command recomputes the reported metrics, enumerates every numeric audit
 leaf with its script and record, and runs the privacy/mechanical-honesty gate.
-It also reads the named Step 3 review record. This assignment review does not
-self-certify the recipe as lifecycle `VERIFIED`.
+It also checks whether the named Step 3 review is bound to the current recipe
+version and database hash. The current record is
+`logs/zening-teng-step3-review-v0.12.0.json`; the older review remains history.
+No assignment review self-certifies the recipe as lifecycle `VERIFIED`.
 
 ```powershell
 npm.cmd run capstone:step3
@@ -209,14 +217,14 @@ npm.cmd run doctor -- --strict
 Check all Step 3 contribution artifacts for conformance:
 
 ```powershell
-node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
+node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/Zening-AIRecipe.md recipes/Zening.card.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
 ```
 
 ### Read the Step 4 honest run
 
-The public report says what ran, shows privacy-safe terminal excerpts, checks
-whether the results make sense, records both deliberate breaks, and lists what
-the machine could not know. Real résumé artifacts stay under `private/`.
+The public report preserves the private résumé run and shows the post-approval
+database-backed gate and public ATS terminal evidence. Real résumé artifacts
+stay under `private/`.
 
 ```powershell
 Get-Content "reports\generated\zening-teng-contribution\step4.md"

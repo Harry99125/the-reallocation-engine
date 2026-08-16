@@ -7,6 +7,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -15,6 +16,7 @@ const REPO_ROOT = path.resolve(SCRIPT_DIR, '..');
 const OUTPUT_DIR = path.join(REPO_ROOT, 'reports/generated/zening-teng-contribution');
 const OUTPUT_JSON = path.join(OUTPUT_DIR, 'step3.json');
 const OUTPUT_MD = path.join(OUTPUT_DIR, 'step3.md');
+const CURRENT_RECIPE_VERSION = '0.12.0';
 
 const INPUTS = {
   atsPositive: 'reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json',
@@ -22,10 +24,13 @@ const INPUTS = {
   gate: 'reports/generated/gate-behavior/gate-behavior-audit.json',
   atsManifest: 'data/examples/aarav-patel-ats-expected.json',
   gateFixture: 'data/examples/gate-behavior-cases.json',
-  step3Review: 'logs/zening-teng-step3-review.json',
+  gateDatabase: 'data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv',
+  gateJoinAudit: 'data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped-join-validation-audit.md',
+  step3Review: 'logs/zening-teng-step3-review-v0.12.0.json',
   atsScript: 'scripts/resumes/ats-parse-test.mjs',
   gateScript: 'scripts/score/gate-behavior-harness.mjs',
   gateCore: 'scripts/score/gate-behavior-core.mjs',
+  gateDatabaseScript: 'scripts/score/gate-database-evidence.mjs',
   scorer: 'scripts/score/role-scorer.mjs',
 };
 
@@ -140,10 +145,38 @@ export const BOUNDARY_ROWS = [
   },
   {
     output: 'Gate schema_version, harness, fixture, sources, contract',
-    label: 'local-evidence',
-    record: 'Gate test cases and Chapters 11 and 16',
+    label: 'record',
+    record: 'Gate test cases, Chapters 11 and 16, and the stored H-1B database',
     machine_can_verify: 'The report points to the saved test file and chapters',
     human_keeps: 'Whether these rules are enough for a real decision',
+  },
+  {
+    output: 'Gate sponsorship weight, Apply threshold, and zero/one controls',
+    label: 'record',
+    record: 'Chapter 11, Chapter 16, and the stored production scorer configuration',
+    machine_can_verify: 'The run used the same saved algorithm settings and contract controls',
+    human_keeps: 'Whether the approximate threshold and weight are adequately calibrated',
+  },
+  {
+    output: 'Gate database path, SHA-256, row/column counts, complete-record count, arithmetic mismatches',
+    label: 'script-output',
+    record: 'data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv',
+    machine_can_verify: 'The stored bytes, schema, record count, and approval-rate arithmetic',
+    human_keeps: 'Whether the mapped company identities are trustworthy enough to use',
+  },
+  {
+    output: 'Gate selected H-1B record: company, approvals, denials, approval rate',
+    label: 'record',
+    record: 'First complete H-1B record in stored CSV order',
+    machine_can_verify: 'The values occur in the selected stored record and the rate recomputes',
+    human_keeps: 'Whether the entity join is correct; raw match evidence is missing',
+  },
+  {
+    output: 'Gate normalized H-1B rate used as sponsorship.p',
+    label: 'script-output',
+    record: 'Stored Approval_Rate divided by 100',
+    machine_can_verify: 'The unit conversion and scorer arithmetic',
+    human_keeps: 'It is only a mechanical proxy, not full P(sponsorship)',
   },
   {
     output: 'Gate generated timestamp',
@@ -157,13 +190,13 @@ export const BOUNDARY_ROWS = [
     label: 'local-evidence',
     record: 'Gate report program and gate-behavior-cases.json',
     machine_can_verify: 'The case names and test labels were copied correctly',
-    human_keeps: 'Whether the six cases cover enough situations',
+    human_keeps: 'Whether the three gate cases cover enough situations',
   },
   {
     output: 'Gate production cases[*].expected.* and expected check values',
-    label: 'local-evidence',
-    record: 'Expected values in gate-behavior-cases.json',
-    machine_can_verify: 'The test file is valid and the results match it',
+    label: 'script-output',
+    record: 'Database record plus Chapter 11/16 contract controls in gate-behavior-cases.json',
+    machine_can_verify: 'The expected values recompute from the stored record and contract controls',
     human_keeps: 'Whether important real situations are missing',
   },
   {
@@ -202,9 +235,9 @@ export const BOUNDARY_ROWS = [
     human_keeps: 'The named review and final approval',
   },
   {
-    output: 'Real résumé truth, universal ATS compatibility, live posting truth, visa legality, final Apply decision',
+    output: 'Real résumé truth, universal ATS compatibility, current posting truth, full sponsorship probability, visa legality, final Apply decision',
     label: 'missing',
-    record: 'These two tools do not have those records',
+    record: 'The reports explicitly mark these records NOT IMPLEMENTED or unavailable',
     machine_can_verify: 'The reports do not claim to know these things',
     human_keeps: 'Find other evidence or leave the answer unknown',
   },
@@ -268,11 +301,33 @@ function numberProvenance(reportName, parts) {
       record: reportName === 'ats-positive' ? INPUTS.atsPositive : INPUTS.atsBreak,
     };
   }
+  if (key.startsWith('database_evidence.selected_record.')
+    && /(?:total_approvals|total_denials|approval_rate_percent)$/.test(key)) {
+    return {
+      label: 'record',
+      script: INPUTS.gateDatabaseScript,
+      record: INPUTS.gateDatabase,
+    };
+  }
+  if (key.startsWith('database_evidence.')) {
+    return {
+      label: 'script-output',
+      script: INPUTS.gateDatabaseScript,
+      record: INPUTS.gateDatabase,
+    };
+  }
+  if (key.startsWith('contract_parameters.')) {
+    return {
+      label: 'record',
+      script: INPUTS.gateScript,
+      record: 'chapters/11-the-bayesian-role-scorer.md, chapters/16-the-build-and-the-honest-run.md, and scripts/score/role-scorer.mjs',
+    };
+  }
   if (key.includes('.expected.') || key.endsWith('.expected')) {
     return {
-      label: 'local-evidence',
-      script: INPUTS.gateCore,
-      record: INPUTS.gateFixture,
+      label: 'script-output',
+      script: INPUTS.gateDatabaseScript,
+      record: `${INPUTS.gateDatabase} and ${INPUTS.gateFixture}`,
     };
   }
   return {
@@ -316,7 +371,9 @@ function renderMarkdown(evidence) {
     ['honesty:ats-break-reconciles', 'Broken résumé totals'],
     ['honesty:gate-production-reconciles', 'Production gate totals'],
     ['honesty:mutation-is-caught', 'Wrong gate examples'],
-    ['honesty:controlled-input-labels', 'Controlled test labels'],
+    ['honesty:database-record-reconciles', 'Stored H-1B record'],
+    ['honesty:contract-controls', 'Chapter gate controls'],
+    ['honesty:not-implemented-visible', 'Missing inputs stay missing'],
     ['honesty:no-self-attestation', 'Human review remains open'],
     ['honesty:named-review-record', 'Named Step 3 review'],
     ['honesty:ats-limitation-visible', 'ATS limitation is shown'],
@@ -329,6 +386,9 @@ function renderMarkdown(evidence) {
     ['privacy:doctor-clean', 'Runnable, privacy clean, and recipe files valid'],
     ['honesty:no-self-attestation', 'The result is still HUMAN_REVIEW_REQUIRED'],
     ['honesty:ats-limitation-visible', 'The report says one parser cannot represent every ATS'],
+    ['honesty:database-record-reconciles', 'Database hash and approval-rate arithmetic match'],
+    ['honesty:contract-controls', 'Only Chapter contract controls 0 and 1 are used'],
+    ['honesty:not-implemented-visible', 'No missing live or personal value was filled in'],
     ['provenance:boundary-labels', 'All labels come from the assignment list'],
     ['provenance:every-number-traced', 'No untraced numbers found'],
   ]);
@@ -343,7 +403,7 @@ function renderMarkdown(evidence) {
     '',
     evidence.human_attestation.status === 'RECORDED'
       ? `Named review recorded: **${evidence.human_attestation.reviewer}** approved Step 4 on ${evidence.human_attestation.recorded_on}.`
-      : 'A person still has to read the reports and sign the review. Until that happens, Step 4 must not start.',
+      : 'A person still has to read the database-backed reports and sign the current review. Until that happens, Step 4 cannot be finalized for this version.',
     '',
     '## Checks I ran',
     '',
@@ -363,7 +423,7 @@ function renderMarkdown(evidence) {
     '',
     '- `record`: a value copied from a saved source record.',
     '- `script-output`: a value calculated by a program.',
-    '- `local-evidence`: a rule or controlled test value stored in this project.',
+    '- `local-evidence`: a saved rule or test definition, not a real-company fact.',
     '- `external-source`: information reported by an outside dependency.',
     '- `your-input`: a value supplied by the person running the command.',
     '- `model-inference`: an AI judgment, not a fact.',
@@ -390,6 +450,7 @@ function renderMarkdown(evidence) {
     `| ATS positive pages / required fields / order checks | ${INPUTS.atsScript} | ${INPUTS.atsPositive} and its paste-test.txt | ${positive.pages} pages; ${positive.fields_passed}/${positive.fields_total} fields; ${positive.order_passed}/${positive.order_total} order |`,
     `| ATS deliberate break pages / required fields / order checks | ${INPUTS.atsScript} | ${INPUTS.atsBreak} and its paste-test.txt | ${broken.pages} page; ${broken.fields_passed}/${broken.fields_total} fields; ${broken.order_passed}/${broken.order_total} order; verdict ${broken.verdict} |`,
     `| Gate production cases / assertions | ${INPUTS.gateScript} + ${INPUTS.scorer} | ${INPUTS.gate} | ${gate.cases_passed}/${gate.cases_total} cases; ${gate.checks_passed}/${gate.checks_total} assertions |`,
+    `| Gate database record | ${INPUTS.gateDatabaseScript} | ${INPUTS.gateDatabase} | ${gate.database_company}; ${gate.database_approvals} approvals; ${gate.database_denials} denials; ${gate.database_rate_percent}% stored rate; arithmetic ${gate.database_arithmetic_status} |`,
     `| Gate-as-vote witnesses | ${INPUTS.gateCore} | ${INPUTS.gate} | ${gate.witnesses.map((witness) => `${witness.id}: ${witness.composite} / ${witness.recommendation} / ${witness.status}`).join('; ')} |`,
     '',
     '## Human review',
@@ -404,7 +465,7 @@ function renderMarkdown(evidence) {
     '',
     '- Commercial ATS products other than PDF.js.',
     '- Whether a real résumé is true or persuasive.',
-    '- Current job liveness, sponsorship, role quality, or visa timing.',
+    '- Current job liveness, full sponsorship probability, role quality, or visa timing.',
     '- Whether the scorer weights are good.',
     '- Whether a person should Apply, Consider, or Skip.',
     '- Step 4 is recorded separately in `step4.md`; this Step 3 checker does not judge that run.',
@@ -412,7 +473,7 @@ function renderMarkdown(evidence) {
     '### Problems found and fixed',
     '',
     '- The first ATS failure report sounded like every field passed. I changed the report and added a test for it.',
-    '- The gate sample first used labels meant for real records. Controlled values are now labeled `local-evidence`.',
+    '- The first gate sample used hand-written business values. The harness now reads the stored H-1B database and keeps missing real inputs as `NOT_IMPLEMENTED`.',
     '- On Windows, `doctor` missed Python, Git privacy checks, and CRLF frontmatter. Those checks now work on this machine.',
   );
   return lines.join('\n');
@@ -430,22 +491,28 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
   const scaffold = (file) => /(^|\/)(README\.md|\.gitkeep|\.gitignore)$/i.test(file) || /\.example\./i.test(file);
   const trackedLeaks = trackedFiles.filter((file) => ((/^(?:private|data\/ats)\//i.test(file) && !scaffold(file))
     || /^resumes\/.*\.pdf$/i.test(file) || /(^|\/)\.env(?:\.|$)/i.test(file)));
-  const fixtureSources = gateFixture.cases.flatMap((entry) => [
-    entry.role.sponsorship?.source,
-    entry.role.fit?.source,
-    entry.role.role_quality?.source,
-    entry.role.liveness?.source,
-    entry.role.timeline?.source,
-  ]);
+  const contractGateValues = gateFixture.cases.flatMap((entry) => Object.values(entry.contract_gates || {}));
+  const databaseEvidence = gateAudit.database_evidence;
+  const databasePath = databaseEvidence?.source?.path
+    ? path.join(REPO_ROOT, databaseEvidence.source.path)
+    : null;
+  const databaseHash = databasePath && fs.existsSync(databasePath)
+    ? createHash('sha256').update(fs.readFileSync(databasePath)).digest('hex')
+    : null;
   const witnesses = gateAudit.deliberate_break.witnesses;
   const reviewRecord = INPUTS.step3Review;
   const humanReviewRecorded = Boolean(step3Review
     && step3Review.source === 'your-input'
     && step3Review.reviewer === 'Zening Teng'
     && step3Review.decision === 'APPROVED_FOR_STEP_4'
+    && step3Review.reviewed_recipe_version === CURRENT_RECIPE_VERSION
+    && step3Review.reviewed_gate_database_sha256 === databaseEvidence?.source?.sha256
     && /^\d{4}-\d{2}-\d{2}$/.test(step3Review.recorded_on)
     && Array.isArray(step3Review.reviewed_records)
-    && step3Review.reviewed_records.length >= 4);
+    && step3Review.reviewed_records.length >= 4
+    && Array.isArray(step3Review.acknowledged_limits)
+    && step3Review.acknowledged_limits.some((entry) => /entity join/i.test(entry))
+    && step3Review.acknowledged_limits.some((entry) => /full sponsorship probability/i.test(entry)));
 
   const checks = [
     check('privacy:no-private-staged', privateStaged.length === 0, 'no private/, data/ats/, résumé PDF, or .env path staged', privateStaged.length ? privateStaged.join(', ') : 'none', 'git diff --cached --name-only'),
@@ -469,16 +536,34 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
       && witnesses.length >= 2 && witnesses.every((entry) => entry.mutation_status === 'FAIL'
         && entry.mutation_observed.composite !== 0 && entry.mutation_observed.recommendation !== 'Skip'),
     'wrong gate-as-vote implementation fails; every named witness is caught', witnesses.map((entry) => `${entry.id}:${entry.mutation_observed.composite}/${entry.mutation_observed.recommendation}/${entry.mutation_status}`).join('; '), INPUTS.gate),
-    check('honesty:controlled-input-labels', fixtureSources.every((source) => source === 'local-evidence'), 'every controlled gate factor labeled local-evidence', [...new Set(fixtureSources)].join(', '), INPUTS.gateFixture),
+    check('honesty:database-record-reconciles', databaseEvidence?.source?.path === INPUTS.gateDatabase
+      && databaseEvidence.source.sha256 === databaseHash
+      && databaseEvidence.selected_record?.arithmetic_status === 'PASS'
+      && databaseEvidence.scan?.approval_rate_arithmetic_mismatches === 0
+      && Math.abs(databaseEvidence.selected_record.normalized_approval_rate
+        - (databaseEvidence.selected_record.approval_rate_percent / 100)) <= 1e-9,
+    'stored database hash and selected H-1B record arithmetic reconcile', databaseEvidence
+      ? `${databaseEvidence.source.sha256}; ${databaseEvidence.selected_record.company_name}; ${databaseEvidence.selected_record.arithmetic_status}`
+      : 'missing database evidence', INPUTS.gateDatabase),
+    check('honesty:contract-controls', contractGateValues.length === gateFixture.cases.length * 2
+      && contractGateValues.every((value) => value === 0 || value === 1),
+    'every liveness/timeline test control is a Chapter 11/16 zero-or-one contract value', [...new Set(contractGateValues)].join(', '), INPUTS.gateFixture),
+    check('honesty:not-implemented-visible', databaseEvidence
+      && Object.values(databaseEvidence.not_implemented || {}).length === 4
+      && Object.values(databaseEvidence.not_implemented).every((value) => String(value).startsWith('NOT_IMPLEMENTED'))
+      && databaseEvidence.limitations.some((value) => /join remains unverified/i.test(value)),
+    'missing real inputs and the unverified entity join are stated, not replaced with scores', databaseEvidence
+      ? Object.values(databaseEvidence.not_implemented).join(' | ')
+      : 'missing database evidence', INPUTS.gate),
     check('honesty:no-self-attestation', gateAudit.human_decision === 'HUMAN_REVIEW_REQUIRED', 'machine output preserves human review boundary', gateAudit.human_decision, INPUTS.gate),
-    check('honesty:named-review-record', humanReviewRecorded, 'a separate named-human record approves Step 4', humanReviewRecorded ? `${step3Review.reviewer}; ${step3Review.recorded_on}; ${step3Review.decision}` : 'missing or invalid', reviewRecord),
+    check('honesty:named-review-record', humanReviewRecorded, `a separate named-human record approves recipe ${CURRENT_RECIPE_VERSION} and database ${databaseEvidence?.source?.sha256}`, humanReviewRecorded ? `${step3Review.reviewer}; ${step3Review.recorded_on}; ${step3Review.decision}` : 'old review does not cover the current database-backed version', reviewRecord),
     check('honesty:ats-limitation-visible', atsPositive.limitations.some((entry) => /not proof of compatibility with every ATS/i.test(entry)), 'universal ATS compatibility explicitly not claimed', atsPositive.limitations.join(' | '), INPUTS.atsPositive),
     check('provenance:boundary-labels', BOUNDARY_ROWS.every((row) => PROVENANCE_LABELS.has(row.label)), 'all boundary rows use assignment-approved labels', [...new Set(BOUNDARY_ROWS.map((row) => row.label))].join(', '), 'BOUNDARY_ROWS in scripts/verified-data-evidence.mjs'),
   ];
 
   const privacyChecks = checks.filter((entry) => entry.id.startsWith('privacy:'));
-  const honestyChecks = checks.filter((entry) => !entry.id.startsWith('privacy:'));
-  const machineResult = checks.every((entry) => entry.status === 'PASS') ? 'PASS' : 'FAIL';
+  const honestyChecks = checks.filter((entry) => !entry.id.startsWith('privacy:')
+    && entry.id !== 'honesty:named-review-record');
   const numberTrace = [
     ...collectNumberTrace('ats-positive', atsPositive),
     ...collectNumberTrace('ats-break', atsBreak),
@@ -486,14 +571,15 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
   ];
   const untracedNumbers = numberTrace.filter((entry) => !PROVENANCE_LABELS.has(entry.label) || !entry.script || !entry.record);
   checks.push(check('provenance:every-number-traced', untracedNumbers.length === 0, 'every numeric audit leaf has label, script, and record', untracedNumbers.length ? untracedNumbers.map((entry) => `${entry.report}:${entry.json_path}`).join(', ') : 'none untraced', 'number_trace in this evidence JSON'));
+  const machineChecks = checks.filter((entry) => entry.id !== 'honesty:named-review-record');
 
   return {
     schema_version: '1.0.0',
     artifact: 'verified-data-evidence',
     contribution: 'reallocation-verification-harness',
-    recipe_version: '0.11.0',
+    recipe_version: CURRENT_RECIPE_VERSION,
     generated: new Date().toISOString(),
-    machine_result: checks.every((entry) => entry.status === 'PASS') ? 'PASS' : 'FAIL',
+    machine_result: machineChecks.every((entry) => entry.status === 'PASS') ? 'PASS' : 'FAIL',
     human_attestation: humanReviewRecorded ? {
       status: 'RECORDED',
       reviewer: step3Review.reviewer,
@@ -526,6 +612,11 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
         cases_total: productionCases.length,
         checks_passed: checksPassed,
         checks_total: productionChecks.length,
+        database_company: databaseEvidence.selected_record.company_name,
+        database_approvals: databaseEvidence.selected_record.total_approvals,
+        database_denials: databaseEvidence.selected_record.total_denials,
+        database_rate_percent: databaseEvidence.selected_record.approval_rate_percent,
+        database_arithmetic_status: databaseEvidence.selected_record.arithmetic_status,
         witnesses: witnesses.map((entry) => ({ id: entry.id, composite: entry.mutation_observed.composite, recommendation: entry.mutation_observed.recommendation, status: entry.mutation_status })),
       },
     },
@@ -541,7 +632,7 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
 }
 
 export function main() {
-  const required = Object.values(INPUTS).filter((entry) => entry.endsWith('.json') || entry.endsWith('.mjs'));
+  const required = Object.values(INPUTS).filter((entry) => /\.(?:json|mjs|csv|md)$/.test(entry));
   const missing = required.filter((entry) => !fs.existsSync(path.join(REPO_ROOT, entry)));
   if (missing.length) throw new Error(`Missing required evidence input(s): ${missing.join(', ')}`);
 

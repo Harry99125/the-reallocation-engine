@@ -18,7 +18,7 @@ function inputs() {
     atsBreak: read('reports/generated/ats-paste-test/break-attempt/paste-test-audit.json'),
     gateAudit: read('reports/generated/gate-behavior/gate-behavior-audit.json'),
     gateFixture: read('data/examples/gate-behavior-cases.json'),
-    step3Review: read('logs/zening-teng-step3-review.json'),
+    step3Review: read('logs/zening-teng-step3-review-v0.12.0.json'),
     stagedFiles: [],
     trackedFiles: ['data/ats/.gitignore', 'private/README.md'],
     doctorOutput,
@@ -45,6 +45,22 @@ test('machine evidence does not invent a missing human review', () => {
   assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:named-review-record').status, 'FAIL');
 });
 
+test('a named review must bind to the current recipe and database hash', () => {
+  const sample = inputs();
+  sample.step3Review = clone(sample.step3Review);
+  sample.step3Review.reviewed_recipe_version = '0.12.0';
+  sample.step3Review.reviewed_gate_database_sha256 = sample.gateAudit.database_evidence.source.sha256;
+  sample.step3Review.acknowledged_limits.push(
+    'the stored entity join lacks raw match evidence',
+    'historical approval rate is not the full sponsorship probability',
+  );
+  const evidence = buildEvidence(sample);
+  assert.equal(evidence.machine_result, 'PASS');
+  assert.equal(evidence.human_attestation.status, 'RECORDED');
+  assert.equal(evidence.human_attestation.reviewer, 'Zening Teng');
+  assert.equal(evidence.ethics_gate.human_decision, 'APPROVED_FOR_STEP_4_BY_NAMED_HUMAN');
+});
+
 test('a staged private path blocks the Step 3 machine gate', () => {
   const sample = inputs();
   sample.stagedFiles = ['private/ats-paste-test/resume/paste-test.txt'];
@@ -64,12 +80,32 @@ test('an invented ATS summary count fails reconciliation', () => {
   assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:ats-positive-reconciles').status, 'FAIL');
 });
 
-test('a controlled factor mislabeled as an external record fails honesty', () => {
+test('a non-contract gate control fails honesty', () => {
   const sample = inputs();
   sample.gateFixture = clone(sample.gateFixture);
-  sample.gateFixture.cases[0].role.liveness.source = 'record';
+  sample.gateFixture.cases[0].contract_gates.liveness = 0.5;
   const evidence = buildEvidence(sample);
   assert.equal(evidence.machine_result, 'FAIL');
   assert.equal(evidence.ethics_gate.honesty, 'FAIL');
-  assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:controlled-input-labels').status, 'FAIL');
+  assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:contract-controls').status, 'FAIL');
+});
+
+test('a stale database hash fails honesty', () => {
+  const sample = inputs();
+  sample.gateAudit = clone(sample.gateAudit);
+  sample.gateAudit.database_evidence.source.sha256 = '0'.repeat(64);
+  const evidence = buildEvidence(sample);
+  assert.equal(evidence.machine_result, 'FAIL');
+  assert.equal(evidence.ethics_gate.honesty, 'FAIL');
+  assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:database-record-reconciles').status, 'FAIL');
+});
+
+test('a missing-input claim replaced with a score fails honesty', () => {
+  const sample = inputs();
+  sample.gateAudit = clone(sample.gateAudit);
+  sample.gateAudit.database_evidence.not_implemented.real_job_liveness = 0.8;
+  const evidence = buildEvidence(sample);
+  assert.equal(evidence.machine_result, 'FAIL');
+  assert.equal(evidence.ethics_gate.honesty, 'FAIL');
+  assert.equal(evidence.checks.find((entry) => entry.id === 'honesty:not-implemented-visible').status, 'FAIL');
 });

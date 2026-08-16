@@ -9,4 +9,4 @@ For the operating principle behind this separation, see [AI does AI things; huma
 The first complete two-customer pair is:
 
 - AI recipe: [`Zening-AIRecipe.md`](Zening-AIRecipe.md)
-- Human card: [`Zening.Humancard.md`](Zening.Humancard.md)
+- Human card: [`Zening.card.md`](Zening.card.md)
