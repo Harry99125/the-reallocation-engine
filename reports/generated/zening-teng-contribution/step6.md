@@ -44,7 +44,7 @@ The same layer contains a deliberate mutation that changes liveness and timeline
 
 Both modules emit JSON audits for machines and Markdown views for people. A separate evidence gate recomputes every headline count, enumerates numeric audit leaves, checks provenance labels, and rejects staged private paths or invented summaries. It can verify mechanical consistency; it cannot certify adequacy. Every report preserves the human-review boundary.
 
-The implementation uses Node.js, the built-in `node:test` runner, PDF.js, Playwright, JSON fixtures, and Markdown audit views. The operating contract is delivered as a version-matched [AI recipe](../../../recipes/reallocation-verification-harness.md) and [human card](../../../recipes/reallocation-verification-harness.card.md).
+The implementation uses Node.js, the built-in `node:test` runner, PDF.js, Playwright, JSON fixtures, and Markdown audit views. The operating contract is delivered as a version-matched [AI recipe](../../../recipes/harness.md) and [human card](../../../recipes/harness.card.md).
 
 ## Measurable improvement
 

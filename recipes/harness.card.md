@@ -3,9 +3,9 @@ status: RUNNABLE-SAMPLE
 todos_open: 0
 last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
 attestation: null
-recipe_version: 0.8.0
-pair: recipes/reallocation-verification-harness.md
-pair_version: 0.8.0
+recipe_version: 0.9.0
+pair: recipes/harness.md
+pair_version: 0.9.0
 type: human-card
 ---
 
@@ -48,7 +48,7 @@ It is a validation contribution, not an end-to-end job-scoring system.
 | `data/examples/gate-behavior-cases.json` | Independent Chapter 11/16 gate truth table. |
 | `scripts/score/role-scorer.mjs` | Production scoring function under test. |
 | `scripts/verified-data-evidence.mjs` | Reconciles every reported metric, traces numeric leaves, and checks the Step 3 privacy/mechanical-honesty gate. |
-| `recipes/reallocation-verification-harness.md` | Exact execution contract paired with this card. |
+| `recipes/harness.md` | Exact execution contract paired with this card. |
 
 ## How to Run
 
@@ -101,7 +101,7 @@ Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
 ### 6. Check the complete contribution
 
 ```powershell
-node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/harness.md recipes/harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 Conformance proves the files parse and compile. It does not clear human adequacy.
@@ -185,4 +185,4 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 
 ## Maintenance and Update Trigger
 
-Update this card and `recipes/reallocation-verification-harness.md` together whenever any command, fixture schema, output filename, exit code, parser, scoring formula, gate threshold, limitation, or failure behavior changes. Increment both `pair_version` values in the same commit and rerun the complete public sample.
+Update this card and `recipes/harness.md` together whenever any command, fixture schema, output filename, exit code, parser, scoring formula, gate threshold, limitation, or failure behavior changes. Increment both `pair_version` values in the same commit and rerun the complete public sample.

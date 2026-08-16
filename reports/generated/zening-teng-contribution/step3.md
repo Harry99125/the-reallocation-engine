@@ -1,6 +1,6 @@
 # Verified-data evidence — Reallocation Verification Harness
 
-- Generated: 2026-08-16T04:07:55.463Z
+- Generated: 2026-08-16T04:30:33.912Z
 - Machine evidence result: **PASS**
 - Human attestation: **REQUIRED BEFORE STEP 4**
 - Scope: one unified contribution containing the Chapter 13 ATS paste-test and Chapter 11/16 gate-behavior harness.

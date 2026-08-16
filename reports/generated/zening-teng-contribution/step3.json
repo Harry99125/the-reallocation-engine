@@ -3,7 +3,7 @@
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
   "recipe_version": "0.8.0",
-  "generated": "2026-08-16T04:07:55.463Z",
+  "generated": "2026-08-16T04:30:33.912Z",
   "machine_result": "PASS",
   "human_attestation": "REQUIRED_BEFORE_STEP_4",
   "ethics_gate": {

@@ -8,5 +8,5 @@ For the operating principle behind this separation, see [AI does AI things; huma
 
 The first complete two-customer pair is:
 
-- AI recipe: [`reallocation-verification-harness.md`](reallocation-verification-harness.md)
-- Human card: [`reallocation-verification-harness.card.md`](reallocation-verification-harness.card.md)
+- AI recipe: [`harness.md`](harness.md)
+- Human card: [`harness.card.md`](harness.card.md)

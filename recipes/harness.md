@@ -3,9 +3,9 @@ status: RUNNABLE-SAMPLE
 todos_open: 0
 last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
 attestation: null
-recipe_version: 0.8.0
-pair: recipes/reallocation-verification-harness.card.md
-pair_version: 0.8.0
+recipe_version: 0.9.0
+pair: recipes/harness.card.md
+pair_version: 0.9.0
 ---
 
 # Reallocation Verification Harness — AI Recipe
@@ -33,7 +33,7 @@ Read these files in order before running any command:
 8. `chapters/16-the-build-and-the-honest-run.md`
 9. `scripts/resumes/README.md`
 10. `scripts/score/README.md`
-11. `recipes/reallocation-verification-harness.card.md`
+11. `recipes/harness.card.md`
 
 Treat the recipe and card as one versioned pair. If their `pair_version`, commands, outputs, or failure descriptions differ, stop for documentation drift.
 
@@ -115,7 +115,7 @@ Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
 6. Run targeted conformance:
 
 ```powershell
-node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+node scripts/conformance.mjs recipes/harness.md recipes/harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
 7. Generate the Step 3 verified-data evidence, then read the report:
@@ -203,7 +203,7 @@ Use this template:
 ```markdown
 ## YYYY-MM-DD -- Reallocation verification harness
 
-- **Recipe:** `reallocation-verification-harness` v0.8.0
+- **Recipe:** `reallocation-verification-harness` v0.9.0
 - **Mode:** public-sample | private-resume
 - **Inputs:** public fixture paths, or "approved private résumé; details withheld"
 - **Commands:** stored command names that actually ran

@@ -22,8 +22,8 @@ These figures are script outputs copied from the named audit/run records, not es
 
 The current pair is:
 
-- AI customer: `recipes/reallocation-verification-harness.md`
-- Human customer: `recipes/reallocation-verification-harness.card.md`
+- AI customer: `recipes/harness.md`
+- Human customer: `recipes/harness.card.md`
 
 The AI recipe contains the assignment's nine required sections: executive summary, required reads, phase gates, primary stored tools, workflow, output contract, verification checks, logging rules, and stop conditions. The human card states purpose, capabilities and limits, dependencies, annotated commands, outputs, success conditions, and named failures including drift and verified-data contract violation.
 

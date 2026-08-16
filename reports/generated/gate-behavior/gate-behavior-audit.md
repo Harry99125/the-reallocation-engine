@@ -1,6 +1,6 @@
 # Gate Behavior Harness — Chapter 11 / Chapter 16
 
-- Generated: 2026-08-16T01:42:59.316Z
+- Generated: 2026-08-16T04:29:33.197Z
 - Machine handoff result: **PASS**
 - Human decision: **HUMAN_REVIEW_REQUIRED**
 - Production cases: 6/6 passed
