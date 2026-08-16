@@ -22,6 +22,7 @@ const INPUTS = {
   gate: 'reports/generated/gate-behavior/gate-behavior-audit.json',
   atsManifest: 'data/examples/aarav-patel-ats-expected.json',
   gateFixture: 'data/examples/gate-behavior-cases.json',
+  step3Review: 'logs/zening-teng-step3-review.json',
   atsScript: 'scripts/resumes/ats-parse-test.mjs',
   gateScript: 'scripts/score/gate-behavior-harness.mjs',
   gateCore: 'scripts/score/gate-behavior-core.mjs',
@@ -317,6 +318,7 @@ function renderMarkdown(evidence) {
     ['honesty:mutation-is-caught', 'Wrong gate examples'],
     ['honesty:controlled-input-labels', 'Controlled test labels'],
     ['honesty:no-self-attestation', 'Human review remains open'],
+    ['honesty:named-review-record', 'Named Step 3 review'],
     ['honesty:ats-limitation-visible', 'ATS limitation is shown'],
     ['provenance:boundary-labels', 'Source labels are allowed'],
     ['provenance:every-number-traced', 'Every number has a source'],
@@ -339,7 +341,9 @@ function renderMarkdown(evidence) {
     '',
     `The machine checks passed: **${evidence.machine_result}**. The privacy check passed, and the reported numbers match the saved records.`,
     '',
-    'A person still has to read the reports and sign the review. Until that happens, Step 4 must not start.',
+    evidence.human_attestation.status === 'RECORDED'
+      ? `Named review recorded: **${evidence.human_attestation.reviewer}** approved Step 4 on ${evidence.human_attestation.recorded_on}.`
+      : 'A person still has to read the reports and sign the review. Until that happens, Step 4 must not start.',
     '',
     '## Checks I ran',
     '',
@@ -388,11 +392,13 @@ function renderMarkdown(evidence) {
     `| Gate production cases / assertions | ${INPUTS.gateScript} + ${INPUTS.scorer} | ${INPUTS.gate} | ${gate.cases_passed}/${gate.cases_total} cases; ${gate.checks_passed}/${gate.checks_total} assertions |`,
     `| Gate-as-vote witnesses | ${INPUTS.gateCore} | ${INPUTS.gate} | ${gate.witnesses.map((witness) => `${witness.id}: ${witness.composite} / ${witness.recommendation} / ${witness.status}`).join('; ')} |`,
     '',
-    '## What I still need to do',
+    '## Human review',
     '',
-    'A named person must read this report and the three Markdown audits. That person must confirm what was run, what the results show, and what was not tested.',
+    evidence.human_attestation.status === 'RECORDED'
+      ? `${evidence.human_attestation.reviewer} confirmed the plain-language evidence summary and approved moving to Step 4. The decision is stored in \`${evidence.human_attestation.record}\`.`
+      : 'A named person must read this report and the three Markdown audits before Step 4.',
     '',
-    'Until that review is written down, the recipe stays at `RUNNABLE-SAMPLE`, `attestation` stays `null`, and Step 4 must not begin.',
+    'This approval clears the Step 3 assignment gate. It does not make the programs universally correct and does not change the limits below.',
     '',
     '### Not tested',
     '',
@@ -401,7 +407,7 @@ function renderMarkdown(evidence) {
     '- Current job liveness, sponsorship, role quality, or visa timing.',
     '- Whether the scorer weights are good.',
     '- Whether a person should Apply, Consider, or Skip.',
-    '- A live or private Step 4 run.',
+    '- Step 4 is recorded separately in `step4.md`; this Step 3 checker does not judge that run.',
     '',
     '### Problems found and fixed',
     '',
@@ -412,7 +418,7 @@ function renderMarkdown(evidence) {
   return lines.join('\n');
 }
 
-export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, stagedFiles, trackedFiles, doctorOutput }) {
+export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, step3Review = null, stagedFiles, trackedFiles, doctorOutput }) {
   const positive = recomputeAts(atsPositive);
   const broken = recomputeAts(atsBreak);
   const productionCases = gateAudit.production.cases;
@@ -432,6 +438,14 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
     entry.role.timeline?.source,
   ]);
   const witnesses = gateAudit.deliberate_break.witnesses;
+  const reviewRecord = INPUTS.step3Review;
+  const humanReviewRecorded = Boolean(step3Review
+    && step3Review.source === 'your-input'
+    && step3Review.reviewer === 'Zening Teng'
+    && step3Review.decision === 'APPROVED_FOR_STEP_4'
+    && /^\d{4}-\d{2}-\d{2}$/.test(step3Review.recorded_on)
+    && Array.isArray(step3Review.reviewed_records)
+    && step3Review.reviewed_records.length >= 4);
 
   const checks = [
     check('privacy:no-private-staged', privateStaged.length === 0, 'no private/, data/ats/, résumé PDF, or .env path staged', privateStaged.length ? privateStaged.join(', ') : 'none', 'git diff --cached --name-only'),
@@ -457,6 +471,7 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
     'wrong gate-as-vote implementation fails; every named witness is caught', witnesses.map((entry) => `${entry.id}:${entry.mutation_observed.composite}/${entry.mutation_observed.recommendation}/${entry.mutation_status}`).join('; '), INPUTS.gate),
     check('honesty:controlled-input-labels', fixtureSources.every((source) => source === 'local-evidence'), 'every controlled gate factor labeled local-evidence', [...new Set(fixtureSources)].join(', '), INPUTS.gateFixture),
     check('honesty:no-self-attestation', gateAudit.human_decision === 'HUMAN_REVIEW_REQUIRED', 'machine output preserves human review boundary', gateAudit.human_decision, INPUTS.gate),
+    check('honesty:named-review-record', humanReviewRecorded, 'a separate named-human record approves Step 4', humanReviewRecorded ? `${step3Review.reviewer}; ${step3Review.recorded_on}; ${step3Review.decision}` : 'missing or invalid', reviewRecord),
     check('honesty:ats-limitation-visible', atsPositive.limitations.some((entry) => /not proof of compatibility with every ATS/i.test(entry)), 'universal ATS compatibility explicitly not claimed', atsPositive.limitations.join(' | '), INPUTS.atsPositive),
     check('provenance:boundary-labels', BOUNDARY_ROWS.every((row) => PROVENANCE_LABELS.has(row.label)), 'all boundary rows use assignment-approved labels', [...new Set(BOUNDARY_ROWS.map((row) => row.label))].join(', '), 'BOUNDARY_ROWS in scripts/verified-data-evidence.mjs'),
   ];
@@ -476,15 +491,29 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
     schema_version: '1.0.0',
     artifact: 'verified-data-evidence',
     contribution: 'reallocation-verification-harness',
-    recipe_version: '0.8.0',
+    recipe_version: '0.11.0',
     generated: new Date().toISOString(),
     machine_result: checks.every((entry) => entry.status === 'PASS') ? 'PASS' : 'FAIL',
-    human_attestation: 'REQUIRED_BEFORE_STEP_4',
+    human_attestation: humanReviewRecorded ? {
+      status: 'RECORDED',
+      reviewer: step3Review.reviewer,
+      recorded_on: step3Review.recorded_on,
+      decision: step3Review.decision,
+      source: step3Review.source,
+      record: reviewRecord,
+    } : {
+      status: 'REQUIRED_BEFORE_STEP_4',
+      reviewer: null,
+      recorded_on: null,
+      decision: null,
+      source: null,
+      record: reviewRecord,
+    },
     ethics_gate: {
       privacy: privacyChecks.every((entry) => entry.status === 'PASS') ? 'PASS' : 'FAIL',
       honesty: honestyChecks.every((entry) => entry.status === 'PASS') && untracedNumbers.length === 0 ? 'PASS' : 'FAIL',
-      human_decision: 'HUMAN_REVIEW_REQUIRED',
-      rule: 'A FAIL blocks the run; machine PASS does not replace named human review.',
+      human_decision: humanReviewRecorded ? 'APPROVED_FOR_STEP_4_BY_NAMED_HUMAN' : 'HUMAN_REVIEW_REQUIRED',
+      rule: 'A FAIL blocks the run; machine PASS does not replace the separate named-human record.',
     },
     inputs: INPUTS,
     checks,
@@ -526,6 +555,7 @@ export function main() {
     atsBreak: readJson(INPUTS.atsBreak),
     gateAudit: readJson(INPUTS.gate),
     gateFixture: readJson(INPUTS.gateFixture),
+    step3Review: readJson(INPUTS.step3Review),
     stagedFiles: git(['diff', '--cached', '--name-only']),
     trackedFiles: git(['ls-files']),
     doctorOutput,
@@ -538,7 +568,7 @@ export function main() {
   console.log(`${evidence.machine_result} Step 3 machine evidence`);
   console.log(`  privacy: ${evidence.ethics_gate.privacy}`);
   console.log(`  honesty/provenance: ${evidence.ethics_gate.honesty}`);
-  console.log(`  human attestation: ${evidence.human_attestation}`);
+  console.log(`  human review: ${evidence.human_attestation.status}${evidence.human_attestation.reviewer ? ` by ${evidence.human_attestation.reviewer}` : ''}`);
   console.log(`  ${path.relative(REPO_ROOT, OUTPUT_MD)}`);
   return evidence.machine_result === 'PASS' ? 0 : 1;
 }

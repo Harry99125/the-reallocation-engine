@@ -2,7 +2,7 @@
 
 ## Short answer
 
-The project is ready for a local review, but the pull request has not been created.
+The project is ready for its final local checks, but the pull request has not been created.
 
 The current branch is:
 
@@ -18,6 +18,8 @@ It was built from the teacher's current `upstream/main`. The older fork history 
 - The AI recipe and human card are under `recipes/`.
 - Reports are under `reports/generated/`.
 - The public résumé PDF is created at test time instead of being committed as source data.
+- Zening Teng recorded the Step 3 review.
+- Step 4 includes a real private résumé run, public terminal evidence, a plausibility check, and two break attempts.
 - `verify` passes.
 - Strict `doctor` passes.
 - The proposed files contain no real résumé, private ATS records, passwords, or environment files.
@@ -25,13 +27,11 @@ It was built from the teacher's current `upstream/main`. The older fork history 
 
 ## What is not done
 
-- Step 3 still needs a named human review.
-- Step 4 has not been written or run.
 - The branch has not been pushed.
 - No GitHub PR exists yet.
 - There is no PR link to submit.
 
-Because of those missing items, this step is only locally ready. It is not finished as a GitHub submission.
+Because the GitHub actions are still missing, this step is only locally ready. It is not finished as a GitHub submission.
 
 ## Proposed PR title
 
@@ -54,6 +54,7 @@ Chapter 13 needs a repeatable way to check whether important résumé text survi
 - A deliberately wrong gate-as-vote version that the tests must reject.
 - JSON audits, readable Markdown reports, automated tests, an AI recipe, and a human card.
 - A Step 3 checker that traces the reported numbers and blocks private staged files.
+- A Step 4 honest-run report with public terminal output, a plausibility audit, deliberate breaks, and a private real-résumé run whose details are withheld.
 
 ### Chapters
 
@@ -71,6 +72,8 @@ Chapter 13 needs a repeatable way to check whether important résumé text survi
 - Gate-as-vote examples: 2/2 were caught.
 
 The numbers come from the saved JSON audits and the test runs listed in `step2.md` and `step3.json`.
+
+Step 4 also records the real run and explains what the machine could not know. The real résumé and all derived private results stay outside the PR.
 
 ### What is verified
 
@@ -97,13 +100,11 @@ The PR contains no real résumé, private extracted text, application tracker, `
 
 ## What must happen before publishing
 
-1. A named person completes the Step 3 review.
-2. Step 4 is completed and saved without private data.
-3. All tests are run again.
-4. The final Git diff is checked.
-5. The student signs in to GitHub.
-6. The branch is pushed to the student's fork.
-7. The PR is opened against `nikbearbrown/the-reallocation-engine:main`.
-8. The real PR link is copied into the submission.
+1. All tests are run one final time.
+2. The final Git diff is checked.
+3. The student signs in to GitHub.
+4. The branch is pushed to the student's fork.
+5. The PR is opened against `nikbearbrown/the-reallocation-engine:main`.
+6. The real PR link is copied into the submission.
 
 Until those actions happen, this report must not claim that the PR was submitted.

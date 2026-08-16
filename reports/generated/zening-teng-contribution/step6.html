@@ -234,6 +234,10 @@
       align-items: start;
     }
 
+    .section-grid > * {
+      min-width: 0;
+    }
+
     .section-index {
       margin: 10px 0 0;
       color: var(--color-red);
@@ -521,7 +525,7 @@
       .hero,
       .section-grid,
       .demo-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 32px;
       }
 
@@ -703,6 +707,7 @@
               <p>Check the totals, show where the numbers came from, block private files, and keep the final decision with a person.</p>
             </li>
           </ol>
+          <p>After the Step 3 review, I ran the résumé checker on the approved real résumé. Its content and results stayed private. The public résumé on this page is only a repeatable code fixture, not the real input.</p>
         </div>
       </div>
     </section>
@@ -747,7 +752,7 @@
               </tbody>
             </table>
           </div>
-          <p class="source-line">Source · Saved test reports and Step 3 evidence</p>
+          <p class="source-line">Source · Saved test reports, Step 3 evidence, and Step 4 honest run</p>
         </div>
       </div>
     </section>
@@ -827,7 +832,7 @@ npm.cmd run test:capstone-step3</pre>
               <ul>
                 <li>11 / 11 ATS tests</li>
                 <li>10 / 10 gate tests</li>
-                <li>4 / 4 evidence tests</li>
+                <li>5 / 5 evidence tests</li>
                 <li>The real scorer passes</li>
                 <li>The wrong scorer is caught</li>
               </ul>
@@ -837,6 +842,7 @@ npm.cmd run test:capstone-step3</pre>
             <a class="button" href="../../../scripts/resumes/ats-parse-test.mjs">Read ATS code</a>
             <a class="button button--secondary" href="../../../scripts/score/gate-behavior-core.mjs">Read gate code</a>
             <a class="button button--secondary" href="step3.md">Read Step 3 evidence</a>
+            <a class="button button--secondary" href="step4.md">Read Step 4 run</a>
           </div>
         </div>
       </div>

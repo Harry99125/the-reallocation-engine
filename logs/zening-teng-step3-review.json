@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0.0",
+  "artifact": "named-human-step3-review",
+  "contribution": "reallocation-verification-harness",
+  "reviewer": "Zening Teng",
+  "recorded_on": "2026-08-16",
+  "source": "your-input",
+  "decision": "APPROVED_FOR_STEP_4",
+  "confirmation": "The reviewer confirmed the five-point plain-language summary and approved starting Step 4.",
+  "reviewed_records": [
+    "reports/generated/zening-teng-contribution/step3.md",
+    "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.md",
+    "reports/generated/ats-paste-test/break-attempt/paste-test-audit.md",
+    "reports/generated/gate-behavior/gate-behavior-audit.md"
+  ],
+  "acknowledged_limits": [
+    "PDF.js does not represent every commercial ATS",
+    "the tools do not verify resume truth or quality",
+    "controlled gate cases are not live job or visa records",
+    "the programs do not make the final application decision"
+  ]
+}

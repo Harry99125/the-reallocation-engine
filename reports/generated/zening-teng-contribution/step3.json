@@ -2,15 +2,22 @@
   "schema_version": "1.0.0",
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
-  "recipe_version": "0.8.0",
-  "generated": "2026-08-16T04:54:19.056Z",
+  "recipe_version": "0.11.0",
+  "generated": "2026-08-16T07:52:33.739Z",
   "machine_result": "PASS",
-  "human_attestation": "REQUIRED_BEFORE_STEP_4",
+  "human_attestation": {
+    "status": "RECORDED",
+    "reviewer": "Zening Teng",
+    "recorded_on": "2026-08-16",
+    "decision": "APPROVED_FOR_STEP_4",
+    "source": "your-input",
+    "record": "logs/zening-teng-step3-review.json"
+  },
   "ethics_gate": {
     "privacy": "PASS",
     "honesty": "PASS",
-    "human_decision": "HUMAN_REVIEW_REQUIRED",
-    "rule": "A FAIL blocks the run; machine PASS does not replace named human review."
+    "human_decision": "APPROVED_FOR_STEP_4_BY_NAMED_HUMAN",
+    "rule": "A FAIL blocks the run; machine PASS does not replace the separate named-human record."
   },
   "inputs": {
     "atsPositive": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json",
@@ -18,6 +25,7 @@
     "gate": "reports/generated/gate-behavior/gate-behavior-audit.json",
     "atsManifest": "data/examples/aarav-patel-ats-expected.json",
     "gateFixture": "data/examples/gate-behavior-cases.json",
+    "step3Review": "logs/zening-teng-step3-review.json",
     "atsScript": "scripts/resumes/ats-parse-test.mjs",
     "gateScript": "scripts/score/gate-behavior-harness.mjs",
     "gateCore": "scripts/score/gate-behavior-core.mjs",
@@ -86,6 +94,13 @@
       "expected": "machine output preserves human review boundary",
       "observed": "HUMAN_REVIEW_REQUIRED",
       "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "id": "honesty:named-review-record",
+      "status": "PASS",
+      "expected": "a separate named-human record approves Step 4",
+      "observed": "Zening Teng; 2026-08-16; APPROVED_FOR_STEP_4",
+      "record": "logs/zening-teng-step3-review.json"
     },
     {
       "id": "honesty:ats-limitation-visible",

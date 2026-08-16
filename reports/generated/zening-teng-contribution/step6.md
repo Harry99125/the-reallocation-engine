@@ -48,6 +48,12 @@ The tools save JSON records and readable Markdown reports. A separate Step 3 pro
 
 The [AI recipe](../../../recipes/Zening-AIRecipe.md) gives the full run process. The [human card](../../../recipes/Zening.Humancard.md) gives a shorter operating guide.
 
+### Honest run
+
+After the Step 3 review, I ran the ATS checker on the approved real résumé. The résumé, extracted text, and result stayed under `private/`. I did not turn any private result into a public score.
+
+I used the made-up public fixture only as a repeatable code test. The [Step 4 report](step4.md) includes the public terminal output, plausibility check, break attempts, and the limits of the private run.
+
 ## Results
 
 | Test | Result |
@@ -68,7 +74,7 @@ The two wrong gate results are the most important evidence:
 | Liveness is zero | `0 / Skip` | `0.80 / Apply` | Caught |
 | Timeline is zero | `0 / Skip` | `0.85 / Apply` | Caught |
 
-These are saved program results, not estimates. The records are in the [gate report](../gate-behavior/gate-behavior-audit.md), [good résumé report](../ats-paste-test/aarav-patel/paste-test-audit.md), [broken résumé report](../ats-paste-test/break-attempt/paste-test-audit.md), and [Step 3 evidence report](step3.md).
+These are saved program results, not estimates. The records are in the [gate report](../gate-behavior/gate-behavior-audit.md), [good résumé report](../ats-paste-test/aarav-patel/paste-test-audit.md), [broken résumé report](../ats-paste-test/break-attempt/paste-test-audit.md), [Step 3 evidence report](step3.md), and [Step 4 honest run](step4.md).
 
 ## What the programs can check
 
@@ -117,7 +123,7 @@ npm.cmd run test:gate-behavior
 npm.cmd run test:capstone-step3
 ```
 
-The expected results are 11/11 ATS tests, 10/10 gate tests, and 4/4 Step 3 tests.
+The expected results are 11/11 ATS tests, 10/10 gate tests, and 5/5 Step 3 tests.
 
 The main code is in the [ATS checker](../../../scripts/resumes/ats-parse-test.mjs), [gate checker](../../../scripts/score/gate-behavior-core.mjs), and [production scorer](../../../scripts/score/role-scorer.mjs).
 

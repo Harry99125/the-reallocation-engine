@@ -1,11 +1,11 @@
 ---
 status: RUNNABLE-SAMPLE
 todos_open: 0
-last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
+last_gate: "step4-honest-run, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
 attestation: null
-recipe_version: 0.10.0
+recipe_version: 0.11.0
 pair: recipes/Zening.Humancard.md
-pair_version: 0.10.0
+pair_version: 0.11.0
 ---
 
 # Reallocation Verification Harness — AI Recipe
@@ -133,7 +133,7 @@ npm.cmd run test:capstone-step3
 npm.cmd run doctor -- --strict
 ```
 
-9. A named human reads the Step 3 report and its three underlying audits. Until that review is recorded, keep `attestation: null`, do not call the contribution `VERIFIED`, and do not begin Step 4.
+9. A named human reads the Step 3 report and its three underlying audits. Record the reviewer's name, date, decision, and accepted limits. The current assignment review is in `logs/zening-teng-step3-review.json`. Keep lifecycle `attestation: null` because this assignment approval is not a self-issued `VERIFIED` attestation.
 
 10. Append the run result to `logs/RUN_LOG.md` using the template below. Include actual observed counts and exit codes; do not copy numbers from this recipe without reading the new output.
 
@@ -150,6 +150,16 @@ $LASTEXITCODE
 
 Read the extracted text yourself. A parser-floor PASS is not a field-correctness claim or universal ATS certification.
 
+### C. Honest-run report
+
+After the named Step 3 review and approved private inspection, read the public Step 4 report:
+
+```powershell
+Get-Content "reports\generated\zening-teng-contribution\step4.md"
+```
+
+The report must say that the real résumé ran privately without publishing its content or derived counts. It must also include reproducible public terminal evidence, a plausibility check, a deliberate ATS break, the gate-as-vote break, the relevant metric readout, and what the machine could not know.
+
 ## 6. Output Contract
 
 | Output | Audience | Required fields or sections | Authority |
@@ -162,6 +172,8 @@ Read the extracted text yourself. A parser-floor PASS is not a field-correctness
 | `reports/generated/gate-behavior/gate-behavior-audit.md` | Human | executable contract, production table, deliberate mutation table, limits | Human-readable handoff; remains `HUMAN_REVIEW_REQUIRED` |
 | `reports/generated/zening-teng-contribution/step3.json` | Machine | boundary rows, ethics checks, metric reconciliation, exhaustive numeric-leaf trace, missing knowledge | Step 3 machine evidence; not a human signature |
 | `reports/generated/zening-teng-contribution/step3.md` | Human | ethics-gate evidence, verified-vs-inferred table, figure-to-script-to-record trace, limitations, review handoff | Must be read by a named human before Step 4 |
+| `logs/zening-teng-step3-review.json` | Machine and human | named reviewer, date, source, decision, reviewed records, accepted limits | Assignment gate record; not lifecycle self-attestation |
+| `reports/generated/zening-teng-contribution/step4.md` | Human | real private-run statement, public terminal evidence, plausibility audit, deliberate breaks, metric readout, unknowns | Honest-run record with private details withheld |
 | `reports/generated/zening-teng-contribution/step1.md` | Human | selected contribution, selection-bar mapping, source chapters, scope boundary | Retrospective selection record requested by the student |
 | `reports/generated/zening-teng-contribution/step2.md` | Human | implementation results, two-customer pair, failure behavior, limits | Retrospective build summary traced to original audits/log/commit |
 | `reports/generated/zening-teng-contribution/step5.md` | Human | requirement audit, base-repository decision, PR description, publication sequence | Local readiness evidence; PR link remains a human/GitHub action |
@@ -192,7 +204,8 @@ Exit-code contract:
 | VH-12 | Conformance | Targeted conformance exits `0` for code, JSON fixtures/audits, reports, recipe, card, package, and README. |
 | VH-13 | Every number traces | Step 3 JSON enumerates every numeric leaf from both ATS audits and the gate audit with a permitted label, producing script, and record. |
 | VH-14 | Ethics gate | No private/data-ATS/résumé-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; controlled values are labeled `local-evidence`. |
-| VH-15 | No self-attestation | Machine evidence may pass, but the report and gate audit retain `HUMAN_REVIEW_REQUIRED`; Step 4 waits for a named human. |
+| VH-15 | No self-attestation | The named Step 3 assignment review is recorded, while the gate audit remains `HUMAN_REVIEW_REQUIRED` and lifecycle `attestation` remains null. |
+| VH-16 | Honest run | Step 4 records the approved private résumé run without private content or counts, and includes public terminal evidence, a plausibility audit, both break attempts, metric records, and unknowns. |
 
 ## 8. Logging Rules
 
@@ -203,7 +216,7 @@ Use this template:
 ```markdown
 ## YYYY-MM-DD -- Reallocation verification harness
 
-- **Recipe:** `reallocation-verification-harness` v0.10.0
+- **Recipe:** `reallocation-verification-harness` v0.11.0
 - **Mode:** public-sample | private-resume
 - **Inputs:** public fixture paths, or "approved private résumé; details withheld"
 - **Commands:** stored command names that actually ran
@@ -211,7 +224,7 @@ Use this template:
 - **Deliberate breaks:** observed exit/verdict and the failure caught
 - **Outputs:** machine audits and human reports
 - **Conformance:** observed file count and result
-- **Human gate:** pending, or named reviewer/date/record path
+- **Human gate:** named reviewer/date/record path and the limits they accepted
 - **Limits:** what the scripts could not verify
 ```
 

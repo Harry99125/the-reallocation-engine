@@ -46,6 +46,7 @@ Capstone step reports:
 - [`step1.md`](reports/generated/zening-teng-contribution/step1.md) — contribution selection and scope
 - [`step2.md`](reports/generated/zening-teng-contribution/step2.md) — build and two-customer-pair evidence
 - [`step3.md`](reports/generated/zening-teng-contribution/step3.md) — verified-data and ethics-gate evidence
+- [`step4.md`](reports/generated/zening-teng-contribution/step4.md) — honest run, plausibility check, deliberate breaks, and limits
 - [`step5.md`](reports/generated/zening-teng-contribution/step5.md) — PR-readiness audit and PR-description draft
 - [`step6.md`](reports/generated/zening-teng-contribution/step6.md) — employer-facing engineering case study
 - [`step6.html`](reports/generated/zening-teng-contribution/step6.html) — responsive single-page portfolio site
@@ -56,6 +57,7 @@ Read the current reports from PowerShell:
 Get-Content "reports\generated\zening-teng-contribution\step1.md"
 Get-Content "reports\generated\zening-teng-contribution\step2.md"
 Get-Content "reports\generated\zening-teng-contribution\step3.md"
+Get-Content "reports\generated\zening-teng-contribution\step4.md"
 Get-Content "reports\generated\zening-teng-contribution\step5.md"
 Get-Content "reports\generated\zening-teng-contribution\step6.md"
 ```
@@ -83,8 +85,8 @@ git fetch upstream main
 git diff --name-only upstream/main...HEAD
 ```
 
-Only after Step 3 human review and Step 4 are complete, authenticate and publish
-the assignment-compliant branch to the student's fork:
+The Step 3 human review and Step 4 are now recorded. After the final local checks,
+authenticate and publish the assignment-compliant branch to the student's fork:
 
 ```powershell
 gh auth login
@@ -182,7 +184,8 @@ node scripts/conformance.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard
 
 This command recomputes the reported metrics, enumerates every numeric audit
 leaf with its script and record, and runs the privacy/mechanical-honesty gate.
-It deliberately leaves the named-human attestation pending.
+It also reads the named Step 3 review record. This assignment review does not
+self-certify the recipe as lifecycle `VERIFIED`.
 
 ```powershell
 npm.cmd run capstone:step3
@@ -207,6 +210,16 @@ Check all Step 3 contribution artifacts for conformance:
 
 ```powershell
 node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/Zening-AIRecipe.md recipes/Zening.Humancard.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
+```
+
+### Read the Step 4 honest run
+
+The public report says what ran, shows privacy-safe terminal excerpts, checks
+whether the results make sense, records both deliberate breaks, and lists what
+the machine could not know. Real résumé artifacts stay under `private/`.
+
+```powershell
+Get-Content "reports\generated\zening-teng-contribution\step4.md"
 ```
 
 ## Table of Contents

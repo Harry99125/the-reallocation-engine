@@ -1,11 +1,11 @@
 ---
 status: RUNNABLE-SAMPLE
 todos_open: 0
-last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
+last_gate: "step4-honest-run, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
 attestation: null
-recipe_version: 0.10.0
+recipe_version: 0.11.0
 pair: recipes/Zening-AIRecipe.md
-pair_version: 0.10.0
+pair_version: 0.11.0
 type: human-card
 ---
 
@@ -116,7 +116,7 @@ npm.cmd run test:capstone-step3
 npm.cmd run doctor -- --strict
 ```
 
-Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`, while human attestation remains required. Read the boundary table and the underlying three Markdown audits yourself before clearing Step 4.
+Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`. Read the boundary table and the three Markdown audits before recording the named Step 3 review. The current assignment review is recorded in `logs/zening-teng-step3-review.json`; it does not change lifecycle status to `VERIFIED`.
 
 ### Optional private résumé inspection
 
@@ -128,6 +128,14 @@ $LASTEXITCODE
 ```
 
 Private output must remain untracked. Read `paste-test.txt` before deciding whether the résumé is adequate.
+
+### Read the Step 4 honest run
+
+```powershell
+Get-Content "reports\generated\zening-teng-contribution\step4.md"
+```
+
+Confirm that it says the real résumé ran privately, does not publish private content or counts, shows the reproducible public output, checks whether the results make sense, records both break attempts, and says what the machine could not know.
 
 ## What It Produces
 
@@ -141,6 +149,8 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 | `reports/generated/gate-behavior/gate-behavior-audit.md` | Human-readable gate handoff and limits. |
 | `reports/generated/zening-teng-contribution/step3.json` | Machine-readable Step 3 checks, complete boundary, and exhaustive numeric-leaf trace. |
 | `reports/generated/zening-teng-contribution/step3.md` | Human-readable Step 3 evidence and named-review handoff. |
+| `logs/zening-teng-step3-review.json` | Named Step 3 assignment-review record; not lifecycle self-attestation. |
+| `reports/generated/zening-teng-contribution/step4.md` | Honest-run report with private details withheld and public evidence shown. |
 | `reports/generated/zening-teng-contribution/step1.md` | Human-readable contribution-selection and scope record. |
 | `reports/generated/zening-teng-contribution/step2.md` | Human-readable build, pair, failure, and limitation summary traced to original evidence. |
 | `reports/generated/zening-teng-contribution/step5.md` | Human-readable PR readiness audit and maintainer-ready description draft; it does not prove a PR was published. |
@@ -155,7 +165,8 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 - Production gate behavior passes every case and assertion.
 - The deliberate gate-as-vote implementation produces plausible but wrong nonzero Apply results for both closed-gate witnesses, and the harness marks both caught.
 - Reports retain a human-review boundary; no script claims universal ATS compatibility, factual résumé truth, or a real-job decision.
-- The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and still requires a named human before Step 4.
+- The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and includes the named assignment review.
+- Step 4 records the approved private run without publishing private content or counts, and keeps the final judgment with a person.
 
 ## Failure Modes
 
@@ -177,7 +188,7 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 
 9. **Dependency or security drift.** PDF.js/Playwright changes alter extraction or a dependency becomes vulnerable. Re-run both suites and both sample audits after updating; never preserve an unsafe version merely to keep snapshots green.
 
-10. **Human gate silently skipped.** All machine checks pass and someone labels the contribution adequate or verified without reading the reports. Keep `HUMAN_REVIEW_REQUIRED` and lifecycle status below `VERIFIED` until a named human records the attestation.
+10. **Human gate silently skipped.** All machine checks pass and someone labels the contribution adequate or verified without reading the reports. Require a named Step 3 review record, keep the gate report at `HUMAN_REVIEW_REQUIRED`, and keep lifecycle status below `VERIFIED` unless a separate valid lifecycle attestation exists.
 
 11. **Untraced-number or provenance-label drift.** A new numeric output is added without a script/record trace, or a controlled fixture value is mislabeled as a real record/model judgment. The Step 3 gate must fail; update the boundary/trace logic and regenerate before any run.
 

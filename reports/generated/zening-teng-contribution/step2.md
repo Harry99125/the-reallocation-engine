@@ -14,7 +14,9 @@ For a normal résumé, it extracts the text and looks for basic problems such as
 
 For a controlled test, it can also compare the PDF with a list of expected names, job titles, dates, and headings. Each field receives `PASS` or `FAIL`.
 
-The public test uses an anonymous résumé. I also made an incomplete version on purpose. The complete version passes. The incomplete version fails and shows exactly which fields are missing.
+The public regression test uses a made-up résumé fixture so anyone can repeat the same check. I also made an incomplete version on purpose. The complete version passes. The incomplete version fails and shows exactly which fields are missing.
+
+This public fixture is only a code test. The real résumé used later in Step 4 stays private and is not used as the public answer key.
 
 ## Part 2: gate-behavior checker
 
@@ -55,7 +57,7 @@ The two modules share one pair of instructions:
 
 The recipe gives the full run order, checks, outputs, and stop rules. The card is the shorter version for a person. It explains what the tools do, how to run them, and what can go wrong.
 
-Both files use version `0.10.0` and point to each other.
+Both files use version `0.11.0` and point to each other.
 
 ## Main code
 

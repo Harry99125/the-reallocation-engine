@@ -1,12 +1,12 @@
 # Step 3 — Where the Numbers Came From
 
-Generated: 2026-08-16T04:54:19.056Z
+Generated: 2026-08-16T07:52:33.739Z
 
 ## Short answer
 
 The machine checks passed: **PASS**. The privacy check passed, and the reported numbers match the saved records.
 
-A person still has to read the reports and sign the review. Until that happens, Step 4 must not start.
+Named review recorded: **Zening Teng** approved Step 4 on 2026-08-16.
 
 ## Checks I ran
 
@@ -21,11 +21,12 @@ A person still has to read the reports and sign the review. Until that happens, 
 | Wrong gate examples | **PASS** | liveness-zero-high-votes:0.8/Apply/FAIL; timeline-zero-high-votes:0.85/Apply/FAIL | reports/generated/gate-behavior/gate-behavior-audit.json |
 | Controlled test labels | **PASS** | local-evidence | data/examples/gate-behavior-cases.json |
 | Human review remains open | **PASS** | The result is still HUMAN_REVIEW_REQUIRED | reports/generated/gate-behavior/gate-behavior-audit.json |
+| Named Step 3 review | **PASS** | Zening Teng; 2026-08-16; APPROVED_FOR_STEP_4 | logs/zening-teng-step3-review.json |
 | ATS limitation is shown | **PASS** | The report says one parser cannot represent every ATS | reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json |
 | Source labels are allowed | **PASS** | All labels come from the assignment list | BOUNDARY_ROWS in scripts/verified-data-evidence.mjs |
 | Every number has a source | **PASS** | No untraced numbers found | number_trace in this evidence JSON |
 
-Privacy: **PASS**. Number and source checks: **PASS**. Human review: **HUMAN_REVIEW_REQUIRED**.
+Privacy: **PASS**. Number and source checks: **PASS**. Human review: **APPROVED_FOR_STEP_4_BY_NAMED_HUMAN**.
 
 ## What the labels mean
 
@@ -80,11 +81,11 @@ The full number-by-number list is in `step3.json` under `number_trace`. It store
 | Gate production cases / assertions | scripts/score/gate-behavior-harness.mjs + scripts/score/role-scorer.mjs | reports/generated/gate-behavior/gate-behavior-audit.json | 6/6 cases; 40/40 assertions |
 | Gate-as-vote witnesses | scripts/score/gate-behavior-core.mjs | reports/generated/gate-behavior/gate-behavior-audit.json | liveness-zero-high-votes: 0.8 / Apply / FAIL; timeline-zero-high-votes: 0.85 / Apply / FAIL |
 
-## What I still need to do
+## Human review
 
-A named person must read this report and the three Markdown audits. That person must confirm what was run, what the results show, and what was not tested.
+Zening Teng confirmed the plain-language evidence summary and approved moving to Step 4. The decision is stored in `logs/zening-teng-step3-review.json`.
 
-Until that review is written down, the recipe stays at `RUNNABLE-SAMPLE`, `attestation` stays `null`, and Step 4 must not begin.
+This approval clears the Step 3 assignment gate. It does not make the programs universally correct and does not change the limits below.
 
 ### Not tested
 
@@ -93,7 +94,7 @@ Until that review is written down, the recipe stays at `RUNNABLE-SAMPLE`, `attes
 - Current job liveness, sponsorship, role quality, or visa timing.
 - Whether the scorer weights are good.
 - Whether a person should Apply, Consider, or Skip.
-- A live or private Step 4 run.
+- Step 4 is recorded separately in `step4.md`; this Step 3 checker does not judge that run.
 
 ### Problems found and fixed
 
