@@ -1,0 +1,853 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Zening Teng's software engineering case study: verification infrastructure for ATS parsing and hard eligibility gates in The Reallocation Engine.">
+  <title>Keeping Hard Gates Hard — Zening Teng</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;1,400&amp;family=Inter:wght@400;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-white: #FFFFFF;
+      --color-ink: #2a1a0e;
+      --color-red: #C8102E;
+      --color-secondary: #545454;
+      --color-border: #D4D4D4;
+      --color-ochre: #C8860E;
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --shadow-sm: 0 1px 2px rgb(18 18 18 / 0.06);
+      --shadow-md: 0 6px 20px -6px rgb(18 18 18 / 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--color-white);
+      color: var(--color-ink);
+      font-family: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: var(--color-ink);
+      text-decoration-color: var(--color-red);
+      text-decoration-thickness: 1px;
+      text-underline-offset: 4px;
+      transition: text-decoration-thickness 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    a:hover {
+      text-decoration-thickness: 2px;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--color-red);
+      outline-offset: 2px;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 10;
+      padding: 8px 12px;
+      background: var(--color-white);
+      border: 1px solid var(--color-border);
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .shell {
+      width: min(1180px, calc(100% - 48px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .site-header__inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .brand::before {
+      content: '';
+      display: inline-block;
+      width: 24px;
+      height: 3px;
+      margin-right: 10px;
+      background: var(--color-red);
+      vertical-align: middle;
+    }
+
+    nav ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    nav a {
+      color: var(--color-secondary);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: var(--color-ink);
+      text-decoration: underline;
+      text-decoration-color: var(--color-red);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 5px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(280px, 0.75fr);
+      gap: 64px;
+      padding: 64px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .eyebrow,
+    .source-line {
+      margin: 0 0 16px;
+      color: var(--color-secondary);
+      font-family: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    .display {
+      font-family: 'EB Garamond', 'Garamond', Georgia, serif;
+      font-weight: 400;
+    }
+
+    h1 {
+      max-width: 14ch;
+      margin: 0;
+      font-size: clamp(52px, 7vw, 76px);
+      line-height: 0.98;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      margin: 0 0 24px;
+      font-size: clamp(36px, 4vw, 48px);
+      line-height: 1.08;
+    }
+
+    h3 {
+      margin: 0 0 12px;
+      font-family: 'Inter', -apple-system, 'Helvetica Neue', sans-serif;
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    p {
+      max-width: 65ch;
+      margin: 0 0 24px;
+    }
+
+    .lede {
+      margin-top: 32px;
+      font-family: 'EB Garamond', 'Garamond', Georgia, serif;
+      font-size: 22px;
+      line-height: 1.5;
+    }
+
+    .byline {
+      margin: 24px 0 0;
+      color: var(--color-secondary);
+      font-size: 14px;
+    }
+
+    .metric-hero {
+      align-self: end;
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-top: 4px solid var(--color-red);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .metric-hero__number {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--color-red);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: clamp(52px, 8vw, 84px);
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .metric-hero p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    section {
+      padding: 64px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: minmax(180px, 0.45fr) minmax(0, 1.55fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .section-index {
+      margin: 10px 0 0;
+      color: var(--color-red);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 13px;
+    }
+
+    .architecture {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 40px 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: layer;
+    }
+
+    .architecture li {
+      min-height: 260px;
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+      counter-increment: layer;
+    }
+
+    .architecture li::before {
+      content: '0' counter(layer);
+      display: block;
+      margin-bottom: 32px;
+      color: var(--color-red);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .architecture p {
+      margin: 0;
+      color: var(--color-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin: 40px 0 32px;
+      border-top: 1px solid var(--color-border);
+      border-left: 1px solid var(--color-border);
+    }
+
+    .metric {
+      min-height: 180px;
+      padding: 24px;
+      border-right: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--color-red);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+      font-size: 34px;
+      font-weight: 600;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      color: var(--color-secondary);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 32px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    th,
+    td {
+      padding: 16px;
+      border-bottom: 1px solid var(--color-border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code,
+    pre {
+      font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+    }
+
+    code {
+      padding: 2px 4px;
+      border-radius: var(--radius-sm);
+      color: var(--color-secondary);
+      font-size: 14px;
+    }
+
+    .boundary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+      margin-top: 32px;
+    }
+
+    .boundary article {
+      padding: 32px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .boundary ul,
+    .failure-grid {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .boundary li {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .boundary li:last-child {
+      border-bottom: 0;
+    }
+
+    .boundary .cannot {
+      border-top: 4px solid var(--color-secondary);
+    }
+
+    .boundary .can {
+      border-top: 4px solid var(--color-red);
+    }
+
+    .failure-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 32px;
+      background: var(--color-border);
+      border: 1px solid var(--color-border);
+    }
+
+    .failure-grid li {
+      padding: 24px;
+      background: var(--color-white);
+    }
+
+    .failure-grid strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    .failure-grid span {
+      color: var(--color-secondary);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .limitation {
+      margin-top: 40px;
+      padding: 24px 28px;
+      border-left: 3px solid var(--color-ochre);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .limitation p {
+      margin: 0;
+      font-family: 'EB Garamond', 'Garamond', Georgia, serif;
+      font-size: 24px;
+      font-style: italic;
+      line-height: 1.45;
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.7fr);
+      gap: 32px;
+      align-items: stretch;
+      margin-top: 32px;
+    }
+
+    .terminal {
+      margin: 0;
+      padding: 24px;
+      overflow-x: auto;
+      border-radius: var(--radius-md);
+      background: var(--color-ink);
+      color: var(--color-white);
+      box-shadow: var(--shadow-md);
+      font-size: 14px;
+      line-height: 1.8;
+      white-space: pre;
+    }
+
+    .demo-result {
+      padding: 24px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+    }
+
+    .demo-result ul {
+      margin: 16px 0 0;
+      padding-left: 20px;
+    }
+
+    .demo-result li {
+      margin: 8px 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 32px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 16px;
+      border: 1px solid var(--color-ink);
+      border-radius: var(--radius-sm);
+      background: var(--color-ink);
+      color: var(--color-white);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 120ms cubic-bezier(0.2, 0.8, 0.2, 1), transform 120ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .button:hover {
+      background: color-mix(in srgb, var(--color-ink) 94%, var(--color-white));
+      text-decoration: none;
+    }
+
+    .button:active {
+      transform: translateY(1px);
+    }
+
+    .button--secondary {
+      background: var(--color-white);
+      color: var(--color-ink);
+    }
+
+    .site-footer {
+      padding: 48px 0 64px;
+    }
+
+    .site-footer__inner {
+      display: flex;
+      justify-content: space-between;
+      gap: 32px;
+      color: var(--color-secondary);
+      font-size: 13px;
+    }
+
+    .site-footer p {
+      margin: 0;
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .section-grid,
+      .demo-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .architecture,
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .metric-hero {
+        align-self: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .shell {
+        width: min(100% - 32px, 1180px);
+      }
+
+      .site-header__inner,
+      .site-footer__inner {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px 0;
+      }
+
+      .hero,
+      section {
+        padding: 48px 0;
+      }
+
+      .architecture,
+      .metrics,
+      .boundary,
+      .failure-grid {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 52px;
+      }
+
+      th,
+      td {
+        min-width: 170px;
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --color-white: #111111;
+        --color-ink: #F0EBE3;
+        --color-red: #E8243A;
+        --color-secondary: #A0978C;
+        --color-border: #2E2E2E;
+        --color-ochre: #D49A30;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      :root {
+        --color-white: #FFFFFF;
+        --color-ink: #2a1a0e;
+        --color-red: #C8102E;
+        --color-secondary: #545454;
+        --color-border: #D4D4D4;
+        --color-ochre: #C8860E;
+      }
+
+      .site-header,
+      .actions,
+      .skip-link {
+        display: none;
+      }
+
+      .shell {
+        width: 100%;
+      }
+
+      .hero,
+      section {
+        padding: 32px 0;
+      }
+
+      .architecture li,
+      .metric,
+      .boundary article,
+      .failure-grid li,
+      .limitation,
+      .demo-grid {
+        break-inside: avoid;
+      }
+
+      a {
+        color: var(--color-ink);
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to case study</a>
+
+  <header class="site-header">
+    <div class="shell site-header__inner">
+      <a class="brand" href="#top">Zening Teng / Verification systems</a>
+      <nav aria-label="Case study sections">
+        <ul>
+          <li><a href="#problem">Problem</a></li>
+          <li><a href="#build">Build</a></li>
+          <li><a href="#results">Results</a></li>
+          <li><a href="#boundary">Boundary</a></li>
+          <li><a href="#demo">Demo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="shell" id="top">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">Software engineering case study</p>
+          <h1>Keeping hard gates hard</h1>
+          <p class="lede">Verification infrastructure for an evidence-first job-search engine: deterministic résumé extraction checks, executable scoring contracts, and an adversarial test for the bug that looks reasonable until it costs a candidate time.</p>
+          <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Contract testing</p>
+        </div>
+        <aside class="metric-hero" aria-label="Primary result">
+          <span class="metric-hero__number">2 / 2</span>
+          <p><strong>Named gate-as-vote witnesses caught.</strong> The wrong implementation returned plausible <code>Apply</code> recommendations; the contract rejected both.</p>
+        </aside>
+      </div>
+    </div>
+
+    <section id="problem">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">01 / Problem</p>
+        </div>
+        <div>
+          <h2>Confidence can be structurally wrong</h2>
+          <p>An early-career international candidate on an OPT timeline cannot afford to spend a day on an application that should have been rejected in seconds. Two hidden failures distort that allocation decision.</p>
+          <p>A résumé PDF can look polished while its extracted text drops a heading, separates a date from its role, or scrambles section order. At the same time, a scoring engine can treat job-posting liveness or visa timing as ordinary weighted preferences. That lets strong secondary signals rescue a role that should have been vetoed.</p>
+          <p>The repository described both contracts. It did not yet have an automated control that passed on production behavior and failed on the exact gate-as-vote bug the project names.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="build">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">02 / Build</p>
+        </div>
+        <div>
+          <h2>One system, three verification layers</h2>
+          <p>I developed a unified contribution that turns both risks into executable contracts. The implementation separates extraction mechanics, scoring behavior, and evidence provenance so each layer can fail closed without claiming the human decision.</p>
+          <ol class="architecture" aria-label="Three-layer verification architecture">
+            <li>
+              <h3>ATS parse layer</h3>
+              <p>Render public Markdown to a temporary PDF, extract with PDF.js, and verify source-backed names, titles, dates, headings, and reading order.</p>
+            </li>
+            <li>
+              <h3>Gate contract layer</h3>
+              <p>Run a six-case truth table through the production scorer, then inject a deliberate mutation that changes hard multipliers into weighted votes.</p>
+            </li>
+            <li>
+              <h3>Evidence layer</h3>
+              <p>Reconcile counts, trace numeric output to scripts and records, block private paths, and retain <code>HUMAN_REVIEW_REQUIRED</code>.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="results">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">03 / Results</p>
+        </div>
+        <div>
+          <h2>The test fails for the right reason</h2>
+          <p>The primary improvement is not that the happy path runs. It is that the harness detects the named failure while the production implementation passes the same contract.</p>
+          <div class="metrics" aria-label="Verified metrics">
+            <div class="metric"><strong>2 / 2</strong><span>Gate-as-vote mutation witnesses caught</span></div>
+            <div class="metric"><strong>40 / 40</strong><span>Production gate assertions passed</span></div>
+            <div class="metric"><strong>13 / 13</strong><span>Required résumé fields in the positive control</span></div>
+            <div class="metric"><strong>7 / 13</strong><span>Fields in the deliberate break, correctly yielding <code>FAIL</code></span></div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Witness</th>
+                  <th>Correct contract</th>
+                  <th>Deliberately wrong result</th>
+                  <th>Harness result</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Zero liveness, strong votes</td>
+                  <td>Composite <code>0</code>, <code>Skip</code></td>
+                  <td><code>0.80</code>, <code>Apply</code></td>
+                  <td>Mutation caught</td>
+                </tr>
+                <tr>
+                  <td>Zero timeline, strong votes</td>
+                  <td>Composite <code>0</code>, <code>Skip</code></td>
+                  <td><code>0.85</code>, <code>Apply</code></td>
+                  <td>Mutation caught</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="source-line">Source · Public machine audits and Step 3 evidence</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="boundary">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">04 / Boundary</p>
+        </div>
+        <div>
+          <h2>Verified is smaller than plausible</h2>
+          <p>Controlled gate values are labeled local evidence. Parser identity is an external dependency record. Counts and verdicts are script output. Real-world facts the harness cannot observe remain missing.</p>
+          <div class="boundary">
+            <article class="can">
+              <h3>The machine verifies</h3>
+              <ul>
+                <li>PDF.js produced a nonempty text layer.</li>
+                <li>Declared fields are present and ordered.</li>
+                <li>Production arithmetic matches the truth table.</li>
+                <li>Zero gates force composite zero and <code>Skip</code>.</li>
+                <li>The named mutation fails.</li>
+                <li>Public counts reconcile to JSON records.</li>
+              </ul>
+            </article>
+            <article class="cannot">
+              <h3>The machine does not know</h3>
+              <ul>
+                <li>Whether a commercial ATS parses identically.</li>
+                <li>Whether résumé claims are true or persuasive.</li>
+                <li>Whether visual design is professionally effective.</li>
+                <li>Whether a live posting or visa timeline is current.</li>
+                <li>Whether scorer weights are calibrated.</li>
+                <li>Whether the candidate should apply.</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="failure-modes">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">05 / Failure modes</p>
+        </div>
+        <div>
+          <h2>Failure paths are part of the interface</h2>
+          <ul class="failure-grid">
+            <li><strong>Gate-as-vote regression</strong><span>A zero gate returns a nonzero composite or a non-<code>Skip</code> decision. The suite blocks handoff.</span></li>
+            <li><strong>Expectation drift</strong><span>A declared field no longer matches its source line. Verification stops with a contract error.</span></li>
+            <li><strong>Missing or scrambled extraction</strong><span>The audit names each absent or reordered field and exits nonzero.</span></li>
+            <li><strong>Private-data escape</strong><span>Public output from a real résumé is rejected; staged and tracked paths are scanned.</span></li>
+            <li><strong>Parser pass mistaken for quality</strong><span>Mechanical success retains a human review requirement for content and visual adequacy.</span></li>
+            <li><strong>Recipe/card drift</strong><span>The AI procedure and human operating card share one version and must change together.</span></li>
+          </ul>
+          <aside class="limitation">
+            <p>A PDF.js pass is not proof that Workday, iCIMS, or another commercial ATS will parse identically. A correct gate formula is only as truthful as the liveness and timeline records supplied to it.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo">
+      <div class="shell section-grid">
+        <div>
+          <p class="section-index">06 / Demo</p>
+        </div>
+        <div>
+          <h2>Run the contracts locally</h2>
+          <p>The demo uses public fixtures and produces no real résumé or application data. From the repository root on PowerShell:</p>
+          <div class="demo-grid">
+            <pre class="terminal" aria-label="PowerShell demo commands">npm.cmd run test:ats-parse
+npm.cmd run test:gate-behavior
+npm.cmd run test:capstone-step3</pre>
+            <aside class="demo-result">
+              <h3>Expected handoff</h3>
+              <ul>
+                <li>11 / 11 ATS tests</li>
+                <li>10 / 10 gate tests</li>
+                <li>4 / 4 evidence tests</li>
+                <li>Production passes</li>
+                <li>Mutation is caught</li>
+              </ul>
+            </aside>
+          </div>
+          <div class="actions">
+            <a class="button" href="../../../scripts/resumes/ats-parse-test.mjs">Review ATS harness</a>
+            <a class="button button--secondary" href="../../../scripts/score/gate-behavior-core.mjs">Review gate contract</a>
+            <a class="button button--secondary" href="step3.md">Read verified-data evidence</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell site-footer__inner">
+      <p>Zening Teng · Reallocation Verification Harness</p>
+      <p>Mechanics verified. Adequacy remains a human decision.</p>
+    </div>
+  </footer>
+</body>
+</html>

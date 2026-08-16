@@ -217,3 +217,11 @@ private emails, or sensitive application notes.
 - **Provenance:** every portfolio number is copied from `step3.md` and its named public audit JSON. The case study distinguishes controlled local evidence and parser output from commercial-ATS behavior, résumé truth, live-job truth, visa legality, and human application judgment.
 - **Demo boundary:** no PR link or screen recording is claimed. The artifact uses the assignment's runnable-snippet option with commands already maintained in the root README.
 - **Privacy:** the case study contains no real résumé content, private output, contact information, application activity, or `data/ats/` record.
+
+## 2026-08-16 -- Step 6 single-page portfolio site
+
+- **Output:** added `reports/generated/zening-teng-contribution/step6.html` as a single-file static-site companion to `step6.md`; the Markdown report now links to it, and the root README records both the artifact and its PowerShell open command. Web fonts are requested from Google Fonts, with repository-approved local fallback stacks when offline.
+- **Design contract:** followed `brutalist/DESIGN.md` for the six-color palette, type hierarchy, square geometry, spacing, contrast, and decorative-use boundary. The page includes semantic landmarks, a skip link, visible keyboard focus, responsive layouts, dark mode, reduced-motion handling, and print styles.
+- **Evidence boundary:** reused the Step 3 traced metrics and public machine audits; no new score, rate, confidence, résumé content, or real-world adequacy claim was introduced. The page continues to label commercial-ATS equivalence, live posting/timeline truth, weight calibration, and the final application decision as unverified or human-owned.
+- **Browser QA:** rendered and visually inspected full-page Chromium screenshots at 1440 × 900 in light mode and 390 × 844 in dark mode. Navigation, cards, metrics, witness table, commands, and local evidence links remained readable without observed clipping or horizontal page overflow.
+- **Privacy / publication:** no private résumé or application data is embedded. The site does not claim a PR URL, deployment, recording, named-human attestation, or Step 4 completion.

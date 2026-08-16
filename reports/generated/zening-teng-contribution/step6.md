@@ -4,6 +4,8 @@
 
 **Zening Teng — Software Engineering Case Study**
 
+[Open the responsive single-page site](step6.html).
+
 An international student on an OPT timeline cannot afford to spend a day on an application that should have been rejected in seconds. The Reallocation Engine addresses that allocation problem with evidence from job-posting liveness, visa timing, sponsorship history, role quality, and other signals. Two quiet failures remained especially dangerous: a résumé PDF could look polished while its text parsed incorrectly, and a supposedly hard eligibility gate could be implemented as one more weighted vote.
 
 I developed a unified verification contribution that turns both risks into executable contracts. It tests résumé extraction field by field, proves that liveness and timeline gates retain veto power in the production scorer, deliberately injects the named gate-as-vote bug, and emits machine-readable evidence without making the human decision for the user.
