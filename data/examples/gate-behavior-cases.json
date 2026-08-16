@@ -14,11 +14,11 @@
         "role_id": "open-gates-control",
         "company": "Anonymized Sample Company",
         "title": "Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 1.0, "source": "record" },
-        "timeline": { "factor": 1.0, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 1.0, "source": "local-evidence" },
+        "timeline": { "factor": 1.0, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.65,
@@ -35,11 +35,11 @@
         "role_id": "liveness-zero-high-votes",
         "company": "Anonymized Sample Company",
         "title": "Ghost Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 0.0, "source": "record" },
-        "timeline": { "factor": 1.0, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 0.0, "source": "local-evidence" },
+        "timeline": { "factor": 1.0, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.0,
@@ -56,11 +56,11 @@
         "role_id": "timeline-zero-high-votes",
         "company": "Anonymized Sample Company",
         "title": "Out-of-window Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 1.0, "source": "record" },
-        "timeline": { "factor": 0.0, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 1.0, "source": "local-evidence" },
+        "timeline": { "factor": 0.0, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.0,
@@ -76,11 +76,11 @@
         "role_id": "both-gates-zero-high-votes",
         "company": "Anonymized Sample Company",
         "title": "Closed Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 0.0, "source": "record" },
-        "timeline": { "factor": 0.0, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 0.0, "source": "local-evidence" },
+        "timeline": { "factor": 0.0, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.0,
@@ -96,11 +96,11 @@
         "role_id": "fractional-gates-scale",
         "company": "Anonymized Sample Company",
         "title": "Constrained Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 0.5, "source": "record" },
-        "timeline": { "factor": 0.8, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 0.5, "source": "local-evidence" },
+        "timeline": { "factor": 0.8, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.26,
@@ -116,11 +116,11 @@
         "role_id": "closed-gate-policy-boundary",
         "company": "Anonymized Sample Company",
         "title": "Boundary Sample Role",
-        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "record" },
-        "fit": { "p": 1.0, "source": "model-judgment" },
-        "role_quality": { "p": 1.0, "source": "record" },
-        "liveness": { "factor": 0.05, "source": "record" },
-        "timeline": { "factor": 1.0, "source": "your-input" }
+        "sponsorship": { "p": 1.0, "tier": "Proven", "source": "local-evidence" },
+        "fit": { "p": 1.0, "source": "local-evidence" },
+        "role_quality": { "p": 1.0, "source": "local-evidence" },
+        "liveness": { "factor": 0.05, "source": "local-evidence" },
+        "timeline": { "factor": 1.0, "source": "local-evidence" }
       },
       "expected": {
         "composite": 0.0325,

@@ -9,6 +9,8 @@
     "eval:score": "node scripts/eval/score-run.mjs",
     "eval:report": "node scripts/eval/report.mjs",
     "doctor": "node scripts/doctor.mjs",
+    "capstone:step3": "node scripts/verified-data-evidence.mjs",
+    "test:capstone-step3": "node --test scripts/verified-data-evidence.test.mjs",
     "build-instructions": "node scripts/build-instructions.mjs",
     "to-markdown": "node scripts/to-markdown.mjs",
     "score": "node scripts/score/role-scorer.mjs",
@@ -30,7 +32,7 @@
   "dependencies": {
     "glob": "^10.0.0",
     "js-yaml": "^4.1.1",
-    "pdfjs-dist": "^6.2.108",
+    "pdfjs-dist": "6.2.108",
     "playwright": "^1.58.1",
     "sharp": "^0.33.0"
   }

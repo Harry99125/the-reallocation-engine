@@ -34,7 +34,8 @@ maintained PDF generator first. No expectation file is required:
 
 ```bash
 npm run resumes:paste-test -- resumes/aarav-patel-cv.md
-npm run resumes:paste-test -- output/resumes/aarav-patel-cv.pdf
+npm run resumes:pdf -- resumes/aarav-patel-cv.md .build/ats-paste-test/aarav-patel-public.pdf
+npm run resumes:paste-test -- .build/ats-paste-test/aarav-patel-public.pdf
 ```
 
 Default output goes to `private/ats-paste-test/<input-name>/`, even for public
@@ -62,7 +63,8 @@ a false PASS or a false order failure.
 Run the anonymized sample:
 
 ```bash
-npm run resumes:paste-test -- output/resumes/aarav-patel-cv.pdf \
+npm run resumes:pdf -- resumes/aarav-patel-cv.md .build/ats-paste-test/aarav-patel-public.pdf
+npm run resumes:paste-test -- .build/ats-paste-test/aarav-patel-public.pdf \
   --expect data/examples/aarav-patel-ats-expected.json \
   --out-dir reports/generated/ats-paste-test/aarav-patel
 ```

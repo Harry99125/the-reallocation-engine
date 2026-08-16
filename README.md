@@ -28,12 +28,60 @@ names and paths are represented with placeholders; personal data never enters
 this public README. Commands below use PowerShell-compatible `npm.cmd` because
 this Windows host blocks `npm.ps1`.
 
+Capstone reports required by the assignment, or needed to preserve material
+evidence, use only the step number: `step3.md`, `step4.md`, and so on. The
+machine-readable twin uses the same basename, such as `step3.json`. A step
+without a distinct report requirement does not receive a duplicate narrative
+artifact.
+
 Detailed module documentation:
 
 - Résumé paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
 - Gate-behavior harness: [`scripts/score/README.md`](scripts/score/README.md)
 - AI recipe: [`recipes/reallocation-verification-harness.md`](recipes/reallocation-verification-harness.md)
 - Human card: [`recipes/reallocation-verification-harness.card.md`](recipes/reallocation-verification-harness.card.md)
+
+Capstone step reports:
+
+- [`step1.md`](reports/generated/zening-teng-contribution/step1.md) — contribution selection and scope
+- [`step2.md`](reports/generated/zening-teng-contribution/step2.md) — build and two-customer-pair evidence
+- [`step3.md`](reports/generated/zening-teng-contribution/step3.md) — verified-data and ethics-gate evidence
+- [`step5.md`](reports/generated/zening-teng-contribution/step5.md) — PR-readiness audit and PR-description draft
+
+Read the current reports from PowerShell:
+
+```powershell
+Get-Content "reports\generated\zening-teng-contribution\step1.md"
+Get-Content "reports\generated\zening-teng-contribution\step2.md"
+Get-Content "reports\generated\zening-teng-contribution\step3.md"
+Get-Content "reports\generated\zening-teng-contribution\step5.md"
+```
+
+### Check Step 5 PR readiness
+
+Run these local gates before any push:
+
+```powershell
+npm.cmd run test:ats-parse
+npm.cmd run test:gate-behavior
+npm.cmd run test:capstone-step3
+npm.cmd run capstone:step3
+npm.cmd run verify
+npm.cmd run doctor -- --strict
+git status --short
+git branch --show-current
+git fetch upstream main
+git diff --name-only upstream/main...HEAD
+```
+
+Only after Step 3 human review and Step 4 are complete, authenticate and publish
+the assignment-compliant branch to the student's fork:
+
+```powershell
+gh auth login
+git push -u origin contrib/zening-teng-verification-harness
+gh pr create --repo nikbearbrown/the-reallocation-engine --base main --head ZeningTeng-Harry:contrib/zening-teng-verification-harness --title "Add ATS paste-test and gate-behavior verification harnesses" --body-file "reports/generated/zening-teng-contribution/step5.md"
+```
 
 ### Inspect any résumé PDF or Markdown file
 
@@ -59,7 +107,8 @@ npm.cmd run test:ats-parse
 ### Run evidence-backed field verification on the public sample
 
 ```powershell
-npm.cmd run resumes:paste-test -- "output\resumes\aarav-patel-cv.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
+npm.cmd run resumes:pdf -- "resumes\aarav-patel-cv.md" ".build\ats-paste-test\aarav-patel-public.pdf"
+npm.cmd run resumes:paste-test -- ".build\ats-paste-test\aarav-patel-public.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
 ```
 
 ### Run the ATS deliberate-break sample
@@ -118,6 +167,37 @@ node scripts/conformance.mjs scripts/score data/examples/gate-behavior-cases.jso
 
 ```powershell
 node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
+```
+
+### Generate and inspect the Step 3 verified-data evidence
+
+This command recomputes the reported metrics, enumerates every numeric audit
+leaf with its script and record, and runs the privacy/mechanical-honesty gate.
+It deliberately leaves the named-human attestation pending.
+
+```powershell
+npm.cmd run capstone:step3
+Get-Content "reports\generated\zening-teng-contribution\step3.md"
+$LASTEXITCODE
+```
+
+Test the evidence gate itself, including a staged-private-path mutation and an
+invented-count mutation:
+
+```powershell
+npm.cmd run test:capstone-step3
+```
+
+Run the strict repository health/privacy check independently:
+
+```powershell
+npm.cmd run doctor -- --strict
+```
+
+Check all Step 3 contribution artifacts for conformance:
+
+```powershell
+node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified-data-evidence.test.mjs scripts/doctor.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md data/examples/gate-behavior-cases.json reports/generated/zening-teng-contribution/step3.json reports/generated/zening-teng-contribution/step3.md package.json README.md
 ```
 
 ## Table of Contents

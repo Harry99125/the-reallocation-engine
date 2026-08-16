@@ -188,3 +188,24 @@ private emails, or sensitive application notes.
 - **Broke during testing, fixed:** the failed ATS Markdown audit correctly showed FAIL rows but its boundary paragraph still claimed every declared string was present and ordered. Made the boundary verdict-aware and added a regression test preventing a FAIL report from making the all-fields-passed claim; regenerated and reread both ATS reports.
 - **Conformance:** the documented Step 2 command checked 22 files (9 Markdown, 7 JavaScript, 6 JSON); all conformed.
 - **Lifecycle:** machine sample gates 1–6 passed, so the paired artifacts moved together from DRAFT to `RUNNABLE-SAMPLE`. Gate 7 remains open: no named-human adequacy attestation has been recorded, and neither artifact claims `VERIFIED`.
+
+## 2026-08-15 -- Step 3 verified-data evidence and ethics-gate preflight
+
+- **Stored tool:** added `scripts/verified-data-evidence.mjs` and `npm.cmd run capstone:step3`. It recomputes the public ATS and gate metrics, emits the verified-vs-inferred boundary, and traces every numeric audit leaf to its producing script and record.
+- **Ethics machine gate:** PASS. No `private/`, `data/ats/`, résumé PDF, or `.env` path was staged; no non-scaffold private/PII path was tracked. Mechanical checks reconciled the ATS positive result (13/13 fields, 1/1 order), deliberate ATS failure (7/13 fields, 0/1 order), gate production result (6/6 cases, 40/40 assertions), and both gate-as-vote witnesses.
+- **Provenance correction:** controlled truth-table factors are labeled `local-evidence`, not represented as real external records. The exact PDF.js dependency is declared in tracked `package.json`; the gitignored lockfile is not cited as repository evidence.
+- **Doctor repair:** `scripts/doctor.mjs` now accepts the platform Python command, runs repository-scoped Git privacy checks, and parses LF/CRLF frontmatter. The clean upstream contribution excludes two fork-only recipes whose TODO corrections were unrelated to this capstone.
+- **Evidence-gate tests:** 4/4 passed, including deliberate private-staged-path, invented-count, and controlled-source-mislabel failures. ATS remained 11/11 and gate behavior remained 10/10.
+- **Artifacts:** active reports are `reports/generated/zening-teng-contribution/step1.md`, `step2.md`, `step3.md`, and `step3.json`; the short filenames follow the student's requested convention.
+- **Human gate:** open by design. Machine privacy and mechanical honesty/provenance are PASS, but a named human must read the evidence and underlying audits before Step 4. Recipe/card remain `RUNNABLE-SAMPLE` with null attestation.
+
+## 2026-08-15 -- Step 5 PR-readiness audit and clean upstream packaging
+
+- **Assignment checks:** audited fork, branch pattern, contribution placement, generated-evidence boundary, verify, strict doctor, privacy scope, required PR-description content, and PR-link handoff.
+- **Branch repair:** the first capstone branch inherited ten older fork-only commits. Preserved that complete history as local `archive/zening-teng-verification-harness-origin-main`, then rebuilt `contrib/zening-teng-verification-harness` from current `upstream/main`. Only capstone files were carried forward; the fork-only mode scripts, recipes, assignments, and generated résumé PDFs were excluded.
+- **Verify repair:** replaced hard-coded `python3`/PyYAML/system-bash assumptions with the tracked JS YAML parser, platform runtime detection, argument-safe execution, Git Bash support on Windows, CRLF/LF normalization, and side-effect-free in-memory Python syntax compilation.
+- **Manifest repair:** separated context-routing exclusions from `gitignore_required` paths and taught privacy matching that `/private/*` protects private content while allowing tracked scaffolding.
+- **PR hygiene:** the active Step 3 evidence has one JSON/Markdown pair; superseded generated name variants are absent from the clean branch. The real résumé and all derived private output remain gitignored and outside the proposed diff.
+- **Portable ATS fixture:** the old fork branch supplied a generated résumé PDF outside the capstone diff. The clean branch instead renders the tracked anonymized Markdown into `.build/ats-paste-test/` at test/run time; no résumé PDF is committed as source of truth. Commands and the paired recipe/card advanced together to v0.8.0.
+- **Output:** `reports/generated/zening-teng-contribution/step5.md` contains the requirement audit, maintainer-ready PR description, explicit limitation, and human publication sequence.
+- **Blockers:** named-human Step 3 attestation, Step 4 honest run, final rerun after those changes, GitHub authentication, push, actual PR creation, and returned PR URL. No external state was changed.

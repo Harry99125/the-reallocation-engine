@@ -3,9 +3,9 @@ status: RUNNABLE-SAMPLE
 todos_open: 0
 last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
 attestation: null
-recipe_version: 0.1.0
+recipe_version: 0.8.0
 pair: recipes/reallocation-verification-harness.md
-pair_version: 0.1.0
+pair_version: 0.8.0
 type: human-card
 ---
 
@@ -40,13 +40,14 @@ It is a validation contribution, not an end-to-end job-scoring system.
 | Dependency | Why it matters |
 |---|---|
 | Node.js and npm dependencies from `package.json` | Runs both harnesses and test suites. |
-| `pdfjs-dist` 6.2.108 or the currently pinned patched version | Extracts PDF text with scripting/eval disabled. |
+| Exact `pdfjs-dist` version declared in `package.json` | Extracts PDF text with scripting/eval disabled; update the declared version and rerun all evidence together. |
 | Playwright with Chromium | Renders Markdown fixtures and résumé PDFs. |
-| `output/resumes/aarav-patel-cv.pdf` | Public anonymized ATS positive control. |
+| `resumes/aarav-patel-cv.md` | Public anonymized source of truth; render its temporary PDF under `.build/` before verification. |
 | `data/examples/aarav-patel-ats-expected.json` | Independent, source-line-traced strict expectation record. |
 | `data/examples/ats-paste-test-broken-render.md` | Public incomplete résumé used for the deliberate break. |
 | `data/examples/gate-behavior-cases.json` | Independent Chapter 11/16 gate truth table. |
 | `scripts/score/role-scorer.mjs` | Production scoring function under test. |
+| `scripts/verified-data-evidence.mjs` | Reconciles every reported metric, traces numeric leaves, and checks the Step 3 privacy/mechanical-honesty gate. |
 | `recipes/reallocation-verification-harness.md` | Exact execution contract paired with this card. |
 
 ## How to Run
@@ -65,7 +66,8 @@ The first command checks parser normalization, field/order failures, provenance 
 ### 2. Public ATS positive control
 
 ```powershell
-npm.cmd run resumes:paste-test -- "output\resumes\aarav-patel-cv.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
+npm.cmd run resumes:pdf -- "resumes\aarav-patel-cv.md" ".build\ats-paste-test\aarav-patel-public.pdf"
+npm.cmd run resumes:paste-test -- ".build\ats-paste-test\aarav-patel-public.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
 ```
 
 Expect exit `0`, 13/13 declared fields, and 1/1 order check. Read the Markdown audit; do not accept only the console summary.
@@ -104,6 +106,18 @@ node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipe
 
 Conformance proves the files parse and compile. It does not clear human adequacy.
 
+### 7. Generate and review the Step 3 evidence
+
+```powershell
+npm.cmd run capstone:step3
+Get-Content "reports\generated\zening-teng-contribution\step3.md"
+$LASTEXITCODE
+npm.cmd run test:capstone-step3
+npm.cmd run doctor -- --strict
+```
+
+Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`, while human attestation remains required. Read the boundary table and the underlying three Markdown audits yourself before clearing Step 4.
+
 ### Optional private résumé inspection
 
 ```powershell
@@ -125,6 +139,11 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.md` | Human-readable deliberate-break evidence. |
 | `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine-readable production contract and mutation results. |
 | `reports/generated/gate-behavior/gate-behavior-audit.md` | Human-readable gate handoff and limits. |
+| `reports/generated/zening-teng-contribution/step3.json` | Machine-readable Step 3 checks, complete boundary, and exhaustive numeric-leaf trace. |
+| `reports/generated/zening-teng-contribution/step3.md` | Human-readable Step 3 evidence and named-review handoff. |
+| `reports/generated/zening-teng-contribution/step1.md` | Human-readable contribution-selection and scope record. |
+| `reports/generated/zening-teng-contribution/step2.md` | Human-readable build, pair, failure, and limitation summary traced to original evidence. |
+| `reports/generated/zening-teng-contribution/step5.md` | Human-readable PR readiness audit and maintainer-ready description draft; it does not prove a PR was published. |
 | `private/ats-paste-test/<resume-name>/` | Private extraction and inspection artifacts for a real résumé. |
 | `logs/RUN_LOG.md` | Privacy-safe record of what actually ran. |
 
@@ -136,6 +155,7 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 - Production gate behavior passes every case and assertion.
 - The deliberate gate-as-vote implementation produces plausible but wrong nonzero Apply results for both closed-gate witnesses, and the harness marks both caught.
 - Reports retain a human-review boundary; no script claims universal ATS compatibility, factual résumé truth, or a real-job decision.
+- The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and still requires a named human before Step 4.
 
 ## Failure Modes
 
@@ -158,6 +178,10 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 9. **Dependency or security drift.** PDF.js/Playwright changes alter extraction or a dependency becomes vulnerable. Re-run both suites and both sample audits after updating; never preserve an unsafe version merely to keep snapshots green.
 
 10. **Human gate silently skipped.** All machine checks pass and someone labels the contribution adequate or verified without reading the reports. Keep `HUMAN_REVIEW_REQUIRED` and lifecycle status below `VERIFIED` until a named human records the attestation.
+
+11. **Untraced-number or provenance-label drift.** A new numeric output is added without a script/record trace, or a controlled fixture value is mislabeled as a real record/model judgment. The Step 3 gate must fail; update the boundary/trace logic and regenerate before any run.
+
+12. **Ethics gate run too late.** A real/private run happens before privacy and honesty evidence pass and a named human reviews it. Treat the run as invalid, do not publish its output, and repeat the gate before any replacement run.
 
 ## Maintenance and Update Trigger
 

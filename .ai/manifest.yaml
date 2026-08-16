@@ -33,6 +33,10 @@ task_relevant:
   - eval/
   - session-handoff.md
 
+# Context-routing exclusions: agents skip these unless the task explicitly
+# requires them. This is not the same thing as a VCS ignore policy; generated
+# audits may be committed as evidence without becoming source of truth, and
+# archive/ preserves non-rebuildable history.
 ignore:
   - output/
   - reports/generated/
@@ -41,6 +45,13 @@ ignore:
   - "*.pyc"
   - .build/
   - archive/
+
+# Rebuildable/dependency paths that must be covered by .gitignore.
+gitignore_required:
+  - node_modules/
+  - "**/__pycache__/"
+  - "*.pyc"
+  - .build/
 
 # Private by default — reveals personal job-search activity. Gitignored AND never committed.
 # `private/` holds the student's real data (real résumé, real tracker); only private/README.md is tracked.

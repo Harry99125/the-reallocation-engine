@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
+import { mkdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -140,14 +141,21 @@ test('rejects an expectation record that drifted from its source line', () => {
   );
 });
 
-test('extracts the tracked anonymized PDF and passes its expectation record', async () => {
+test('renders and extracts the tracked anonymized source, then passes its expectation record', async () => {
   const expectationPath = path.join(REPO_ROOT, 'data/examples/aarav-patel-ats-expected.json');
-  const pdfPath = path.join(REPO_ROOT, 'output/resumes/aarav-patel-cv.pdf');
   const expectation = JSON.parse(await readFile(expectationPath, 'utf8'));
-  const source = await readFile(path.join(REPO_ROOT, expectation.source_markdown), 'utf8');
+  const sourcePath = path.join(REPO_ROOT, expectation.source_markdown);
+  const source = await readFile(sourcePath, 'utf8');
+  const pdfPath = path.join(REPO_ROOT, '.build/ats-paste-test/aarav-patel-public.pdf');
 
   validateManifest(expectation);
   verifyManifestProvenance(expectation, source);
+  await mkdir(path.dirname(pdfPath), { recursive: true });
+  execFileSync(process.execPath, [
+    path.join(REPO_ROOT, 'scripts/resumes/generate-pdf.mjs'),
+    sourcePath,
+    pdfPath,
+  ], { cwd: REPO_ROOT, stdio: 'pipe' });
   const extracted = await extractPdfText(pdfPath);
   const result = evaluateManifest(extracted.text, expectation);
 

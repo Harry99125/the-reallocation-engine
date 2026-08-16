@@ -8,7 +8,8 @@
 //   E2  Every Tier-1 / canonical file in .ai/manifest.yaml actually exists.
 //   E3  Every generated adapter matches what build-instructions.mjs would emit
 //       (catches hand-edits and "forgot to rebuild" drift).
-//   W1  Every ignore: entry that is a real path is covered by .gitignore.
+//   W1  Every gitignore_required: entry is covered by .gitignore. The separate
+//       ignore: list is for agent context routing, not VCS policy.
 //   W2  Every private: path is covered by .gitignore (secrets/PII must not commit).
 //   W3  _MANIFEST.md Tier-1 set and .ai/manifest.yaml canonical: set agree.
 //
@@ -20,6 +21,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
+import yaml from 'js-yaml';
 
 const strict = process.argv.includes('--strict');
 const errors = [];
@@ -30,11 +32,9 @@ const W = (m) => warns.push(m);
 const AI = '.ai/manifest.yaml';
 const MAN = '_MANIFEST.md';
 
-// --- load .ai/manifest.yaml (PyYAML, like the other scripts) -------------
+// --- load .ai/manifest.yaml with the repository's pinned JS parser --------
 function loadYaml(p) {
-  return JSON.parse(execSync(
-    `python3 -c "import yaml,json;print(json.dumps(yaml.safe_load(open('${p}'))))"`,
-    { encoding: 'utf8' }));
+  return yaml.load(fs.readFileSync(p, 'utf8'));
 }
 
 console.log('MANIFEST CHECK — The Reallocation Engine');
@@ -65,7 +65,8 @@ if (m) {
     const staged = path.join('instructions', '.build', f);
     if (!fs.existsSync(staged)) { E(`E3 ${f} not produced by build (is it in manifest.yml targets?)`); continue; }
     if (!fs.existsSync(f)) { E(`E3 generated file missing on disk: ${f} — run build --promote`); continue; }
-    if (fs.readFileSync(f, 'utf8') !== fs.readFileSync(staged, 'utf8'))
+    const normalizeEol = (value) => value.replace(/\r\n/g, '\n');
+    if (normalizeEol(fs.readFileSync(f, 'utf8')) !== normalizeEol(fs.readFileSync(staged, 'utf8')))
       E(`E3 ${f} is out of sync with instructions/ — hand-edited or not rebuilt (run: node scripts/build-instructions.mjs --promote)`);
   }
 
@@ -74,15 +75,21 @@ if (m) {
   const giHas = (entry) => {
     const base = entry.replace(/^[./]+/, '').replace(/\/$/, '');
     return gi.split('\n').some((l) => {
-      const t = l.trim().replace(/^[./]+/, '').replace(/\/$/, '');
-      return t && (t === base || base.startsWith(t + '/') || base.endsWith(t));
+      const raw = l.trim();
+      if (!raw || raw.startsWith('#') || raw.startsWith('!')) return false;
+      const t = raw.replace(/^[./]+/, '').replace(/\/$/, '');
+      return t === base || t === `${base}/*` || t === `${base}/**`
+        || base.startsWith(t + '/') || base.endsWith(t);
     });
   };
-  for (const ig of m.ignore || []) {
-    if (ig.includes('*')) continue; // globs like **/__pycache__/ — checked loosely below
-    if (fs.existsSync(ig) && !giHas(ig)) W(`W1 ignore path not in .gitignore: ${ig}`);
+  for (const ig of m.gitignore_required || []) {
+    if (ig.includes('*')) {
+      const marker = ig.replaceAll('**/', '').replace(/^\*+/, '');
+      if (!gi.includes(marker)) W(`W1 required ignore pattern not in .gitignore: ${ig}`);
+    } else if (!giHas(ig)) {
+      W(`W1 required ignore path not in .gitignore: ${ig}`);
+    }
   }
-  for (const g of ['__pycache__', '.build']) if (!gi.includes(g)) W(`W1 ignore glob not in .gitignore: ${g}`);
 
   // W2 — private paths covered by .gitignore (root) OR a nested ignore-all .gitignore
   const privateCovered = (pv) => {

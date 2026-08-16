@@ -10,7 +10,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 
 const strict = process.argv.includes('--strict');
 const ok = (b) => (b ? '✓' : '✗');
@@ -24,10 +24,14 @@ console.log('='.repeat(42));
 
 // --- environment ----------------------------------------------------------
 console.log('\nENVIRONMENT (required)');
-const node = ver('node -v'), py = ver('python3 --version');
+const node = ver('node -v');
+const pythonCandidates = process.platform === 'win32' ? ['python', 'python3'] : ['python3', 'python'];
+const pythonRuntime = pythonCandidates
+  .map((command) => ({ command, version: ver(`${command} --version`) }))
+  .find(({ version }) => version);
 console.log(`  ${ok(!!node)} node       ${node || 'MISSING'}`);
-console.log(`  ${ok(!!py)} python3    ${py || 'MISSING'}`);
-if (!node || !py) hardFail = true;
+console.log(`  ${ok(!!pythonRuntime)} python     ${pythonRuntime ? `${pythonRuntime.version} (${pythonRuntime.command})` : 'MISSING'}`);
+if (!node || !pythonRuntime) hardFail = true;
 
 console.log('\nENVIRONMENT (optional — features degrade without these)');
 const pandoc = ver('pandoc -v'), soffice = ver('soffice --version');
@@ -56,7 +60,11 @@ for (const d of ['data/sec', 'data/bls', 'data/ats', 'data/80-days-to-stay', 'sc
 // never be committed. A tracked private path is a PII leak — hard fail.
 console.log('\nPRIVACY (no personal data committed)');
 let trackedFiles = [];
-try { trackedFiles = execSync('git ls-files', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().split('\n').filter(Boolean); }
+try {
+  const repoRoot = path.resolve('.').replaceAll('\\', '/');
+  trackedFiles = execFileSync('git', ['-c', `safe.directory=${repoRoot}`, 'ls-files'], { stdio: ['ignore', 'pipe', 'ignore'] })
+    .toString().split(/\r?\n/).filter(Boolean);
+}
 catch { console.log('  — not a git repo (skipped)'); }
 if (trackedFiles.length) {
   // private zones: real personal data; scaffolding (policy/readme/examples) is OK to track.
@@ -78,11 +86,10 @@ if (trackedFiles.length) {
 // --- recipe status dashboard ---------------------------------------------
 const FM_KEYS = ['status', 'todos_open', 'last_gate', 'attestation', 'recipe_version'];
 function frontmatter(txt) {
-  if (!txt.startsWith('---')) return null;
-  const end = txt.indexOf('\n---', 3);
-  if (end < 0) return null;
+  const match = txt.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!match) return null;
   const fm = {};
-  for (const line of txt.slice(3, end).trim().split('\n')) {
+  for (const line of match[1].split(/\r?\n/)) {
     const mm = line.match(/^([a-z_]+):\s*(.*)$/i);
     if (mm) fm[mm[1]] = mm[2].trim();
   }

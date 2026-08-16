@@ -16,7 +16,8 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
+import yaml from 'js-yaml';
 
 const SKIP = new Set([
   '.git', 'node_modules', '.build', 'output', 'images', 'd3', 'data', 'MD',
@@ -51,21 +52,49 @@ function tail(e) {
   return s.split('\n').filter(Boolean).slice(-1)[0] || 'failed';
 }
 
+function executable(candidates, args = ['--version']) {
+  for (const candidate of candidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    try {
+      execFileSync(candidate, args, { stdio: 'ignore' });
+      return candidate;
+    } catch {
+      // Try the next platform-appropriate command. Windows app-execution
+      // aliases can exist on PATH while still being non-runnable.
+    }
+  }
+  return null;
+}
+
+const python = executable(process.platform === 'win32' ? ['python', 'python3'] : ['python3', 'python']);
+const bash = executable(process.platform === 'win32'
+  ? ['C:\\Program Files\\Git\\bin\\bash.exe', 'C:\\Program Files (x86)\\Git\\bin\\bash.exe', 'bash']
+  : ['bash']);
+
 function checkMd(file) {
   const t = fs.readFileSync(file, 'utf8');
   const fences = (t.match(/^```/gm) || []).length;
   if (fences % 2 !== 0) throw new Error(`unbalanced code fences (${fences})`);
-  if (t.startsWith('---\n') && !/^---\n[\s\S]*?\n---\s*\n/.test(t))
+  if (/^---\r?\n/.test(t) && !/^---\r?\n[\s\S]*?\r?\n---\s*\r?\n/.test(t))
     throw new Error('unterminated front-matter');
 }
 
 function check(file, kind) {
   try {
     if (kind === 'json') JSON.parse(fs.readFileSync(file, 'utf8'));
-    else if (kind === 'yaml') execSync(`python3 -c "import yaml,sys; yaml.safe_load(open(sys.argv[1]))" "${file}"`, { stdio: 'pipe' });
-    else if (kind === 'js') execSync(`node --check "${file}"`, { stdio: 'pipe' });
-    else if (kind === 'py') execSync(`python3 -m py_compile "${file}"`, { stdio: 'pipe' });
-    else if (kind === 'sh') execSync(`bash -n "${file}"`, { stdio: 'pipe' });
+    else if (kind === 'yaml') yaml.load(fs.readFileSync(file, 'utf8'));
+    else if (kind === 'js') execFileSync(process.execPath, ['--check', file], { stdio: 'pipe' });
+    else if (kind === 'py') {
+      if (!python) throw new Error('Python runtime missing (tried python3 and python)');
+      execFileSync(python, [
+        '-c',
+        'import pathlib,sys; p=pathlib.Path(sys.argv[1]); compile(p.read_bytes(), str(p), "exec")',
+        file,
+      ], { stdio: 'pipe' });
+    } else if (kind === 'sh') {
+      if (!bash) throw new Error('Bash runtime missing (Git Bash is accepted on Windows)');
+      execFileSync(bash, ['-n', file], { stdio: 'pipe' });
+    }
     else if (kind === 'md') checkMd(file);
     return { ok: true };
   } catch (e) {

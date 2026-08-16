@@ -1,0 +1,2096 @@
+{
+  "schema_version": "1.0.0",
+  "artifact": "verified-data-evidence",
+  "contribution": "reallocation-verification-harness",
+  "recipe_version": "0.8.0",
+  "generated": "2026-08-16T03:03:53.731Z",
+  "machine_result": "PASS",
+  "human_attestation": "REQUIRED_BEFORE_STEP_4",
+  "ethics_gate": {
+    "privacy": "PASS",
+    "honesty": "PASS",
+    "human_decision": "HUMAN_REVIEW_REQUIRED",
+    "rule": "A FAIL blocks the run; machine PASS does not replace named human review."
+  },
+  "inputs": {
+    "atsPositive": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json",
+    "atsBreak": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json",
+    "gate": "reports/generated/gate-behavior/gate-behavior-audit.json",
+    "atsManifest": "data/examples/aarav-patel-ats-expected.json",
+    "gateFixture": "data/examples/gate-behavior-cases.json",
+    "atsScript": "scripts/resumes/ats-parse-test.mjs",
+    "gateScript": "scripts/score/gate-behavior-harness.mjs",
+    "gateCore": "scripts/score/gate-behavior-core.mjs",
+    "scorer": "scripts/score/role-scorer.mjs"
+  },
+  "checks": [
+    {
+      "id": "privacy:no-private-staged",
+      "status": "PASS",
+      "expected": "no private/, data/ats/, résumé PDF, or .env path staged",
+      "observed": "none",
+      "record": "git diff --cached --name-only"
+    },
+    {
+      "id": "privacy:no-private-tracked",
+      "status": "PASS",
+      "expected": "no non-scaffold private/PII path tracked",
+      "observed": "none",
+      "record": "git ls-files"
+    },
+    {
+      "id": "privacy:doctor-clean",
+      "status": "PASS",
+      "expected": "strict doctor reports runnable, privacy clean, all recipe frontmatter, and no TODO-count mismatch",
+      "observed": "  ✓ no private/PII paths are tracked |   with lifecycle frontmatter: 44   missing: 0 |   environment: ✓ runnable",
+      "record": "node scripts/doctor.mjs --strict"
+    },
+    {
+      "id": "honesty:ats-positive-reconciles",
+      "status": "PASS",
+      "expected": "positive verdict/counts recompute to PASS",
+      "observed": "13/13 fields; 1/1 order; PASS",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "id": "honesty:ats-break-reconciles",
+      "status": "PASS",
+      "expected": "break verdict/counts recompute to deterministic FAIL",
+      "observed": "7/13 fields; 0/1 order; FAIL",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "id": "honesty:gate-production-reconciles",
+      "status": "PASS",
+      "expected": "production counts recompute and verdict is PASS",
+      "observed": "6/6 cases; 40/40 assertions",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "id": "honesty:mutation-is-caught",
+      "status": "PASS",
+      "expected": "wrong gate-as-vote implementation fails; every named witness is caught",
+      "observed": "liveness-zero-high-votes:0.8/Apply/FAIL; timeline-zero-high-votes:0.85/Apply/FAIL",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "id": "honesty:controlled-input-labels",
+      "status": "PASS",
+      "expected": "every controlled gate factor labeled local-evidence",
+      "observed": "local-evidence",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "id": "honesty:no-self-attestation",
+      "status": "PASS",
+      "expected": "machine output preserves human review boundary",
+      "observed": "HUMAN_REVIEW_REQUIRED",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "id": "honesty:ats-limitation-visible",
+      "status": "PASS",
+      "expected": "universal ATS compatibility explicitly not claimed",
+      "observed": "One parser is a conservative floor, not proof of compatibility with every ATS. | String presence and order do not verify the truth or quality of resume claims. | Visual adequacy requires human review.",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "id": "provenance:boundary-labels",
+      "status": "PASS",
+      "expected": "all boundary rows use assignment-approved labels",
+      "observed": "local-evidence, your-input, external-source, script-output, record, missing, model-inference",
+      "record": "BOUNDARY_ROWS in scripts/verified-data-evidence.mjs"
+    },
+    {
+      "id": "provenance:every-number-traced",
+      "status": "PASS",
+      "expected": "every numeric audit leaf has label, script, and record",
+      "observed": "none untraced",
+      "record": "number_trace in this evidence JSON"
+    }
+  ],
+  "boundary": [
+    {
+      "output": "ATS schema_version, harness, mode, chapter",
+      "label": "local-evidence",
+      "record": "Harness contract and Chapter 13",
+      "machine_can_verify": "Presence and allowed mode",
+      "human_keeps": "Whether this contract is adequate for the intended workflow"
+    },
+    {
+      "output": "ATS document_id",
+      "label": "your-input",
+      "record": "Expectation manifest in verify mode; input filename in inspect mode",
+      "machine_can_verify": "Identifier is nonempty and consistently copied",
+      "human_keeps": "Whether the identifier names the intended résumé"
+    },
+    {
+      "output": "ATS parser.name, parser.version, parser.source_type",
+      "label": "external-source",
+      "record": "Exact pdfjs-dist dependency in package.json plus installed module metadata",
+      "machine_can_verify": "Parser identity/version used for this run",
+      "human_keeps": "Whether this parser represents a target commercial ATS"
+    },
+    {
+      "output": "ATS inputs.* paths and file types",
+      "label": "your-input",
+      "record": "CLI arguments",
+      "machine_can_verify": "Existence, supported extension, and private-output policy",
+      "human_keeps": "Whether the input is appropriate and safe to inspect"
+    },
+    {
+      "output": "ATS inputs.expectation_manifest and inputs.source_markdown",
+      "label": "local-evidence",
+      "record": "data/examples/aarav-patel-ats-expected.json",
+      "machine_can_verify": "Manifest/source existence and source-line agreement",
+      "human_keeps": "Whether the declared public sample is suitable evidence"
+    },
+    {
+      "output": "paste-test.txt extracted text",
+      "label": "script-output",
+      "record": "PDF text items from the named input, written to paste-test.txt",
+      "machine_can_verify": "Extraction and deterministic normalization",
+      "human_keeps": "Semantic completeness, visual adequacy, and factual truth"
+    },
+    {
+      "output": "ATS metrics.pages.value",
+      "label": "script-output",
+      "record": "PDF page tree",
+      "machine_can_verify": "Page count returned by PDF.js",
+      "human_keeps": "Whether pagination is professionally acceptable"
+    },
+    {
+      "output": "ATS verify fields[*].id/category/expected/match/occurrence/required",
+      "label": "record",
+      "record": "resumes/aarav-patel-cv.md source lines, located by data/examples/aarav-patel-ats-expected.json",
+      "machine_can_verify": "Manifest shape and expectation/source drift",
+      "human_keeps": "Whether the declared fields are sufficient for the intended hiring workflow"
+    },
+    {
+      "output": "ATS verify fields[*].status/observed_index/evidence.observed_record",
+      "label": "script-output",
+      "record": "scripts/resumes/ats-parse-test.mjs comparison against paste-test.txt",
+      "machine_can_verify": "Presence under the declared match and occurrence rules",
+      "human_keeps": "Whether a present string conveys the correct résumé claim"
+    },
+    {
+      "output": "ATS verify order_checks[*].status/positions/reason and evidence",
+      "label": "script-output",
+      "record": "Field results and paste-test.txt offsets",
+      "machine_can_verify": "Declared linear order and missing fields",
+      "human_keeps": "Whether the reading order is usable in every ATS"
+    },
+    {
+      "output": "ATS verify verdict, metrics.required_fields/order_checks, summary",
+      "label": "script-output",
+      "record": "Per-field and per-order records in the same audit JSON",
+      "machine_can_verify": "Counts and PASS/FAIL reconciliation",
+      "human_keeps": "Whether mechanical PASS is adequate to submit"
+    },
+    {
+      "output": "ATS inspect parser_floor and checks[*]",
+      "label": "script-output",
+      "record": "PDF page tree, text layer, Unicode/control characters, line structure, and text-item geometry",
+      "machine_can_verify": "The named deterministic parser-floor rules",
+      "human_keeps": "Whether the extracted résumé is complete and useful"
+    },
+    {
+      "output": "ATS inspect inventory.* and page_metrics.*",
+      "label": "script-output",
+      "record": "paste-test.txt lines and PDF.js text-item geometry",
+      "machine_can_verify": "Counts under the documented regex/geometry rules",
+      "human_keeps": "Inventory meaning; these counts are heuristic, not résumé quality"
+    },
+    {
+      "output": "ATS decision and boundary/limitations text",
+      "label": "local-evidence",
+      "record": "Chapter 13 scope and maintained harness policy",
+      "machine_can_verify": "HUMAN_REVIEW_REQUIRED and limitation text are present",
+      "human_keeps": "The actual adequacy decision"
+    },
+    {
+      "output": "Gate schema_version, harness, fixture, sources, contract",
+      "label": "local-evidence",
+      "record": "data/examples/gate-behavior-cases.json and Chapters 11/16",
+      "machine_can_verify": "Fixture and source binding",
+      "human_keeps": "Whether the chapter contract is adequate for a real decision"
+    },
+    {
+      "output": "Gate generated timestamp",
+      "label": "script-output",
+      "record": "System clock read by scripts/score/gate-behavior-harness.mjs",
+      "machine_can_verify": "A timestamp was emitted for this execution",
+      "human_keeps": "Whether the evidence is recent enough for the intended use"
+    },
+    {
+      "output": "Gate production implementation and case id/purpose/mutation_witness",
+      "label": "local-evidence",
+      "record": "scripts/score/gate-behavior-harness.mjs and data/examples/gate-behavior-cases.json",
+      "machine_can_verify": "Identifiers and controlled-case declarations are copied consistently",
+      "human_keeps": "Whether the cases are representative"
+    },
+    {
+      "output": "Gate production cases[*].expected.* and expected check values",
+      "label": "local-evidence",
+      "record": "data/examples/gate-behavior-cases.json controlled truth table",
+      "machine_can_verify": "Fixture shape and exact comparison",
+      "human_keeps": "Whether the controlled cases cover all important real-world states"
+    },
+    {
+      "output": "Gate production observed composite/recommendation/reason/gate_product",
+      "label": "script-output",
+      "record": "scripts/score/role-scorer.mjs run on each controlled fixture role",
+      "machine_can_verify": "Formula result and trace shape/value",
+      "human_keeps": "Truth of any upstream real-role factor"
+    },
+    {
+      "output": "Gate case/check status and production summary counts",
+      "label": "script-output",
+      "record": "scripts/score/gate-behavior-core.mjs comparisons",
+      "machine_can_verify": "Every status and aggregate count reconciles",
+      "human_keeps": "Adequacy of the assertions"
+    },
+    {
+      "output": "Gate deliberate_break mutation result, detection, witnesses, failed checks",
+      "label": "script-output",
+      "record": "Deliberate gate-as-vote implementation in scripts/score/gate-behavior-core.mjs",
+      "machine_can_verify": "The wrong implementation fails and both named witnesses are caught",
+      "human_keeps": "Whether other plausible mutations should also be tested"
+    },
+    {
+      "output": "Gate machine_result",
+      "label": "script-output",
+      "record": "Production contract verdict plus mutation-detection result",
+      "machine_can_verify": "Mechanical handoff condition",
+      "human_keeps": "No adequacy claim follows automatically"
+    },
+    {
+      "output": "Gate human_decision",
+      "label": "local-evidence",
+      "record": "SNICKERDOODLE.md human-gate policy",
+      "machine_can_verify": "Value remains HUMAN_REVIEW_REQUIRED",
+      "human_keeps": "Named review, ethics clearance, and final go/no-go"
+    },
+    {
+      "output": "Real résumé truth, universal ATS compatibility, live posting truth, visa legality, final Apply decision",
+      "label": "missing",
+      "record": "No qualifying record exists inside these two harnesses",
+      "machine_can_verify": "The reports do not claim these capabilities",
+      "human_keeps": "Supply independent evidence or leave the result unknown"
+    },
+    {
+      "output": "Model judgments",
+      "label": "model-inference",
+      "record": "Not emitted by the controlled public sample; any future model-derived value must carry this label",
+      "machine_can_verify": "Controlled fixture sources are not mislabeled as model or external records",
+      "human_keeps": "Judge any future inference against reality"
+    }
+  ],
+  "metric_readout": {
+    "ats_positive": {
+      "pages": 2,
+      "fields_passed": 13,
+      "fields_total": 13,
+      "order_passed": 1,
+      "order_total": 1,
+      "verdict": "PASS"
+    },
+    "ats_break": {
+      "pages": 1,
+      "fields_passed": 7,
+      "fields_total": 13,
+      "order_passed": 0,
+      "order_total": 1,
+      "verdict": "FAIL"
+    },
+    "gate": {
+      "cases_passed": 6,
+      "cases_total": 6,
+      "checks_passed": 40,
+      "checks_total": 40,
+      "witnesses": [
+        {
+          "id": "liveness-zero-high-votes",
+          "composite": 0.8,
+          "recommendation": "Apply",
+          "status": "FAIL"
+        },
+        {
+          "id": "timeline-zero-high-votes",
+          "composite": 0.85,
+          "recommendation": "Apply",
+          "status": "FAIL"
+        }
+      ]
+    }
+  },
+  "number_trace": [
+    {
+      "report": "ats-positive",
+      "json_path": "chapter",
+      "value": 13,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "metrics.pages.value",
+      "value": 2,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "metrics.required_fields.passed",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "metrics.required_fields.total",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "metrics.order_checks.passed",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "metrics.order_checks.total",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "summary.fields.passed",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "summary.fields.total",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "summary.order_checks.passed",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "summary.order_checks.total",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 153,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 164,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 216,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 2,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 574,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 626,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 1138,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 1193,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 1827,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 2237,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 3011,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 3097,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "fields[*].observed_index",
+      "value": 3226,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 153,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 164,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 216,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 574,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 626,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 1138,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 1193,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 1827,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 2237,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 3011,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 3097,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-positive",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 3226,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/aarav-patel/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "chapter",
+      "value": 13,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "metrics.pages.value",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "metrics.required_fields.passed",
+      "value": 7,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "metrics.required_fields.total",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "metrics.order_checks.passed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "metrics.order_checks.total",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "summary.fields.passed",
+      "value": 7,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "summary.fields.total",
+      "value": 13,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "summary.order_checks.passed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "summary.order_checks.total",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 231,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 242,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 294,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 2,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 314,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 369,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].observed_index",
+      "value": 386,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "fields[*].occurrence",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "data/examples/aarav-patel-ats-expected.json and resumes/aarav-patel-cv.md"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 231,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 242,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 294,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 314,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 369,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "ats-break",
+      "json_path": "order_checks[*].observed_positions[*]",
+      "value": 386,
+      "label": "script-output",
+      "script": "scripts/resumes/ats-parse-test.mjs",
+      "record": "reports/generated/ats-paste-test/break-attempt/paste-test-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.summary.cases_passed",
+      "value": 6,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.summary.cases_total",
+      "value": 6,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.summary.checks_passed",
+      "value": 40,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.summary.checks_total",
+      "value": 40,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0.65,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0.65,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0.65,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0.65,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0.26,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 0.4,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0.26,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 0.4,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0.26,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0.26,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0.4,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0.4,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0.5,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0.5,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.composite",
+      "value": 0.0325,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].expected.gate_product",
+      "value": 0.05,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.composite",
+      "value": 0.0325,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].observed.gate_product",
+      "value": 0.05,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0.0325,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0.0325,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected",
+      "value": 0.05,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed",
+      "value": 0.05,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 0.05,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 0.05,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "production.cases[*].checks[*].observed[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/role-scorer.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].mutation_observed.composite",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.witnesses[*].mutation_observed.composite",
+      "value": 0.85,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.summary.cases_passed",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.summary.cases_total",
+      "value": 6,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.summary.checks_passed",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.summary.checks_total",
+      "value": 40,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0.65,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0.65,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 1,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 0.85,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 0.85,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 0.65,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 0.65,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0.26,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0.4,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 0.87,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0.26,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 0.87,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0.4,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0.5,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0.8,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.composite",
+      "value": 0.0325,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].expected.gate_product",
+      "value": 0.05,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].observed.composite",
+      "value": 0.81,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0.0325,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].observed",
+      "value": 0.81,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected",
+      "value": 0.05,
+      "label": "local-evidence",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "data/examples/gate-behavior-cases.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 0.05,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    },
+    {
+      "report": "gate-behavior",
+      "json_path": "deliberate_break.full_result.cases[*].checks[*].expected[*]",
+      "value": 1,
+      "label": "script-output",
+      "script": "scripts/score/gate-behavior-core.mjs",
+      "record": "reports/generated/gate-behavior/gate-behavior-audit.json"
+    }
+  ],
+  "not_verified": [
+    "universal ATS compatibility",
+    "truth or persuasiveness of a real resume",
+    "current real-job liveness or sponsorship",
+    "legal correctness of a personal visa timeline",
+    "weight calibration or final application worthiness"
+  ]
+}

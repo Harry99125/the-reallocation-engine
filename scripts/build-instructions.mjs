@@ -30,7 +30,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import { execSync } from 'node:child_process';
+import yaml from 'js-yaml';
 
 const SRC = 'instructions';
 const SHARED = path.join(SRC, '_shared');
@@ -52,14 +52,11 @@ const GEN_NOTE =
 'GENERATED from instructions/ by scripts/build-instructions.mjs — do not edit by hand. ' +
 'Thin shim: points at the canonical AGENTS.md (SNICKERDOODLE.md governs).';
 
-// --- manifest (YAML via PyYAML, like conformance.mjs) --------------------
+// --- manifest (YAML via the repository's pinned JS parser) ---------------
 function loadManifest() {
   const p = path.join(SRC, 'manifest.yml');
   if (!fs.existsSync(p)) { console.error(`No ${p}`); process.exit(2); }
-  const json = execSync(
-    `python3 -c "import yaml,json,sys;print(json.dumps(yaml.safe_load(open('${p}'))))"`,
-    { encoding: 'utf8' });
-  return JSON.parse(json);
+  return yaml.load(fs.readFileSync(p, 'utf8'));
 }
 
 function readModule(name) {
@@ -136,14 +133,15 @@ const TARGETS = {
 
 function diff(rootFile, buildFile) {
   if (!fs.existsSync(rootFile)) { console.log(`  (new) ${rootFile} — no current version`); return true; }
-  try {
-    execSync(`diff -u "${rootFile}" "${buildFile}"`, { stdio: 'pipe' });
-    console.log(`  = ${rootFile} unchanged`); return false;
-  } catch (e) {
-    console.log(`--- diff: ${rootFile} ---`);
-    console.log(e.stdout?.toString() || '(changed)');
-    return true;
+  const normalizeEol = (value) => value.replace(/\r\n/g, '\n');
+  const current = normalizeEol(fs.readFileSync(rootFile, 'utf8'));
+  const staged = normalizeEol(fs.readFileSync(buildFile, 'utf8'));
+  if (current === staged) {
+    console.log(`  = ${rootFile} unchanged`);
+    return false;
   }
+  console.log(`  ~ ${rootFile} changed — compare it with ${buildFile}`);
+  return true;
 }
 
 function writeNested(base, name, content) {

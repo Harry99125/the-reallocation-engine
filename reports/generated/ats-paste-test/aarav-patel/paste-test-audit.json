@@ -11,9 +11,9 @@
     "source_type": "script-output"
   },
   "inputs": {
-    "source": "output\\resumes\\aarav-patel-cv.pdf",
+    "source": ".build\\ats-paste-test\\aarav-patel-public.pdf",
     "source_type": "pdf",
-    "pdf": "output\\resumes\\aarav-patel-cv.pdf",
+    "pdf": ".build\\ats-paste-test\\aarav-patel-public.pdf",
     "expectation_manifest": "data\\examples\\aarav-patel-ats-expected.json",
     "source_markdown": "resumes/aarav-patel-cv.md"
   },

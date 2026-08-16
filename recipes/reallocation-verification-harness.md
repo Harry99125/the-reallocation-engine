@@ -3,9 +3,9 @@ status: RUNNABLE-SAMPLE
 todos_open: 0
 last_gate: "sample-run, 2026-08-15, logs/RUN_LOG.md#2026-08-15-step-2-reallocation-verification-harness"
 attestation: null
-recipe_version: 0.1.0
+recipe_version: 0.8.0
 pair: recipes/reallocation-verification-harness.card.md
-pair_version: 0.1.0
+pair_version: 0.8.0
 ---
 
 # Reallocation Verification Harness — AI Recipe
@@ -64,6 +64,8 @@ Use only these maintained tools for this workflow:
 | `scripts/score/gate-behavior-core.mjs` | Evaluate the independent truth table and the deliberate gate-as-vote mutation | None |
 | `scripts/score/gate-behavior-harness.mjs` | Generate gate machine audit and human report | `reports/generated/gate-behavior/` |
 | `scripts/score/gate-behavior.test.mjs` | Gate regression, mutation, and CLI integration tests | Temporary test output only |
+| `scripts/verified-data-evidence.mjs` | Reconcile public metrics, enumerate numeric provenance, and enforce the Step 3 privacy/mechanical-honesty gate | `reports/generated/zening-teng-contribution/` |
+| `scripts/verified-data-evidence.test.mjs` | Prove the Step 3 gate blocks a private staged path, invented count, and provenance mislabel | Temporary test output only |
 | `scripts/conformance.mjs` | Parse/compile the contribution artifacts | None |
 
 No stored tool in this contribution converts a résumé plus a job description into a real-job recommendation. Report that capability as not implemented in this contribution.
@@ -84,7 +86,8 @@ npm.cmd run test:gate-behavior
 2. Run the ATS positive control against the anonymized PDF and its source-traced expectation record:
 
 ```powershell
-npm.cmd run resumes:paste-test -- "output\resumes\aarav-patel-cv.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
+npm.cmd run resumes:pdf -- "resumes\aarav-patel-cv.md" ".build\ats-paste-test\aarav-patel-public.pdf"
+npm.cmd run resumes:paste-test -- ".build\ats-paste-test\aarav-patel-public.pdf" --expect "data\examples\aarav-patel-ats-expected.json" --out-dir "reports\generated\ats-paste-test\aarav-patel"
 ```
 
 3. Render and run the deliberate ATS break. Read `$LASTEXITCODE` immediately after the strict verification command; it must be `1`.
@@ -115,7 +118,24 @@ Get-Content "reports\generated\gate-behavior\gate-behavior-audit.md"
 node scripts/conformance.mjs recipes/reallocation-verification-harness.md recipes/reallocation-verification-harness.card.md scripts/resumes scripts/score data/examples/aarav-patel-ats-expected.json data/examples/ats-paste-test-broken-render.md data/examples/gate-behavior-cases.json reports/generated/ats-paste-test reports/generated/gate-behavior package.json README.md
 ```
 
-7. Append the run result to `logs/RUN_LOG.md` using the template below. Include actual observed counts and exit codes; do not copy numbers from this recipe without reading the new output.
+7. Generate the Step 3 verified-data evidence, then read the report:
+
+```powershell
+npm.cmd run capstone:step3
+Get-Content "reports\generated\zening-teng-contribution\step3.md"
+$LASTEXITCODE
+npm.cmd run test:capstone-step3
+```
+
+8. Run the strict doctor independently. It must report a runnable environment, no tracked private/PII paths, complete recipe frontmatter, and no TODO-count mismatch.
+
+```powershell
+npm.cmd run doctor -- --strict
+```
+
+9. A named human reads the Step 3 report and its three underlying audits. Until that review is recorded, keep `attestation: null`, do not call the contribution `VERIFIED`, and do not begin Step 4.
+
+10. Append the run result to `logs/RUN_LOG.md` using the template below. Include actual observed counts and exit codes; do not copy numbers from this recipe without reading the new output.
 
 ### B. Approved private résumé inspection
 
@@ -140,6 +160,11 @@ Read the extracted text yourself. A parser-floor PASS is not a field-correctness
 | `reports/generated/ats-paste-test/break-attempt/paste-test-audit.md` | Human | visible failed fields/order and limits | Human-readable break evidence |
 | `reports/generated/gate-behavior/gate-behavior-audit.json` | Machine | production case/assertion counts, per-check evidence, mutation result, witness failures | Chapter 11/16 mechanical handoff evidence |
 | `reports/generated/gate-behavior/gate-behavior-audit.md` | Human | executable contract, production table, deliberate mutation table, limits | Human-readable handoff; remains `HUMAN_REVIEW_REQUIRED` |
+| `reports/generated/zening-teng-contribution/step3.json` | Machine | boundary rows, ethics checks, metric reconciliation, exhaustive numeric-leaf trace, missing knowledge | Step 3 machine evidence; not a human signature |
+| `reports/generated/zening-teng-contribution/step3.md` | Human | ethics-gate evidence, verified-vs-inferred table, figure-to-script-to-record trace, limitations, review handoff | Must be read by a named human before Step 4 |
+| `reports/generated/zening-teng-contribution/step1.md` | Human | selected contribution, selection-bar mapping, source chapters, scope boundary | Retrospective selection record requested by the student |
+| `reports/generated/zening-teng-contribution/step2.md` | Human | implementation results, two-customer pair, failure behavior, limits | Retrospective build summary traced to original audits/log/commit |
+| `reports/generated/zening-teng-contribution/step5.md` | Human | requirement audit, base-repository decision, PR description, publication sequence | Local readiness evidence; PR link remains a human/GitHub action |
 | `private/ats-paste-test/<resume-name>/` | Human and local agent only | extracted text, inspection JSON/Markdown, optional rendered PDF | Private local evidence; never commit |
 | `logs/RUN_LOG.md` | Maintainers | date, recipe, inputs, commands, outputs, observed results, break result, limitations | Ground-truth run history without PII |
 
@@ -165,6 +190,9 @@ Exit-code contract:
 | VH-10 | Human boundary | Every report distinguishes machine conformance from human adequacy and does not self-attest. |
 | VH-11 | Pair drift | Recipe and card have identical `pair_version`, commands, output paths, and exit-code meanings. |
 | VH-12 | Conformance | Targeted conformance exits `0` for code, JSON fixtures/audits, reports, recipe, card, package, and README. |
+| VH-13 | Every number traces | Step 3 JSON enumerates every numeric leaf from both ATS audits and the gate audit with a permitted label, producing script, and record. |
+| VH-14 | Ethics gate | No private/data-ATS/résumé-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; controlled values are labeled `local-evidence`. |
+| VH-15 | No self-attestation | Machine evidence may pass, but the report and gate audit retain `HUMAN_REVIEW_REQUIRED`; Step 4 waits for a named human. |
 
 ## 8. Logging Rules
 
@@ -175,7 +203,7 @@ Use this template:
 ```markdown
 ## YYYY-MM-DD -- Reallocation verification harness
 
-- **Recipe:** `reallocation-verification-harness` v0.1.0
+- **Recipe:** `reallocation-verification-harness` v0.8.0
 - **Mode:** public-sample | private-resume
 - **Inputs:** public fixture paths, or "approved private résumé; details withheld"
 - **Commands:** stored command names that actually ran
@@ -202,6 +230,7 @@ Stop immediately when any of these is true:
 - Either gate mutation witness is not caught.
 - Liveness or timeline appears in the weighted-vote trace.
 - A JSON audit fails to parse, a Markdown report is missing, or conformance fails.
+- Step 3 finds an untraced number, a non-approved provenance label, a count/verdict mismatch, a staged private path, a tracked private leak, or a non-clean strict doctor result.
 - Recipe and card commands, versions, outputs, or limits differ.
 - Anyone asks the harness to certify universal ATS compatibility, factual résumé correctness without independent evidence, real-job sponsorship, real-job fit, visa legality, or final application worthiness.
 - No named human has read the reports but the run is being described as adequate, attested, or verified.
