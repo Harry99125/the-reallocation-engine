@@ -36,7 +36,7 @@ artifact.
 
 Detailed module documentation:
 
-- Résumé paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
+- Resume paste-test: [`scripts/resumes/README.md`](scripts/resumes/README.md)
 - Gate-behavior harness: [`scripts/score/README.md`](scripts/score/README.md)
 - AI recipe: [`recipes/Zening-AIRecipe.md`](recipes/Zening-AIRecipe.md)
 - Human card: [`recipes/Zening.card.md`](recipes/Zening.card.md)
@@ -103,7 +103,7 @@ git push -u origin contrib/zening-teng-verification-harness
 gh pr create --repo nikbearbrown/the-reallocation-engine --base main --head ZeningTeng-Harry:contrib/zening-teng-verification-harness --title "Add ATS paste-test and gate-behavior verification harnesses" --body-file "reports/generated/zening-teng-contribution/step5.md"
 ```
 
-### Inspect any résumé PDF or Markdown file
+### Inspect any resume PDF or Markdown file
 
 ```powershell
 npm.cmd run resumes:paste-test -- "resumes\<resume>.pdf"
@@ -133,7 +133,7 @@ npm.cmd run resumes:paste-test -- ".build\ats-paste-test\aarav-patel-public.pdf"
 
 ### Run the ATS deliberate-break sample
 
-Render the intentionally incomplete public résumé and verify that the strict
+Render the intentionally incomplete public resume and verify that the strict
 paste-test rejects it. The second command must exit `1`; that failure is the
 expected evidence.
 
@@ -143,13 +143,13 @@ npm.cmd run resumes:paste-test -- ".build\ats-paste-test\broken-render.pdf" --ex
 $LASTEXITCODE
 ```
 
-### Render a Markdown résumé to PDF
+### Render a Markdown resume to PDF
 
 ```powershell
 npm.cmd run resumes:pdf -- "resumes\aarav-patel-cv.md"
 ```
 
-### Check the résumé harness files for conformance
+### Check the resume harness files for conformance
 
 ```powershell
 node scripts/conformance.mjs scripts/resumes data/examples/aarav-patel-ats-expected.json reports/generated/ats-paste-test package.json
@@ -230,8 +230,8 @@ node scripts/conformance.mjs scripts/verified-data-evidence.mjs scripts/verified
 
 ### Read the Step 4 honest run
 
-The public report preserves the private résumé run and shows the post-approval
-database-backed gate and public ATS terminal evidence. Real résumé artifacts
+The public report preserves the private resume run and shows the post-approval
+database-backed gate and public ATS terminal evidence. Real resume artifacts
 stay under `private/`.
 
 ```powershell

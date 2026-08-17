@@ -13,7 +13,7 @@ type: human-card
 
 ## Purpose
 
-This contribution adds two narrow safety checks to The Reallocation Engine. The résumé harness checks whether ATS-relevant text survives PDF/Markdown extraction. The gate harness proves that liveness and timeline remain multipliers and catches the Chapter 16 gate-as-vote bug.
+This contribution adds two narrow safety checks to The Reallocation Engine. The resume harness checks whether ATS-relevant text survives PDF/Markdown extraction. The gate harness proves that liveness and timeline remain multipliers and catches the Chapter 16 gate-as-vote bug.
 
 It is a validation contribution, not an end-to-end job-scoring system.
 
@@ -30,8 +30,8 @@ It is a validation contribution, not an end-to-end job-scoring system.
 ## What It Cannot Verify
 
 - Whether every commercial ATS parser will behave like PDF.js.
-- Whether résumé claims are factually true unless a human supplies independent evidence.
-- Whether a visually attractive résumé is persuasive or ready to submit.
+- Whether resume claims are factually true unless a human supplies independent evidence.
+- Whether a visually attractive resume is persuasive or ready to submit.
 - Whether an upstream liveness observation is current or a timeline input is legally correct.
 - Whether sponsorship, fit, role quality, or the configured weights are valid for a real role.
 - The full Chapter 7 sponsorship probability. The CSV lacks required inputs and the stored company join lacks raw match evidence.
@@ -43,10 +43,10 @@ It is a validation contribution, not an end-to-end job-scoring system.
 |---|---|
 | Node.js and npm dependencies from `package.json` | Runs both harnesses and test suites. |
 | Exact `pdfjs-dist` version declared in `package.json` | Extracts PDF text with scripting/eval disabled; update the declared version and rerun all evidence together. |
-| Playwright with Chromium | Renders Markdown fixtures and résumé PDFs. |
+| Playwright with Chromium | Renders Markdown fixtures and resume PDFs. |
 | `resumes/aarav-patel-cv.md` | Public anonymized source of truth; render its temporary PDF under `.build/` before verification. |
 | `data/examples/aarav-patel-ats-expected.json` | Independent, source-line-traced strict expectation record. |
-| `data/examples/ats-paste-test-broken-render.md` | Public incomplete résumé used for the deliberate break. |
+| `data/examples/ats-paste-test-broken-render.md` | Public incomplete resume used for the deliberate break. |
 | `data/examples/gate-behavior-cases.json` | Independent Chapter 11/16 gate truth table. |
 | `data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv` | Stored business record used to create the nonzero pre-gate value; not proof of the full sponsorship probability. |
 | `scripts/score/gate-database-evidence.mjs` | Hashes and reads the CSV, selects the first complete H-1B record in stored order, and checks its approval-rate arithmetic. |
@@ -123,7 +123,7 @@ npm.cmd run doctor -- --strict
 
 Expect the machine evidence, privacy gate, and mechanical honesty/provenance gate to report `PASS`. The current human review is stored in `logs/zening-teng-step3-review-v0.12.0.json` and binds to recipe 0.12.0 plus the database hash. It does not change lifecycle status to `VERIFIED`.
 
-### Optional private résumé inspection
+### Optional private resume inspection
 
 ```powershell
 npm.cmd run resumes:paste-test -- "resumes\<resume>.pdf"
@@ -132,7 +132,7 @@ Get-Content "private\ats-paste-test\<resume-name>\paste-test.txt"
 $LASTEXITCODE
 ```
 
-Private output must remain untracked. Read `paste-test.txt` before deciding whether the résumé is adequate.
+Private output must remain untracked. Read `paste-test.txt` before deciding whether the resume is adequate.
 
 ### Read the Step 4 honest run
 
@@ -140,7 +140,7 @@ Private output must remain untracked. Read `paste-test.txt` before deciding whet
 Get-Content "reports\generated\zening-teng-contribution\step4.md"
 ```
 
-Confirm that it says the real résumé ran privately, does not publish private content or counts, shows the reproducible public output, checks whether the results make sense, records both break attempts, and says what the machine could not know.
+Confirm that it says the real resume ran privately, does not publish private content or counts, shows the reproducible public output, checks whether the results make sense, records both break attempts, and says what the machine could not know.
 
 ## What It Produces
 
@@ -159,26 +159,26 @@ Confirm that it says the real résumé ran privately, does not publish private c
 | `reports/generated/zening-teng-contribution/step1.md` | Human-readable contribution-selection and scope record. |
 | `reports/generated/zening-teng-contribution/step2.md` | Human-readable build, pair, failure, and limitation summary traced to original evidence. |
 | `reports/generated/zening-teng-contribution/step5.md` | Human-readable PR readiness audit and maintainer-ready description draft; it does not prove a PR was published. |
-| `private/ats-paste-test/<resume-name>/` | Private extraction and inspection artifacts for a real résumé. |
+| `private/ats-paste-test/<resume-name>/` | Private extraction and inspection artifacts for a real resume. |
 | `logs/RUN_LOG.md` | Privacy-safe record of what actually ran. |
 
 ## What Success Looks Like
 
 - Both test suites exit `0`.
 - The public ATS positive control passes every declared field and order check.
-- The incomplete résumé fails deterministically and explains the missing/order evidence.
+- The incomplete resume fails deterministically and explains the missing/order evidence.
 - Production gate behavior passes every case and assertion.
 - The deliberate gate-as-vote implementation produces plausible but wrong nonzero Apply results for both closed-gate witnesses, and the harness marks both caught.
 - The gate report names the CSV, records its hash, checks the stored rate, calls the rate a historical proxy only, and does not invent the missing full sponsorship, liveness, or timeline inputs.
-- Reports retain a human-review boundary; no script claims universal ATS compatibility, factual résumé truth, or a real-job decision.
+- Reports retain a human-review boundary; no script claims universal ATS compatibility, factual resume truth, or a real-job decision.
 - The Step 3 evidence reconciles every public metric, reports privacy and mechanical honesty/provenance PASS, and records the current named review.
-- Step 4 contains the post-approval gate and public ATS reruns while keeping private résumé content and counts unpublished.
+- Step 4 contains the post-approval gate and public ATS reruns while keeping private resume content and counts unpublished.
 
 ## Failure Modes
 
 1. **Contract violation — a gate becomes a vote.** A zero-liveness or zero-timeline witness returns a nonzero composite or Apply/Consider. Stop immediately; the production scorer has violated the Chapter 11/16 contract. Restore multiplicative gates and rerun the complete gate suite.
 
-2. **Expectation/source contract drift.** A strict ATS expected value no longer matches its declared Markdown source line. The harness must exit `2`. Update the source and expectation together only when the underlying public résumé intentionally changes; never weaken matching merely to recover PASS.
+2. **Expectation/source contract drift.** A strict ATS expected value no longer matches its declared Markdown source line. The harness must exit `2`. Update the source and expectation together only when the underlying public resume intentionally changes; never weaken matching merely to recover PASS.
 
 3. **Recipe/card drift.** Commands, output paths, exit meanings, limits, or `pair_version` differ between this card and the AI recipe. Stop using both documents until they are reconciled and updated in the same commit.
 
@@ -188,7 +188,7 @@ Confirm that it says the real résumé ran privately, does not publish private c
 
 6. **Presence mistaken for correct order.** Every field exists, but titles, dates, or headings are scrambled. Strict order checks must fail; do not reduce the test to document-wide substring presence.
 
-7. **Private-data leak.** A real résumé, extracted text, expectation record, preview, or ATS search artifact appears outside `private/` or is staged. Stop, move derived artifacts to the private area, remove them from the proposed commit scope, and rerun the privacy gate. Do not copy personal details into `RUN_LOG.md`.
+7. **Private-data leak.** A real resume, extracted text, expectation record, preview, or ATS search artifact appears outside `private/` or is staged. Stop, move derived artifacts to the private area, remove them from the proposed commit scope, and rerun the privacy gate. Do not copy personal details into `RUN_LOG.md`.
 
 8. **False break evidence.** The deliberate ATS command exits `2` because the PDF is missing or the parser crashes. That is an execution error, not proof that missing fields were detected. Repair the run and require deterministic exit `1` plus a readable FAIL audit.
 

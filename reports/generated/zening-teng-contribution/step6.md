@@ -3,7 +3,7 @@
 
 [Open the single-page website](step6.html).
 
-I added two checks to an evidence-based job-search project. One checks whether a résumé can be read after it becomes a PDF. The other checks whether the job scorer keeps its two hard gates.
+I added two checks to an evidence-based job-search project. One checks whether a resume can be read after it becomes a PDF. The other checks whether the job scorer keeps its two hard gates.
 
 The main result is simple: I made a wrong gate implementation on purpose, and the tests caught both bad results.
 
@@ -11,7 +11,7 @@ The main result is simple: I made a wrong gate implementation on purpose, and th
 
 An international student has limited time to apply for jobs. A bad system can waste that time in two ways.
 
-First, a résumé can look correct on screen but turn into broken or missing text when software reads the PDF. A heading, date, or job title may disappear or move to the wrong place.
+First, a resume can look correct on screen but turn into broken or missing text when software reads the PDF. A heading, date, or job title may disappear or move to the wrong place.
 
 Second, the scorer can make a more serious mistake. Job liveness and visa timing are supposed to be hard gates. If a job is closed, or the timing cannot work, strong scores in other areas should not change the answer to `Apply`.
 
@@ -19,15 +19,15 @@ The project explained these rules, but it did not have tests for both of them.
 
 ## What I built
 
-### ATS résumé checker
+### ATS resume checker
 
-The first tool accepts a PDF or Markdown résumé. It extracts the text with PDF.js and checks for basic parsing problems.
+The first tool accepts a PDF or Markdown resume. It extracts the text with PDF.js and checks for basic parsing problems.
 
-For a normal résumé, it reports problems such as empty text, broken characters, or unusual layout. The result still asks a person to read the extracted text.
+For a normal resume, it reports problems such as empty text, broken characters, or unusual layout. The result still asks a person to read the extracted text.
 
-For the public test, the tool also checks a known list of names, titles, dates, headings, and their order. That list points back to the public source résumé, so the test cannot quietly change its expected answer.
+For the public test, the tool also checks a known list of names, titles, dates, headings, and their order. That list points back to the public source resume, so the test cannot quietly change its expected answer.
 
-Real résumé output is private by default.
+Real resume output is private by default.
 
 ### Gate-behavior checker
 
@@ -53,20 +53,20 @@ The [AI recipe](../../../recipes/Zening-AIRecipe.md) gives the full run process.
 
 ### Honest run
 
-After the earlier Step 3 review, I ran the ATS checker on the approved real résumé. The résumé, extracted text, and result stayed under `private/`. I did not turn any private result into a public score.
+After the earlier Step 3 review, I ran the ATS checker on the approved real resume. The resume, extracted text, and result stayed under `private/`. I did not turn any private result into a public score.
 
 The gate evidence later changed to the database-backed version described here. Zening Teng reviewed and approved recipe 0.12.0 with the current database hash. I then reran the gate harness and both public ATS cases. The [Step 4 report](step4.md) contains that post-approval run.
 
-I used the made-up public résumé only as a repeatable code test.
+I used the made-up public resume only as a repeatable code test.
 
 ## Results
 
 | Test | Result |
 |---|---:|
 | ATS tests | 11/11 passed |
-| Public résumé fields | 13/13 passed |
-| Public résumé order | 1/1 passed |
-| Broken résumé | 7/13 fields and 0/1 order; final result `FAIL` |
+| Public resume fields | 13/13 passed |
+| Public resume order | 1/1 passed |
+| Broken resume | 7/13 fields and 0/1 order; final result `FAIL` |
 | Gate tests | 10/10 passed |
 | Production gate cases | 3/3 passed |
 | Production gate assertions | 19/19 passed |
@@ -81,7 +81,7 @@ The two wrong gate results are the most important evidence:
 | Liveness is zero | `0 / Skip` | `1.35 / Apply` | Caught |
 | Timeline is zero | `0 / Skip` | `1.35 / Apply` | Caught |
 
-These are saved test-program results, not estimates or real-job recommendations. The H-1B inputs trace to the stored CSV. The records are in the [gate report](../gate-behavior/gate-behavior-audit.md), [good résumé report](../ats-paste-test/aarav-patel/paste-test-audit.md), [broken résumé report](../ats-paste-test/break-attempt/paste-test-audit.md), [Step 3 evidence report](step3.md), and [Step 4 honest run](step4.md).
+These are saved test-program results, not estimates or real-job recommendations. The H-1B inputs trace to the stored CSV. The records are in the [gate report](../gate-behavior/gate-behavior-audit.md), [good resume report](../ats-paste-test/aarav-patel/paste-test-audit.md), [broken resume report](../ats-paste-test/break-attempt/paste-test-audit.md), [Step 3 evidence report](step3.md), and [Step 4 honest run](step4.md).
 
 ## What the programs can check
 
@@ -97,8 +97,8 @@ These are saved test-program results, not estimates or real-job recommendations.
 ## What the programs cannot know
 
 - Whether Workday, iCIMS, or another ATS will read the PDF the same way.
-- Whether the résumé claims are true or persuasive.
-- Whether the résumé design looks professional.
+- Whether the resume claims are true or persuasive.
+- Whether the resume design looks professional.
 - Whether a real job is still open.
 - Whether a real visa timeline is legally correct.
 - Whether the scoring weights are good for one person's search.
@@ -106,17 +106,17 @@ These are saved test-program results, not estimates or real-job recommendations.
 
 ## Failure cases I tested
 
-- A résumé field is missing.
-- Résumé fields appear in the wrong order.
+- A resume field is missing.
+- Resume fields appear in the wrong order.
 - The expected field list no longer matches the public source.
 - A zero gate is treated like a normal score.
-- A private résumé tries to write a public report.
+- A private resume tries to write a public report.
 - The AI recipe and human card stop matching.
 
 
 ## Main limitation
 
-A PDF.js pass does not prove that every commercial ATS will parse the résumé correctly. A correct gate formula also does not prove that the company join, current job liveness, full sponsorship probability, or visa input is true.
+A PDF.js pass does not prove that every commercial ATS will parse the resume correctly. A correct gate formula also does not prove that the company join, current job liveness, full sponsorship probability, or visa input is true.
 
 The tools check the code and the saved evidence. Missing real inputs stay `NOT IMPLEMENTED`; they are not replaced with made-up values.
 

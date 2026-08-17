@@ -89,8 +89,8 @@ export const BOUNDARY_ROWS = [
       'fields[*].evidence.expected_record',
     ],
     label: 'record',
-    record: 'Public résumé and answer file',
-    machine_can_verify: 'Checks that every answer came from the résumé.',
+    record: 'Public resume and answer file',
+    machine_can_verify: 'Checks that every answer came from the resume.',
     human_keeps: 'Does the list cover the important parts?',
   },
   {
@@ -133,7 +133,7 @@ export const BOUNDARY_ROWS = [
     label: 'script-output',
     record: 'PDF text and answer list',
     machine_can_verify: 'Checks the fields, their order, and PASS or FAIL.',
-    human_keeps: 'Is the résumé really ready to use?',
+    human_keeps: 'Is the resume really ready to use?',
   },
   {
     output: 'Basic PDF check',
@@ -141,7 +141,7 @@ export const BOUNDARY_ROWS = [
     label: 'script-output',
     record: 'PDF text',
     machine_can_verify: 'Counts headings, dates, and bullet lines.',
-    human_keeps: 'Is the résumé complete and useful?',
+    human_keeps: 'Is the resume complete and useful?',
   },
   {
     output: 'ATS limits',
@@ -149,7 +149,7 @@ export const BOUNDARY_ROWS = [
     label: 'local-evidence',
     record: 'Chapter 13',
     machine_can_verify: 'Shows what the test cannot prove.',
-    human_keeps: 'Makes the final résumé decision.',
+    human_keeps: 'Makes the final resume decision.',
   },
   {
     output: 'Gate rules',
@@ -278,7 +278,7 @@ export const BOUNDARY_ROWS = [
       'database_evidence.not_implemented.real_job_liveness',
       'database_evidence.not_implemented.personal_visa_timeline',
       'database_evidence.not_implemented.real_role_recommendation',
-      'real résumé truth',
+      'real resume truth',
       'all commercial ATS results',
     ],
     label: 'missing',
@@ -423,13 +423,13 @@ function renderMarkdown(evidence) {
     '',
     '## 1. Data and judgment split',
     '',
-    '- `record`: saved résumé facts, Gate rules, and the saved H-1B row.',
+    '- `record`: saved resume facts, Gate rules, and the saved H-1B row.',
     '- `script-output`: PDF text, counts, math, PASS/FAIL, and Gate results.',
     '- `local-evidence`: saved test rules, limits, test cases, and review rules.',
     '- `external-source`: PDF.js name and version.',
     '- `your-input`: the PDF file picked by the user.',
     '- `model-inference`: none in this run. Any future AI idea must use this label.',
-    '- `missing`: real résumé truth, all ATS results, live job status, full sponsorship chance, visa law, and a real Apply choice.',
+    '- `missing`: real resume truth, all ATS results, live job status, full sponsorship chance, visa law, and a real Apply choice.',
     '',
     'Code may read, count, compare, and do math. A person must judge meaning, safety, company matching, and the final choice.',
     '',
@@ -508,7 +508,7 @@ export function buildEvidence({ atsPositive, atsBreak, gateAudit, gateFixture, s
 
   const boundaryLabels = new Set(BOUNDARY_ROWS.map((row) => row.label));
   const checks = [
-    check('privacy:no-private-staged', privateStaged.length === 0, 'no private/, data/ats/, résumé PDF, or .env path staged', privateStaged.length ? privateStaged.join(', ') : 'none', 'git diff --cached --name-only'),
+    check('privacy:no-private-staged', privateStaged.length === 0, 'no private/, data/ats/, resume PDF, or .env path staged', privateStaged.length ? privateStaged.join(', ') : 'none', 'git diff --cached --name-only'),
     check('privacy:no-private-tracked', trackedLeaks.length === 0, 'no non-scaffold private/PII path tracked', trackedLeaks.length ? trackedLeaks.join(', ') : 'none', 'git ls-files'),
     check('privacy:doctor-clean', /environment: ✓ runnable/.test(doctorOutput) && /no private\/PII paths are tracked/.test(doctorOutput) && /missing: 0/.test(doctorOutput) && !/todos_open mismatch/.test(doctorOutput), 'strict doctor reports runnable, privacy clean, all recipe frontmatter, and no TODO-count mismatch', doctorOutput.split(/\r?\n/).filter((line) => /environment:|no private\/PII|with lifecycle|mismatch/.test(line)).join(' | '), 'node scripts/doctor.mjs --strict'),
     check('honesty:ats-positive-reconciles', atsPositive.verdict === positive.verdict && positive.verdict === 'PASS'

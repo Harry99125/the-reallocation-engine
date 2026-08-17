@@ -56,7 +56,7 @@ for (const d of ['data/sec', 'data/bls', 'data/ats', 'data/80-days-to-stay', 'sc
   console.log(`  ${fs.existsSync(d) ? '✓' : '—'} ${d}`);
 
 // --- privacy: no real personal data may be git-tracked --------------------
-// This repo is public. A student's real résumé/tracker live in private/ and must
+// This repo is public. A student's real resume/tracker live in private/ and must
 // never be committed. A tracked private path is a PII leak — hard fail.
 console.log('\nPRIVACY (no personal data committed)');
 let trackedFiles = [];

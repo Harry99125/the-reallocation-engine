@@ -4,19 +4,19 @@
 
 I built both parts of the contribution and connected them to the real project.
 
-The first part checks whether a résumé survives PDF text extraction. The second part checks whether the role scorer treats liveness and timeline as hard gates. Both parts have automated tests and saved reports.
+The first part checks whether a resume survives PDF text extraction. The second part checks whether the role scorer treats liveness and timeline as hard gates. Both parts have automated tests and saved reports.
 
-## Part 1: ATS résumé checker
+## Part 1: ATS resume checker
 
 The checker accepts a PDF or Markdown file.
 
-For a normal résumé, it extracts the text and looks for basic problems such as empty output, broken characters, and unusual reading order. The output goes to `private/` by default.
+For a normal resume, it extracts the text and looks for basic problems such as empty output, broken characters, and unusual reading order. The output goes to `private/` by default.
 
 For a controlled test, it can also compare the PDF with a list of expected names, job titles, dates, and headings. Each field receives `PASS` or `FAIL`.
 
-The public regression test uses a made-up résumé fixture so anyone can repeat the same check. I also made an incomplete version on purpose. The complete version passes. The incomplete version fails and shows exactly which fields are missing.
+The public regression test uses a made-up resume fixture so anyone can repeat the same check. I also made an incomplete version on purpose. The complete version passes. The incomplete version fails and shows exactly which fields are missing.
 
-This public fixture is only a code test. The real résumé used later in Step 4 stays private and is not used as the public answer key.
+This public fixture is only a code test. The real resume used later in Step 4 stays private and is not used as the public answer key.
 
 ## Part 2: gate-behavior checker
 
@@ -43,10 +43,10 @@ These numbers came from the saved test reports.
 | Test | Result |
 |---|---:|
 | ATS automated tests | 11/11 passed |
-| Public résumé fields | 13/13 passed |
-| Public résumé order check | 1/1 passed |
-| Broken résumé fields | 7/13 passed |
-| Broken résumé order check | 0/1 passed; final result `FAIL` |
+| Public resume fields | 13/13 passed |
+| Public resume order check | 1/1 passed |
+| Broken resume fields | 7/13 passed |
+| Broken resume order check | 0/1 passed; final result `FAIL` |
 | Gate automated tests | 10/10 passed |
 | Production gate cases | 3/3 passed |
 | Production gate assertions | 19/19 passed |
@@ -82,15 +82,15 @@ The public test records are under `data/examples/`. The saved reports are under 
 
 ## What the tests can catch
 
-- A résumé field is missing or appears in the wrong order.
-- The expected field list no longer matches the public source résumé.
+- A resume field is missing or appears in the wrong order.
+- The expected field list no longer matches the public source resume.
 - A gate is changed into a normal weighted score.
-- A private résumé tries to write a public report.
+- A private resume tries to write a public report.
 
 
 ## What this step did not prove
 
-The ATS test does not represent every commercial ATS. It does not judge whether a résumé is true or well written.
+The ATS test does not represent every commercial ATS. It does not judge whether a resume is true or well written.
 
 The gate database has historical H-1B fields, but it cannot verify the full sponsorship probability, current job liveness, or a personal visa timeline. Those outputs are `NOT IMPLEMENTED`. A person still makes the final application decision.
 

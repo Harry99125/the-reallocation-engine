@@ -25,10 +25,10 @@ The generator uses Playwright/Chromium and a small built-in Markdown renderer
 for resume-safe Markdown headings, paragraphs, bold text, inline code, and
 bullets.
 
-## Inspect any PDF or Markdown résumé
+## Inspect any PDF or Markdown resume
 
 The Chapter 13 paste-test harness extracts PDF text with PDF.js, checks parser
-mechanics, inventories common résumé signals, and writes a plain-text extraction
+mechanics, inventories common resume signals, and writes a plain-text extraction
 plus JSON and Markdown audits. Markdown inputs are rendered through the
 maintained PDF generator first. No expectation file is required:
 
@@ -79,7 +79,7 @@ npm run resumes:paste-test -- .build/ats-paste-test/broken-render.pdf \
   --out-dir reports/generated/ats-paste-test/break-attempt
 ```
 
-For a real résumé, the default private output is safe. If `--out-dir` is given
+For a real resume, the default private output is safe. If `--out-dir` is given
 for an external or private input, it must still be under `private/`. The command
 exits `0` when the parser floor or declared verification passes, `1` for a
 deterministic inspection/verification failure, and `2` for an input, contract,

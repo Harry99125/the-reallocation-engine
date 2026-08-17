@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Zening Teng's software engineering case study about an ATS résumé checker and a hard-gate test for The Reallocation Engine.">
+  <meta name="description" content="Zening Teng's software engineering case study about an ATS resume checker and a hard-gate test for The Reallocation Engine.">
   <title>Two Safety Checks for the Reallocation Engine — Zening Teng</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -677,7 +677,7 @@ The zero condition (non-negotiable, from the verified-data contract): any number
         <div>
           <p class="eyebrow">Software engineering case study</p>
           <h1>Two safety checks for a job-search tool</h1>
-          <p class="lede">I built a résumé PDF checker and a test that keeps two important scoring gates from turning into normal weighted scores.</p>
+          <p class="lede">I built a resume PDF checker and a test that keeps two important scoring gates from turning into normal weighted scores.</p>
           <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Automated testing</p>
         </div>
         <aside class="metric-hero" aria-label="Primary result">
@@ -695,7 +695,7 @@ The zero condition (non-negotiable, from the verified-data contract): any number
         <div>
           <h2>A result can look right and still be wrong</h2>
           <p>An international student has limited time to apply for jobs. A bad system can waste that time in two ways.</p>
-          <p>A résumé can look correct on screen while its PDF text is missing a heading, date, or job title. The scorer can also treat job liveness or visa timing like normal scores. That mistake can turn a job that should be skipped into an <code>Apply</code>.</p>
+          <p>A resume can look correct on screen while its PDF text is missing a heading, date, or job title. The scorer can also treat job liveness or visa timing like normal scores. That mistake can turn a job that should be skipped into an <code>Apply</code>.</p>
           <p>The project explained both rules, but it did not have automated tests for both of them.</p>
         </div>
       </div>
@@ -711,7 +711,7 @@ The zero condition (non-negotiable, from the verified-data contract): any number
           <p>I kept the work in three small parts. Each part has one clear job.</p>
           <ol class="architecture" aria-label="Three-layer verification architecture">
             <li>
-              <h3>Résumé checker</h3>
+              <h3>Resume checker</h3>
               <p>Turn public Markdown into a temporary PDF, extract its text with PDF.js, and check names, titles, dates, headings, and order.</p>
             </li>
             <li>
@@ -738,8 +738,8 @@ The zero condition (non-negotiable, from the verified-data contract): any number
           <div class="metrics" aria-label="Verified metrics">
             <div class="metric"><strong>2 / 2</strong><span>Wrong gate examples caught</span></div>
             <div class="metric"><strong>40 / 40</strong><span>Real scorer checks passed</span></div>
-            <div class="metric"><strong>13 / 13</strong><span>Fields found in the complete résumé</span></div>
-            <div class="metric"><strong>7 / 13</strong><span>Fields found in the broken résumé, giving <code>FAIL</code></span></div>
+            <div class="metric"><strong>13 / 13</strong><span>Fields found in the complete resume</span></div>
+            <div class="metric"><strong>7 / 13</strong><span>Fields found in the broken resume, giving <code>FAIL</code></span></div>
           </div>
           <div class="table-wrap">
             <table>
@@ -796,8 +796,8 @@ The zero condition (non-negotiable, from the verified-data contract): any number
               <h3>The programs do not know</h3>
               <ul>
                 <li>Whether every commercial ATS reads the same PDF.</li>
-                <li>Whether résumé claims are true or convincing.</li>
-                <li>Whether the résumé design looks professional.</li>
+                <li>Whether resume claims are true or convincing.</li>
+                <li>Whether the resume design looks professional.</li>
                 <li>Whether a real job or visa timeline is current.</li>
                 <li>Whether the scoring weights are good.</li>
                 <li>Whether a person should apply.</li>
@@ -819,12 +819,12 @@ The zero condition (non-negotiable, from the verified-data contract): any number
             <li><strong>Gate becomes a score</strong><span>A zero gate returns a nonzero result or something other than <code>Skip</code>. The test fails.</span></li>
             <li><strong>Expected data changes</strong><span>An expected field no longer matches its public source line. The program stops.</span></li>
             <li><strong>Missing or mixed-up text</strong><span>The report names every missing or reordered field and returns a failure.</span></li>
-            <li><strong>Private data leaks</strong><span>Real résumé output cannot be written into the public report folders.</span></li>
+            <li><strong>Private data leaks</strong><span>Real resume output cannot be written into the public report folders.</span></li>
             <li><strong>A parser pass sounds like a quality score</strong><span>The report still tells a person to review the content and design.</span></li>
             <li><strong>Instructions stop matching</strong><span>The AI recipe and human card share one version and must change together.</span></li>
           </ul>
           <aside class="limitation">
-            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot fix bad job or visa data.</p>
+            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the resume the same way. A correct formula also cannot fix bad job or visa data.</p>
           </aside>
         </div>
       </div>
@@ -837,7 +837,7 @@ The zero condition (non-negotiable, from the verified-data contract): any number
         </div>
         <div>
           <h2>Run the tests</h2>
-          <p>The demo uses public test files and no real résumé or application data. Run these commands from the project root:</p>
+          <p>The demo uses public test files and no real resume or application data. Run these commands from the project root:</p>
           <div class="demo-grid">
             <pre class="terminal" aria-label="PowerShell demo commands">npm.cmd run test:ats-parse
 npm.cmd run test:gate-behavior

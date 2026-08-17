@@ -14,10 +14,10 @@ pair_version: 0.12.1
 
 Run the two capstone validation modules as one contribution:
 
-1. Chapter 13 résumé paste-test: extract PDF text, inspect parser mechanics, and optionally verify independently declared name/title/date/heading fields and their order.
+1. Chapter 13 resume paste-test: extract PDF text, inspect parser mechanics, and optionally verify independently declared name/title/date/heading fields and their order.
 2. Chapter 11/16 gate-behavior harness: prove liveness and timeline remain multiplicative gates and detect the named gate-as-vote mutation.
 
-Use the public résumé fixture for the reproducible ATS run. For the gate run, read the stored `SEC_DOL_H1b_data_mapped.csv` database and use its first complete H-1B record in file order. Keep every real résumé and every artifact derived from it under `private/` or another gitignored private path. This recipe verifies the two harnesses; it does not produce a complete sponsorship probability, real liveness result, personal timeline result, or real-job recommendation.
+Use the public resume fixture for the reproducible ATS run. For the gate run, read the stored `SEC_DOL_H1b_data_mapped.csv` database and use its first complete H-1B record in file order. Keep every real resume and every artifact derived from it under `private/` or another gitignored private path. This recipe verifies the two harnesses; it does not produce a complete sponsorship probability, real liveness result, personal timeline result, or real-job recommendation.
 
 ## 2. Required Reads
 
@@ -44,10 +44,10 @@ Do not advance past a failed gate.
 | Gate | Testable handoff condition | Failure path |
 |---|---|---|
 | 1. Scope and provenance | The run declares `public-sample` or `private-resume`; every input path is named; ATS expectations trace to source Markdown; the gate business input traces to the stored H-1B CSV; gate controls trace to Chapters 11 and 16. | Stop and label the missing source. Do not substitute remembered fields, hand-written company scores, or invented factors. |
-| 2. Privacy and honesty | Public mode contains no private input. Private mode writes only under `private/`. No real résumé, extracted text, or `data/ats/` content is staged. The gate report says that its H-1B rate is only a stored historical proxy and marks unavailable real inputs `NOT_IMPLEMENTED`. | Stop before running or publishing. Move private output under `private/`; do not turn missing liveness, timeline, or sponsorship inputs into numbers. |
+| 2. Privacy and honesty | Public mode contains no private input. Private mode writes only under `private/`. No real resume, extracted text, or `data/ats/` content is staged. The gate report says that its H-1B rate is only a stored historical proxy and marks unavailable real inputs `NOT_IMPLEMENTED`. | Stop before running or publishing. Move private output under `private/`; do not turn missing liveness, timeline, or sponsorship inputs into numbers. |
 | 3. Regression | Both maintained test suites exit `0`. | Stop. Record the failing test and do not regenerate success evidence. |
 | 4. Positive controls | Public ATS strict verification reports all declared fields and the order check passing. The gate database hash and approval-rate arithmetic reconcile, and every production gate case/assertion passes. | Stop. Treat any mismatch as data drift, contract drift, or a code failure until explained and fixed. |
-| 5. Deliberate breaks | The incomplete résumé exits `1` with missing/order failures. The gate-as-vote sentinel is rejected and both zero-gate witnesses are caught. | Stop. A missed break means the harness cannot detect its named failure and Step 2 is not complete. |
+| 5. Deliberate breaks | The incomplete resume exits `1` with missing/order failures. The gate-as-vote sentinel is rejected and both zero-gate witnesses are caught. | Stop. A missed break means the harness cannot detect its named failure and Step 2 is not complete. |
 | 6. Output and conformance | JSON audits parse, Markdown reports exist, targeted conformance exits `0`, and the run has a privacy-safe `RUN_LOG.md` entry. | Stop. Invalid or unlogged output is not gradeable evidence. |
 | 7. Human adequacy | A named human reads the extracted text, positive report, break report, and gate report and records what was observed. | Leave status at `RUNNABLE-SAMPLE`; do not self-attest or claim `VERIFIED`. |
 
@@ -58,7 +58,7 @@ Use only these maintained tools for this workflow:
 | Tool | Purpose | Writes |
 |---|---|---|
 | `scripts/resumes/ats-parse-test.mjs` | Generic PDF/Markdown inspection and optional evidence-backed strict field verification | Private default output or the explicitly approved public sample report path |
-| `scripts/resumes/ats-parse-test.test.mjs` | Résumé harness unit/integration regression suite | Temporary test output only |
+| `scripts/resumes/ats-parse-test.test.mjs` | Resume harness unit/integration regression suite | Temporary test output only |
 | `scripts/resumes/generate-pdf.mjs` | Render the public broken Markdown fixture to a rebuildable PDF | `.build/ats-paste-test/` |
 | `scripts/score/role-scorer.mjs` | Production Chapter 11 scoring function used by the contract harness | No output when imported by tests |
 | `scripts/score/gate-database-evidence.mjs` | Read, hash, and check the stored H-1B database; select the first complete record without hand-picking a company | Included in the gate audit |
@@ -69,7 +69,7 @@ Use only these maintained tools for this workflow:
 | `scripts/verified-data-evidence.test.mjs` | Prove the Step 3 gate blocks a private staged path, invented count, and provenance mislabel | Temporary test output only |
 | `scripts/conformance.mjs` | Parse/compile the contribution artifacts | None |
 
-No stored tool in this contribution computes the full Chapter 7 sponsorship probability or converts a résumé plus a job description into a real-job recommendation. Report those capabilities, real ATS liveness, and the personal visa timeline as `NOT_IMPLEMENTED`.
+No stored tool in this contribution computes the full Chapter 7 sponsorship probability or converts a resume plus a job description into a real-job recommendation. Report those capabilities, real ATS liveness, and the personal visa timeline as `NOT_IMPLEMENTED`.
 
 ## 5. Workflow
 
@@ -138,7 +138,7 @@ npm.cmd run doctor -- --strict
 
 10. Append the run result to `logs/RUN_LOG.md` using the template below. Include actual observed counts and exit codes; do not copy numbers from this recipe without reading the new output.
 
-### B. Approved private résumé inspection
+### B. Approved private resume inspection
 
 Use this only after the privacy gate. A local PDF under `resumes/` is gitignored; all derived output defaults to `private/`.
 
@@ -159,7 +159,7 @@ After the named Step 3 review and approved private inspection, read the public S
 Get-Content "reports\generated\zening-teng-contribution\step4.md"
 ```
 
-The report must say that the real résumé ran privately without publishing its content or derived counts. It must also include reproducible public terminal evidence, a plausibility check, a deliberate ATS break, the gate-as-vote break, the relevant metric readout, and what the machine could not know.
+The report must say that the real resume ran privately without publishing its content or derived counts. It must also include reproducible public terminal evidence, a plausibility check, a deliberate ATS break, the gate-as-vote break, the relevant metric readout, and what the machine could not know.
 
 ## 6. Output Contract
 
@@ -199,14 +199,14 @@ Exit-code contract:
 | VH-06 | Production gate contract | The current database-backed production cases and assertions all pass; read the fresh audit for counts. |
 | VH-07 | Gate mutation | Deliberate gate-as-vote implementation fails the contract; both named witnesses show nonzero Apply results and are marked caught. |
 | VH-08 | Vote/gate trace separation | Production trace lists liveness and timeline under gates and excludes both from weighted votes. |
-| VH-09 | Privacy | No private résumé, extraction, expectation file, or `data/ats/` personal output enters the public contribution. |
+| VH-09 | Privacy | No private resume, extraction, expectation file, or `data/ats/` personal output enters the public contribution. |
 | VH-10 | Human boundary | Every report distinguishes machine conformance from human adequacy and does not self-attest. |
 | VH-11 | Pair drift | Recipe and card have identical `pair_version`, commands, output paths, and exit-code meanings. |
 | VH-12 | Conformance | Targeted conformance exits `0` for code, JSON fixtures/audits, reports, recipe, card, package, and README. |
 | VH-13 | Every number traces | Step 3 JSON enumerates every numeric leaf from both ATS audits and the gate audit with a permitted label, producing script, and record. |
-| VH-14 | Ethics gate | No private/data-ATS/résumé-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; the stored database hash/rate reconcile; missing real inputs remain `NOT_IMPLEMENTED`. |
+| VH-14 | Ethics gate | No private/data-ATS/resume-PDF/environment file is staged or improperly tracked; strict doctor is clean; all public counts and verdicts recompute; the stored database hash/rate reconcile; missing real inputs remain `NOT_IMPLEMENTED`. |
 | VH-15 | No self-attestation | The current Step 3 review binds to recipe 0.12.0 and the database hash; the gate audit remains `HUMAN_REVIEW_REQUIRED` and lifecycle `attestation` remains null. |
-| VH-16 | Honest run | After the current review, Step 4 records a fresh gate run plus the approved private résumé evidence without private content or counts, and includes terminal evidence, a plausibility audit, both break attempts, metric records, and unknowns. |
+| VH-16 | Honest run | After the current review, Step 4 records a fresh gate run plus the approved private resume evidence without private content or counts, and includes terminal evidence, a plausibility audit, both break attempts, metric records, and unknowns. |
 
 ## 8. Logging Rules
 
@@ -219,7 +219,7 @@ Use this template:
 
 - **Recipe:** `reallocation-verification-harness` v0.12.0
 - **Mode:** public-sample | private-resume
-- **Inputs:** public fixture paths, or "approved private résumé; details withheld"
+- **Inputs:** public fixture paths, or "approved private resume; details withheld"
 - **Commands:** stored command names that actually ran
 - **Positive controls:** observed ATS fields/order; observed gate cases/assertions
 - **Deliberate breaks:** observed exit/verdict and the failure caught
@@ -229,7 +229,7 @@ Use this template:
 - **Limits:** what the scripts could not verify
 ```
 
-Never log a real name, email, phone number, résumé text, target company, application note, or private filesystem path.
+Never log a real name, email, phone number, resume text, target company, application note, or private filesystem path.
 
 ## 9. Stop Conditions
 
@@ -238,7 +238,7 @@ Stop immediately when any of these is true:
 - A required read, stored script, fixture, source Markdown, expectation record, or public PDF is missing.
 - The H-1B database is missing, its hash does not match the generated audit, or the selected approval rate does not recompute from approvals and denials.
 - The expectation/source contract drifts or cannot be verified.
-- A real résumé or derived artifact would be written outside `private/` or another approved gitignored private path.
+- A real resume or derived artifact would be written outside `private/` or another approved gitignored private path.
 - A private path or `data/ats/` personal artifact is staged or tracked.
 - A positive regression or positive sample exits nonzero.
 - The ATS deliberate break exits `0` or `2` instead of the expected deterministic `1`.
@@ -248,5 +248,5 @@ Stop immediately when any of these is true:
 - A JSON audit fails to parse, a Markdown report is missing, or conformance fails.
 - Step 3 finds an untraced number, a non-approved provenance label, a count/verdict mismatch, a staged private path, a tracked private leak, or a non-clean strict doctor result.
 - Recipe and card commands, versions, outputs, or limits differ.
-- Anyone asks the harness to certify universal ATS compatibility, factual résumé correctness without independent evidence, real-job sponsorship, real-job fit, visa legality, or final application worthiness.
+- Anyone asks the harness to certify universal ATS compatibility, factual resume correctness without independent evidence, real-job sponsorship, real-job fit, visa legality, or final application worthiness.
 - No named human has read the reports but the run is being described as adequate, attested, or verified.

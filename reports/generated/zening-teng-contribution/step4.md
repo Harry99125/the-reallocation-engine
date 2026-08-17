@@ -2,11 +2,11 @@
 
 I ran the two modules after the named Step 3 review. I used my resume  in the private ATS run. 
 
-## Private résumé run
+## Private resume run
 
 The ATS inspection ran on the approved real PDF. The input, extracted text, and report stayed under `private/ats-paste-test/`, which Git ignores.
 
-I did not copy the résumé text, private path, or résumé-derived counts into this public report. The private run proves that the command works on the approved file. It does not prove that the résumé is good or that every ATS will parse it the same way.
+I did not copy the resume text, private path, or resume-derived counts into this public report. The private run proves that the command works on the approved file. It does not prove that the resume is good or that every ATS will parse it the same way.
 
 ## Real terminal output
 
@@ -99,8 +99,8 @@ Each number above comes from one of the three linked JSON audits. Step 3 lists t
 
 The tools could not know:
 
-- whether every commercial ATS will parse the résumé the same way;
-- whether résumé claims are true, strong, or visually good;
+- whether every commercial ATS will parse the resume the same way;
+- whether resume claims are true, strong, or visually good;
 - whether a real job is still open;
 - the full sponsorship probability for a real role;
 - whether a personal visa timeline is legally possible;
@@ -111,6 +111,6 @@ These items stay unknown or `NOT_IMPLEMENTED`.
 
 ## Honest result
 
-The public positive controls passed. Both deliberate breaks were detected. The real résumé run stayed private. The scripts did not claim a real liveness value, a personal timeline, or a real-job recommendation.
+The public positive controls passed. Both deliberate breaks were detected. The real resume run stayed private. The scripts did not claim a real liveness value, a personal timeline, or a real-job recommendation.
 
 This is evidence that the two harnesses behave as claimed. It is not a universal ATS certificate and it is not an application decision.

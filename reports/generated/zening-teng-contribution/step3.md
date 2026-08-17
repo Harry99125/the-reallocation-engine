@@ -1,19 +1,20 @@
 # Step 3 — Proof Check
 
-Made on: 2026-08-17T02:28:38.654Z
+Made on: 2026-08-17T03:05:19.992Z
 
 ## 1. Data and judgment split
 
-- `record`: saved résumé facts, Gate rules, and the saved H-1B row.
+- `record`: saved resume facts, Gate rules, and the saved H-1B row.
 - `script-output`: PDF text, counts, math, PASS/FAIL, and Gate results.
 - `local-evidence`: saved test rules, limits, test cases, and review rules.
 - `external-source`: PDF.js name and version.
 - `your-input`: the PDF file picked by the user.
 - `model-inference`: none in this run. Any future AI idea must use this label.
-- `missing`: real résumé truth, all ATS results, live job status, full sponsorship chance, visa law, and a real Apply choice.
+- `missing`: real resume truth, all ATS results, live job status, full sponsorship chance, visa law, and a real Apply choice.
 
 Code may read, count, compare, and do math. A person must judge meaning, safety, company matching, and the final choice.
 
+The full field-by-field split is in `step3.json` under `boundary`. Each item has exact fields, a label, a source, the code job, and the human job.
 
 ## 2. Every number has a source
 
@@ -35,5 +36,7 @@ A privacy or honesty FAIL stops Step 3. Step 4 must not run.
 
 - **Privacy — PASS:** no private path is staged or tracked; `node scripts/doctor.mjs --strict` passed.
 - **Honesty — PASS:** totals and math match saved records; bad code was caught; every number is traced; missing facts stay `missing` or `NOT_IMPLEMENTED`.
+
+Zening Teng allowed Step 4 on 2026-08-16. Record: `logs/zening-teng-step3-review-v0.12.0.json`.
 
 The code did not approve itself. This is not proof for every ATS, job, company, or visa case.

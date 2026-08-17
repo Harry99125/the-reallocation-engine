@@ -28,5 +28,5 @@ PDF.js 6.2.108 extracted 1 page(s). Required fields: 7/13 PASS. Order checks: 0/
 
 - The parser checked every declared string and order constraint; the FAIL rows above identify evidence that is missing or out of order.
 - Expected values came from the named local Markdown lines; the harness checked that contract before parsing.
-- This does not certify compatibility with every ATS, semantic résumé quality, factual truth of résumé claims, or visual adequacy.
+- This does not certify compatibility with every ATS, semantic resume quality, factual truth of resume claims, or visual adequacy.
 - A named human must read `paste-test.txt` and decide adequacy.

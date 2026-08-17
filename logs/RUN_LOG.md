@@ -158,7 +158,7 @@ private emails, or sensitive application notes.
 - **Outputs:** maintained harness `scripts/resumes/ats-parse-test.mjs`; ten-test suite `scripts/resumes/ats-parse-test.test.mjs`; sample and deliberate-break `paste-test.txt`, JSON audit, and Markdown audit under `reports/generated/ats-paste-test/`.
 - **Result:** unit/integration suite 10/10 passed. The sample PDF produced PASS with 13/13 required name/title/date/heading fields and 1/1 linear-order check. The deliberate broken PDF exited 1 with FAIL, 7/13 fields and 0/1 order check, proving missing fields do not receive a fluent success report. Expected values were checked against their source Markdown lines before PDF evaluation. Output names its one-parser and human-adequacy limits.
 - **Generic inspect mode:** a single command now accepts either `.pdf` or `.md` without an expectation file. Markdown is rendered through the maintained generator; deterministic parser/character/layout checks are separated from heuristic heading/date/contact/bullet inventory; the decision always remains `HUMAN_REVIEW_REQUIRED`. Default output is gitignored `private/ats-paste-test/<input-name>/`. External/private inputs are blocked from writing outside `private/`. Both PDF and Markdown integration runs passed the parser floor. `resumes/*.pdf` is now ignored so local real-PDF inputs cannot be accidentally staged.
-- **Private adequacy run:** ran the same stored harness against a user-approved real résumé; all inputs, extracted text, preview, expectation record, and audits remain under gitignored `private/` (or at the user's original external path). No private values or results were copied into tracked artifacts. The run exposed an overly broad substring-match failure mode, so the public harness now distinguishes exact-line, within-line, and document-wide matching; public regression tests cover the fix. Named-human adequacy remains pending.
+- **Private adequacy run:** ran the same stored harness against a user-approved real resume; all inputs, extracted text, preview, expectation record, and audits remain under gitignored `private/` (or at the user's original external path). No private values or results were copied into tracked artifacts. The run exposed an overly broad substring-match failure mode, so the public harness now distinguishes exact-line, within-line, and document-wide matching; public regression tests cover the fix. Named-human adequacy remains pending.
 - **Broke during testing, fixed:** first PDF run reached no verdict because PDF.js 6 exposes resource teardown on the loading task, not the document proxy; changed `document.destroy()` to `loadingTask.destroy()` and reran. Initial PDF.js 6.1.200 also fell in GHSA-hq66-cqwq-w95j; upgraded to patched 6.2.108 and explicitly disabled scripting and eval before rerunning every test and audit.
 - **Repository gates:** targeted conformance passed. `npm run verify` remains blocked on this Windows host because the existing conformance runner invokes `python3` and `bash` entry points that are not executable here (`python` is available). `npm run doctor` finds the new command and its privacy check passes when Git is given this workspace as a one-command safe directory, but its existing frontmatter parser rejects CRLF recipe files. These are recorded blockers, not PDF-harness failures.
 - **Open issues:** human adequacy attestation is not signed; multi-parser comparison is not implemented; `npm audit` still reports the repo's separate `sharp <0.35.0` high-severity issue, whose available fix is a breaking upgrade and was not applied in this scoped run.
@@ -180,10 +180,10 @@ private emails, or sensitive application notes.
 
 - **Recipe:** `reallocation-verification-harness` v0.1.0, public-sample mode; paired AI recipe and human card created together with `pair_version: 0.1.0`.
 - **Two-customer pair:** `recipes/reallocation-verification-harness.md` contains all nine required sections, seven phase gates with explicit failure paths, twelve verification checks, exact commands, output contracts, log template, and stop conditions. `recipes/reallocation-verification-harness.card.md` contains purpose, verified limits, dependencies, annotated commands, outputs, success criteria, and ten named failure modes including recipe/card drift and verified-data contract violation.
-- **Inputs:** anonymized public PDF and source-traced expectation record; incomplete public Markdown break fixture; independent Chapter 11/16 gate truth table. Controlled gate values remain labeled as test inputs in the recipe/card boundary, not as real external records. Prior real-résumé evidence remains private and was not used in this public sample.
+- **Inputs:** anonymized public PDF and source-traced expectation record; incomplete public Markdown break fixture; independent Chapter 11/16 gate truth table. Controlled gate values remain labeled as test inputs in the recipe/card boundary, not as real external records. Prior real-resume evidence remains private and was not used in this public sample.
 - **Regression:** ATS suite 11/11 passed after adding the report-boundary regression; gate suite 10/10 passed.
 - **Positive controls:** public ATS sample exited 0 with 13/13 declared fields and 1/1 order check; production gate contract passed 6/6 cases and 40/40 assertions.
-- **Deliberate breaks:** incomplete résumé rendered to a one-page rebuildable PDF, then strict verification exited 1 with 7/13 fields and 0/1 order checks; the gate-as-vote sentinel produced `0.80 / Apply` and `0.85 / Apply` for the two zero-gate witnesses, and both were caught. No exit-2 execution error was counted as break evidence.
+- **Deliberate breaks:** incomplete resume rendered to a one-page rebuildable PDF, then strict verification exited 1 with 7/13 fields and 0/1 order checks; the gate-as-vote sentinel produced `0.80 / Apply` and `0.85 / Apply` for the two zero-gate witnesses, and both were caught. No exit-2 execution error was counted as break evidence.
 - **Reports read:** positive ATS audit, ATS break audit, and gate-behavior audit. All retain the named-human adequacy boundary.
 - **Broke during testing, fixed:** the failed ATS Markdown audit correctly showed FAIL rows but its boundary paragraph still claimed every declared string was present and ordered. Made the boundary verdict-aware and added a regression test preventing a FAIL report from making the all-fields-passed claim; regenerated and reread both ATS reports.
 - **Conformance:** the documented Step 2 command checked 22 files (9 Markdown, 7 JavaScript, 6 JSON); all conformed.
@@ -192,7 +192,7 @@ private emails, or sensitive application notes.
 ## 2026-08-15 -- Step 3 verified-data evidence and ethics-gate preflight
 
 - **Stored tool:** added `scripts/verified-data-evidence.mjs` and `npm.cmd run capstone:step3`. It recomputes the public ATS and gate metrics, emits the verified-vs-inferred boundary, and traces every numeric audit leaf to its producing script and record.
-- **Ethics machine gate:** PASS. No `private/`, `data/ats/`, résumé PDF, or `.env` path was staged; no non-scaffold private/PII path was tracked. Mechanical checks reconciled the ATS positive result (13/13 fields, 1/1 order), deliberate ATS failure (7/13 fields, 0/1 order), gate production result (6/6 cases, 40/40 assertions), and both gate-as-vote witnesses.
+- **Ethics machine gate:** PASS. No `private/`, `data/ats/`, resume PDF, or `.env` path was staged; no non-scaffold private/PII path was tracked. Mechanical checks reconciled the ATS positive result (13/13 fields, 1/1 order), deliberate ATS failure (7/13 fields, 0/1 order), gate production result (6/6 cases, 40/40 assertions), and both gate-as-vote witnesses.
 - **Provenance correction:** controlled truth-table factors are labeled `local-evidence`, not represented as real external records. The exact PDF.js dependency is declared in tracked `package.json`; the gitignored lockfile is not cited as repository evidence.
 - **Doctor repair:** `scripts/doctor.mjs` now accepts the platform Python command, runs repository-scoped Git privacy checks, and parses LF/CRLF frontmatter. The clean upstream contribution excludes two fork-only recipes whose TODO corrections were unrelated to this capstone.
 - **Evidence-gate tests:** 4/4 passed, including deliberate private-staged-path, invented-count, and controlled-source-mislabel failures. ATS remained 11/11 and gate behavior remained 10/10.
@@ -202,11 +202,11 @@ private emails, or sensitive application notes.
 ## 2026-08-15 -- Step 5 PR-readiness audit and clean upstream packaging
 
 - **Assignment checks:** audited fork, branch pattern, contribution placement, generated-evidence boundary, verify, strict doctor, privacy scope, required PR-description content, and PR-link handoff.
-- **Branch repair:** the first capstone branch inherited ten older fork-only commits. Preserved that complete history as local `archive/zening-teng-verification-harness-origin-main`, then rebuilt `contrib/zening-teng-verification-harness` from current `upstream/main`. Only capstone files were carried forward; the fork-only mode scripts, recipes, assignments, and generated résumé PDFs were excluded.
+- **Branch repair:** the first capstone branch inherited ten older fork-only commits. Preserved that complete history as local `archive/zening-teng-verification-harness-origin-main`, then rebuilt `contrib/zening-teng-verification-harness` from current `upstream/main`. Only capstone files were carried forward; the fork-only mode scripts, recipes, assignments, and generated resume PDFs were excluded.
 - **Verify repair:** replaced hard-coded `python3`/PyYAML/system-bash assumptions with the tracked JS YAML parser, platform runtime detection, argument-safe execution, Git Bash support on Windows, CRLF/LF normalization, and side-effect-free in-memory Python syntax compilation.
 - **Manifest repair:** separated context-routing exclusions from `gitignore_required` paths and taught privacy matching that `/private/*` protects private content while allowing tracked scaffolding.
-- **PR hygiene:** the active Step 3 evidence has one JSON/Markdown pair; superseded generated name variants are absent from the clean branch. The real résumé and all derived private output remain gitignored and outside the proposed diff.
-- **Portable ATS fixture:** the old fork branch supplied a generated résumé PDF outside the capstone diff. The clean branch instead renders the tracked anonymized Markdown into `.build/ats-paste-test/` at test/run time; no résumé PDF is committed as source of truth. Commands and the paired recipe/card advanced together to v0.8.0.
+- **PR hygiene:** the active Step 3 evidence has one JSON/Markdown pair; superseded generated name variants are absent from the clean branch. The real resume and all derived private output remain gitignored and outside the proposed diff.
+- **Portable ATS fixture:** the old fork branch supplied a generated resume PDF outside the capstone diff. The clean branch instead renders the tracked anonymized Markdown into `.build/ats-paste-test/` at test/run time; no resume PDF is committed as source of truth. Commands and the paired recipe/card advanced together to v0.8.0.
 - **Output:** `reports/generated/zening-teng-contribution/step5.md` contains the requirement audit, maintainer-ready PR description, explicit limitation, and human publication sequence.
 - **Blockers:** named-human Step 3 attestation, Step 4 honest run, final rerun after those changes, GitHub authentication, push, actual PR creation, and returned PR URL. No external state was changed.
 
@@ -214,17 +214,17 @@ private emails, or sensitive application notes.
 
 - **Assignment fit:** created `reports/generated/zening-teng-contribution/step6.md` as an employer-facing Markdown case study rather than a grader narrative. It covers the specific user/problem, plain-language architecture, one primary measurable result, verified-vs-inferred boundary, named failure modes, one explicit limitation, and a runnable demo.
 - **Primary metric:** 2/2 named gate-as-vote mutation witnesses were caught. Supporting script outputs remain 6/6 production cases and 40/40 assertions; ATS positive 13/13 fields and 1/1 order; deliberate ATS break 7/13 fields and 0/1 order with verdict FAIL; regression suites 11 ATS, 10 gate, and 4 evidence tests.
-- **Provenance:** every portfolio number is copied from `step3.md` and its named public audit JSON. The case study distinguishes controlled local evidence and parser output from commercial-ATS behavior, résumé truth, live-job truth, visa legality, and human application judgment.
+- **Provenance:** every portfolio number is copied from `step3.md` and its named public audit JSON. The case study distinguishes controlled local evidence and parser output from commercial-ATS behavior, resume truth, live-job truth, visa legality, and human application judgment.
 - **Demo boundary:** no PR link or screen recording is claimed. The artifact uses the assignment's runnable-snippet option with commands already maintained in the root README.
-- **Privacy:** the case study contains no real résumé content, private output, contact information, application activity, or `data/ats/` record.
+- **Privacy:** the case study contains no real resume content, private output, contact information, application activity, or `data/ats/` record.
 
 ## 2026-08-16 -- Step 6 single-page portfolio site
 
 - **Output:** added `reports/generated/zening-teng-contribution/step6.html` as a single-file static-site companion to `step6.md`; the Markdown report now links to it, and the root README records both the artifact and its PowerShell open command. Web fonts are requested from Google Fonts, with repository-approved local fallback stacks when offline.
 - **Design contract:** followed `brutalist/DESIGN.md` for the six-color palette, type hierarchy, square geometry, spacing, contrast, and decorative-use boundary. The page includes semantic landmarks, a skip link, visible keyboard focus, responsive layouts, dark mode, reduced-motion handling, and print styles.
-- **Evidence boundary:** reused the Step 3 traced metrics and public machine audits; no new score, rate, confidence, résumé content, or real-world adequacy claim was introduced. The page continues to label commercial-ATS equivalence, live posting/timeline truth, weight calibration, and the final application decision as unverified or human-owned.
+- **Evidence boundary:** reused the Step 3 traced metrics and public machine audits; no new score, rate, confidence, resume content, or real-world adequacy claim was introduced. The page continues to label commercial-ATS equivalence, live posting/timeline truth, weight calibration, and the final application decision as unverified or human-owned.
 - **Browser QA:** rendered and visually inspected full-page Chromium screenshots at 1440 × 900 in light mode and 390 × 844 in dark mode. Navigation, cards, metrics, witness table, commands, and local evidence links remained readable without observed clipping or horizontal page overflow.
-- **Privacy / publication:** no private résumé or application data is embedded. The site does not claim a PR URL, deployment, recording, named-human attestation, or Step 4 completion.
+- **Privacy / publication:** no private resume or application data is embedded. The site does not claim a PR URL, deployment, recording, named-human attestation, or Step 4 completion.
 
 ## 2026-08-16 -- Shorten capstone recipe/card filenames
 
@@ -241,14 +241,14 @@ private emails, or sensitive application notes.
 - **Generator change:** simplified the Step 3 Markdown renderer and its boundary wording in `scripts/verified-data-evidence.mjs`, then regenerated `step3.md` and `step3.json`. Machine logic, evidence labels, counts, privacy rules, and the open human-attestation state did not change.
 - **Site QA:** rendered and inspected the updated Step 6 site in Chromium at 1440 × 900 light mode and 390 × 844 dark mode. The shorter copy remains readable with no observed overlap, clipping, or page-level horizontal overflow.
 - **Checks:** ATS tests passed 11/11, gate tests passed 10/10, Step 3 tests passed 4/4, and targeted conformance passed for the five Markdown reports plus the Step 3 generator.
-- **Privacy:** no private résumé text, contact information, or application data was added to any report.
+- **Privacy:** no private resume text, contact information, or application data was added to any report.
 - **User filename change preserved:** while the reports were being rewritten, the active pair was renamed to `recipes/Zening-AIRecipe.md` and `recipes/Zening.Humancard.md`. Updated both files' internal pair paths, current links, and documented commands; advanced both together to version 0.10.0. Historical log entries keep the filenames that were true for those earlier runs.
 
 ## 2026-08-16 -- Step 3 review and Step 4 honest run
 
 - **Named review:** Zening Teng confirmed the plain-language Step 3 summary and approved moving to Step 4. The separate decision record is `logs/zening-teng-step3-review.json`. This clears the assignment gate but does not self-certify lifecycle `VERIFIED`; recipe/card status remains `RUNNABLE-SAMPLE` with null lifecycle attestation.
-- **Private run:** ran the maintained ATS inspection against the user-approved real résumé. Input, extracted text, audit, and all résumé-derived values remain outside tracked files under the private-data policy. The public report records only that the run executed and retained `HUMAN_REVIEW_REQUIRED`; it publishes no private content, path, or résumé-derived count.
-- **Public positive control:** the rebuildable public regression PDF returned PASS with 13/13 declared fields and 1/1 order check. This fixture is reproducible code-test data, not the real résumé used in the private run.
+- **Private run:** ran the maintained ATS inspection against the user-approved real resume. Input, extracted text, audit, and all resume-derived values remain outside tracked files under the private-data policy. The public report records only that the run executed and retained `HUMAN_REVIEW_REQUIRED`; it publishes no private content, path, or resume-derived count.
+- **Public positive control:** the rebuildable public regression PDF returned PASS with 13/13 declared fields and 1/1 order check. This fixture is reproducible code-test data, not the real resume used in the private run.
 - **ATS break:** the intentionally incomplete public PDF returned FAIL and exit 1 with 7/13 declared fields and 0/1 order check. The failure is deterministic contract evidence, not an execution error.
 - **Gate plausibility audit:** production passed 6/6 cases and 40/40 checks. Open gates returned `0.65 / Apply`; zero liveness, zero timeline, and both zero returned `0 / Skip`; fractional gates returned `0.26 / Consider`; the configured boundary returned `0.0325 / Skip`. These are controlled local cases, not live job or visa facts.
 - **Gate break:** the deliberate gate-as-vote mutation returned `0.80 / Apply` for zero liveness and `0.85 / Apply` for zero timeline. Both named witnesses were rejected.
@@ -256,7 +256,7 @@ private emails, or sensitive application notes.
 - **Broke during update, fixed:** the first Step 3 generator edit had an invalid template-literal escape. Fixed the syntax, added a missing-review regression case, and regenerated the evidence before continuing.
 - **Regression and repository gates:** ATS passed 11/11, gate behavior passed 10/10, and Step 3 evidence passed 5/5. Step 3 regenerated with privacy PASS, honesty/provenance PASS, and the named review recorded. Targeted conformance, full `verify`, and strict `doctor` passed.
 - **Site QA:** Chromium checks at 1440 × 900 light mode and 390 × 844 dark mode exposed a mobile results-grid overflow. Added a zero-minimum grid constraint, reran both views, and confirmed the page width now matches both viewports. The refreshed screenshots showed no visible clipping outside the intentionally scrollable result table.
-- **Limits:** PDF.js does not represent every commercial ATS. Neither module proves résumé truth or quality, current job liveness, legal timeline correctness, weight calibration, or the final application decision.
+- **Limits:** PDF.js does not represent every commercial ATS. Neither module proves resume truth or quality, current job liveness, legal timeline correctness, weight calibration, or the final application decision.
 
 ## 2026-08-16 -- Replace hand-written gate business values with stored database evidence
 
@@ -277,7 +277,7 @@ private emails, or sensitive application notes.
 - **ATS positive rerun:** the public two-page PDF returned PASS with 13/13 declared fields and 1/1 order check.
 - **ATS break rerun:** the intentionally incomplete one-page PDF returned FAIL and exit 1 with 7/13 fields and 0/1 order check. This was the expected deterministic contract failure, not an execution error.
 - **Step 3 rerun:** privacy PASS, honesty/provenance PASS, and current human review `RECORDED by Zening Teng`.
-- **Step 4 status:** refreshed `reports/generated/zening-teng-contribution/step4.md` as the current honest run. The earlier private résumé evidence remains private; the public gate and ATS controls were rerun after the current review.
+- **Step 4 status:** refreshed `reports/generated/zening-teng-contribution/step4.md` as the current honest run. The earlier private resume evidence remains private; the public gate and ATS controls were rerun after the current review.
 - **Final checks:** ATS regression passed 11/11, gate regression passed 10/10, and Step 3 evidence regression passed 8/8. Full `verify` passed 142-file conformance plus the manifest check. Strict `doctor` reported a runnable environment, complete recipe frontmatter, and no tracked private/PII paths. `git diff --check` found no whitespace errors.
 - **Boundary:** this approval clears the assignment phase gate only. It does not verify the database entity join, create missing real-world inputs, certify every commercial ATS, make a real-job decision, or change lifecycle `attestation: null`.
 
@@ -292,13 +292,13 @@ private emails, or sensitive application notes.
 
 - **Requested behavior:** generic ATS inspect mode no longer generates a `decision` property in JSON, a Decision line in Markdown, or a decision line in the console. Its inspect-audit schema advanced to `2.0.0` because the machine-readable shape changed.
 - **Boundary retained:** inspect mode still reports the objective `parser_floor`, deterministic checks, heuristic inventory, source boundary, and private artifacts. Verify mode still emits evidence-backed `PASS/FAIL` only when an independent expectation record is supplied. Gate and named-human review fields were not changed.
-- **Private rerun:** reran the approved real PDF locally. Parser floor passed with 7/7 deterministic checks and 0 review flags. The regenerated private JSON and Markdown contain no `decision` field or heading; no private content or résumé-derived audit was added to the tracked tree.
+- **Private rerun:** reran the approved real PDF locally. Parser floor passed with 7/7 deterministic checks and 0 review flags. The regenerated private JSON and Markdown contain no `decision` field or heading; no private content or resume-derived audit was added to the tracked tree.
 - **Checks:** ATS regression passed 11/11, including an explicit no-decision assertion. Step 3 evidence regression passed 8/8 and regenerated with privacy PASS, honesty/provenance PASS, and the current named review recorded. Full `verify` and strict `doctor` passed with no tracked private/PII paths.
 
 ## 2026-08-16 -- Three-slide capstone video explainer
 
 - **Output:** created `reports/generated/zening-teng-contribution/video.pptx`, a three-slide 16:9 live deck with embedded English speaker notes. The rebuild script is `scripts/presentation/build-video-ppt.ps1`; the command and open action are recorded in the root README.
-- **Visual:** generated one project-local, transparent editorial-cartoon asset at `reports/generated/zening-teng-contribution/assets/capstone-cartoon.png`. It shows a résumé scanner, a scoring machine, two gates catching a software bug, and a human reviewer. It contains no text, logos, personal information, or watermark.
+- **Visual:** generated one project-local, transparent editorial-cartoon asset at `reports/generated/zening-teng-contribution/assets/capstone-cartoon.png`. It shows a resume scanner, a scoring machine, two gates catching a software bug, and a human reviewer. It contains no text, logos, personal information, or watermark.
 - **Claims:** slide numbers come only from the stored audits and code: seven ATS deterministic checks and two of two controlled gate-as-vote witnesses caught. The deck labels the historical H-1B value as a proxy and keeps commercial-ATS compatibility, current liveness, personal legal timeline, and the final application decision outside the verified boundary.
 - **Layout review:** rendered all three slides at 1920 × 1080 and visually checked title safe zones, text wrapping, arrows, borders, image edges, and footer placement. No clipping, overlap, or unreadable text was observed. The PowerPoint package contains three notes-slide records.
 - **Accuracy review:** reconciled the `2 / 2` witness claim to the two `deliberate_break.witnesses` records in the gate JSON and checked the ATS seven-check label against the maintained inspect implementation. The first-slide wording was tightened from “survives the filter” to “becomes inspectable” to avoid implying universal ATS certification.
@@ -315,7 +315,7 @@ private emails, or sensitive application notes.
 
 - **User feedback:** the raised barriers in the first simplified illustration looked passable and did not show the required hard-stop rule.
 - **Visual correction:** replaced them with two separate, fully lowered barriers and labeled them `LIVENESS` and `TIMELINE`. Slide 1 now states `Either zero → 0 / Skip`; slide 2 repeats `Either gate = 0 → Skip`.
-- **Scope:** the ATS scanner illustration, the two-module structure, the stored `2 / 2` witness result, and the verified/unknown boundary did not change. The image contains no résumé details or other personal data.
+- **Scope:** the ATS scanner illustration, the two-module structure, the stored `2 / 2` witness result, and the verified/unknown boundary did not change. The image contains no resume details or other personal data.
 - **QA:** regenerated `video-simple.pptx`, exported both slides at 1920 × 1080, and visually checked the white background, labels, lowered barriers, title safe zones, footer, overlap, and clipping.
 
 ## 2026-08-16 -- Simplify the second explainer slide
@@ -334,11 +334,11 @@ private emails, or sensitive application notes.
 
 - **Reason:** the public reports still contained superseded gate values from the earlier hand-written fixture. Replaced those values with the current database-backed evidence and simplified the writing.
 - **Step 3:** updated the stored generator and regenerated `step3.md` and `step3.json`. The report now shows the passing privacy/honesty gate, the complete verified/human-owned boundary, the number trace, the named-human decision, and the `NOT_IMPLEMENTED` boundary in plain language.
-- **Step 4:** pasted the current public ATS and gate terminal summaries, recorded the private résumé run without private content or counts, recomputed the plausibility check from the stored H-1B record, documented both deliberate breaks, listed the controlled metrics, and stated what the machine could not know.
+- **Step 4:** pasted the current public ATS and gate terminal summaries, recorded the private resume run without private content or counts, recomputed the plausibility check from the stored H-1B record, documented both deliberate breaks, listed the controlled metrics, and stated what the machine could not know.
 - **Recovered required records:** the current branch had deleted the recipe/card lifecycle frontmatter and the database-bound Step 3 review record. Restored them from the immediately preceding committed version. The review remains bound to recipe `0.12.0` and the current database hash; lifecycle `attestation` remains null.
 - **Current evidence:** public ATS positive control returned 13/13 fields and 1/1 order; the deliberate ATS break returned 7/13 fields, 0/1 order, FAIL, and exit 1; production gate behavior passed 3/3 cases and 19/19 assertions; both deliberate gate-as-vote witnesses returned 1.35/Apply and were caught.
 - **Checks:** ATS regression passed 11/11, gate regression passed 10/10, and Step 3 regression passed 8/8. Targeted conformance, full `verify`, strict `doctor`, and `git diff --check` passed. A stale-value search found none of the old 6/6, 40/40, 0.65, 0.80, or 0.85 gate figures in Step 3 or Step 4.
-- **Privacy:** no private résumé text, path, or résumé-derived count was added to a tracked report. Strict doctor found no tracked private/PII paths.
+- **Privacy:** no private resume text, path, or resume-derived count was added to a tracked report. Strict doctor found no tracked private/PII paths.
 
 ## 2026-08-16 -- Simplify the Step 3 and Step 4 writing
 
@@ -376,3 +376,9 @@ private emails, or sensitive application notes.
 - **Size:** Step 3 is 42 lines and has no table. Step 4 is 71 lines and has no table; its command and output blocks account for much of the length.
 - **Evidence:** no source, number, test result, privacy result, or human decision changed.
 - **Validation:** Step 3 tests passed 8/8. Full `verify`, strict `doctor`, and `git diff --check` passed.
+
+## 2026-08-16 -- Use plain `resume` spelling in contribution files
+
+- **Change:** replaced `resume` words that used accent marks with the plain English spelling in the contribution code, reports, recipe/card pair, README, and public ATS audits. Teacher-owned chapters and other source material were not changed.
+- **Evidence refresh:** reran the public ATS pass and deliberate-break reports, then regenerated Step 3 so its saved script hashes match the changed source files.
+- **Scope:** wording only. No field, number, result, rule, private data, or human decision changed.
