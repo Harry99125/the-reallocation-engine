@@ -3,7 +3,7 @@
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
   "recipe_version": "0.12.0",
-  "generated": "2026-08-17T01:06:10.588Z",
+  "generated": "2026-08-17T02:28:38.654Z",
   "machine_result": "PASS",
   "human_attestation": {
     "status": "RECORDED",
@@ -129,8 +129,15 @@
     {
       "id": "provenance:boundary-labels",
       "status": "PASS",
-      "expected": "all boundary rows use assignment-approved labels",
+      "expected": "the boundary uses all seven assignment labels and no other label",
       "observed": "local-evidence, your-input, external-source, record, script-output, missing, model-inference",
+      "record": "BOUNDARY_ROWS in scripts/verified-data-evidence.mjs"
+    },
+    {
+      "id": "provenance:boundary-fields",
+      "status": "PASS",
+      "expected": "every boundary row names fields, source, code work, and human work",
+      "observed": "complete rows",
       "record": "BOUNDARY_ROWS in scripts/verified-data-evidence.mjs"
     },
     {
@@ -143,7 +150,7 @@
   ],
   "boundary": [
     {
-      "output": "ATS report rules",
+      "output": "ATS test rules",
       "technical_fields": [
         "schema_version",
         "harness",
@@ -151,84 +158,106 @@
         "chapter"
       ],
       "label": "local-evidence",
-      "record": "Chapter 13 and the saved ATS test rules",
-      "machine_can_verify": "The report names the test and uses an allowed test mode.",
-      "human_keeps": "Whether those rules are good enough for this assignment."
+      "record": "Chapter 13",
+      "machine_can_verify": "Checks that the saved rules were used.",
+      "human_keeps": "Are these rules good enough?"
     },
     {
-      "output": "The PDF chosen for the ATS test",
+      "output": "PDF file",
       "technical_fields": [
         "document_id",
-        "inputs.* paths",
-        "inputs.* file types"
+        "inputs.source",
+        "inputs.source_type",
+        "inputs.pdf"
       ],
       "label": "your-input",
-      "record": "The file path typed in the command",
-      "machine_can_verify": "The file exists, is a supported type, and is saved in an allowed place.",
-      "human_keeps": "Whether it is the right PDF and is safe to use."
+      "record": "The command",
+      "machine_can_verify": "Checks that the file exists and can be opened.",
+      "human_keeps": "Is this the right and safe file?"
     },
     {
-      "output": "The software that reads the PDF",
+      "output": "PDF reader",
       "technical_fields": [
         "parser.name",
         "parser.version",
         "parser.source_type"
       ],
       "label": "external-source",
-      "record": "The installed PDF.js package and its saved version number",
-      "machine_can_verify": "Which PDF reader and version actually ran.",
-      "human_keeps": "Whether that reader is similar enough to a real company ATS."
+      "record": "Installed PDF.js",
+      "machine_can_verify": "Shows which reader and version ran.",
+      "human_keeps": "Would a real ATS read it the same way?"
     },
     {
-      "output": "The answer sheet for the public ATS example",
+      "output": "Public test files",
       "technical_fields": [
         "inputs.expectation_manifest",
-        "inputs.source_markdown",
+        "inputs.source_markdown"
+      ],
+      "label": "local-evidence",
+      "record": "Saved public files",
+      "machine_can_verify": "Checks that both files are there.",
+      "human_keeps": "Are these the right test files?"
+    },
+    {
+      "output": "Public test answer list",
+      "technical_fields": [
         "fields[*].id",
         "fields[*].category",
         "fields[*].expected",
-        "fields[*].match",
-        "fields[*].occurrence",
-        "fields[*].required"
+        "fields[*].evidence.expected_record"
       ],
       "label": "record",
-      "record": "The saved public résumé and its separate expected-field file",
-      "machine_can_verify": "The expected text really appears in the public source résumé.",
-      "human_keeps": "Whether the chosen fields cover the important parts of the résumé."
+      "record": "Public résumé and answer file",
+      "machine_can_verify": "Checks that every answer came from the résumé.",
+      "human_keeps": "Does the list cover the important parts?"
     },
     {
-      "output": "Text and page count taken from the PDF",
+      "output": "Public test match rules",
+      "technical_fields": [
+        "fields[*].match",
+        "fields[*].occurrence",
+        "fields[*].required",
+        "order_checks[*].id",
+        "order_checks[*].fields"
+      ],
+      "label": "local-evidence",
+      "record": "Saved answer file",
+      "machine_can_verify": "Uses the saved match and order rules.",
+      "human_keeps": "Are these rules good enough?"
+    },
+    {
+      "output": "PDF text and page count",
       "technical_fields": [
         "paste-test.txt",
-        "metrics.pages.value"
+        "metrics.pages.*"
       ],
       "label": "script-output",
-      "record": "The selected PDF",
-      "machine_can_verify": "The text it extracted and the number of PDF pages.",
-      "human_keeps": "Whether the text still has the right meaning and whether the length is acceptable."
+      "record": "PDF file",
+      "machine_can_verify": "Reads the text and counts the pages.",
+      "human_keeps": "Does the text still make sense?"
     },
     {
-      "output": "ATS field, order, and final PASS/FAIL results",
+      "output": "ATS test result",
       "technical_fields": [
         "fields[*].status",
         "fields[*].observed_index",
         "fields[*].evidence.observed_record",
         "order_checks[*].status",
-        "order_checks[*].positions",
+        "order_checks[*].observed_positions",
         "order_checks[*].reason",
-        "order_checks[*].evidence",
+        "order_checks[*].evidence.observed_record",
         "verdict",
-        "metrics.required_fields",
-        "metrics.order_checks",
-        "summary"
+        "metrics.required_fields.*",
+        "metrics.order_checks.*",
+        "summary.*"
       ],
       "label": "script-output",
-      "record": "The extracted text compared with the saved answer sheet",
-      "machine_can_verify": "Which listed fields were found, whether they stayed in order, and the totals.",
-      "human_keeps": "Whether a PASS means the résumé is ready for a real application."
+      "record": "PDF text and answer list",
+      "machine_can_verify": "Checks the fields, their order, and PASS or FAIL.",
+      "human_keeps": "Is the résumé really ready to use?"
     },
     {
-      "output": "General ATS inspection results",
+      "output": "Basic PDF check",
       "technical_fields": [
         "parser_floor",
         "checks[*]",
@@ -236,156 +265,187 @@
         "page_metrics.*"
       ],
       "label": "script-output",
-      "record": "The extracted text and the locations of text on each page",
-      "machine_can_verify": "Basic reading problems and simple counts of headings, dates, and bullet-like lines.",
-      "human_keeps": "Whether the résumé is complete and useful. These counts are not a quality score."
+      "record": "PDF text",
+      "machine_can_verify": "Counts headings, dates, and bullet lines.",
+      "human_keeps": "Is the résumé complete and useful?"
     },
     {
-      "output": "Warnings about what the ATS test cannot prove",
+      "output": "ATS limits",
       "technical_fields": [
         "boundary",
         "limitations"
       ],
       "label": "local-evidence",
-      "record": "Chapter 13 and the checker rules",
-      "machine_can_verify": "The report shows its limits and does not make the final decision.",
-      "human_keeps": "The final decision about the résumé."
+      "record": "Chapter 13",
+      "machine_can_verify": "Shows what the test cannot prove.",
+      "human_keeps": "Makes the final résumé decision."
     },
     {
-      "output": "Gate test rules and saved settings",
+      "output": "Gate rules",
       "technical_fields": [
         "schema_version",
         "harness",
         "fixture",
-        "sources",
-        "contract",
-        "sponsorship weight",
-        "Apply threshold",
-        "zero/one gate controls"
+        "sources.*",
+        "contract.*",
+        "contract_parameters.sponsorship_weight.*",
+        "contract_parameters.apply_threshold.*",
+        "contract_parameters.gate_control_values.*"
       ],
       "label": "record",
-      "record": "Chapters 11 and 16, the saved test cases, and the real scoring program settings",
-      "machine_can_verify": "The test used the same saved rules and settings as the real scoring program.",
-      "human_keeps": "Whether the weight and cutoff are good enough for real decisions."
+      "record": "Chapters 11 and 16",
+      "machine_can_verify": "Checks that the saved Gate rules were used.",
+      "human_keeps": "Are the scoring numbers good enough?"
     },
     {
-      "output": "Identity and basic checks of the saved H-1B database",
+      "output": "H-1B data file",
       "technical_fields": [
-        "database.path",
-        "database.sha256",
-        "database.data_record_count",
-        "database.column_count",
-        "database.complete_record_count",
-        "database.arithmetic_mismatch_count"
+        "database_evidence.source.path",
+        "database_evidence.source.sha256",
+        "database_evidence.scan.data_records",
+        "database_evidence.scan.columns",
+        "database_evidence.scan.complete_h1b_records",
+        "database_evidence.scan.approval_rate_arithmetic_mismatches"
       ],
       "label": "script-output",
-      "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv",
-      "machine_can_verify": "Which saved file was used, its size and shape, and whether its rate math is correct.",
-      "human_keeps": "Whether companies were matched correctly when this file was created."
+      "record": "Saved H-1B file",
+      "machine_can_verify": "Checks the file, row counts, and rate math.",
+      "human_keeps": "Were the companies matched correctly?"
     },
     {
-      "output": "The one saved H-1B row used by the test",
+      "output": "Rule used to pick the H-1B row",
       "technical_fields": [
-        "company",
-        "approvals",
-        "denials",
-        "approval_rate"
-      ],
-      "label": "record",
-      "record": "First complete H-1B record in stored CSV order",
-      "machine_can_verify": "The company and numbers really occur in that saved row and its rate math is correct.",
-      "human_keeps": "Whether that company was matched correctly. The original matching proof is missing."
-    },
-    {
-      "output": "The H-1B rate changed from percent to decimal for the test",
-      "technical_fields": [
-        "normalized_h1b_rate",
-        "sponsorship.p"
-      ],
-      "label": "script-output",
-      "record": "The saved approval rate divided by 100",
-      "machine_can_verify": "The conversion and the later score calculation.",
-      "human_keeps": "This is only a test starting value, not the full chance of sponsorship."
-    },
-    {
-      "output": "Names and purpose of the three Gate test cases",
-      "technical_fields": [
-        "production.implementation",
-        "cases[*].id",
-        "cases[*].purpose",
-        "cases[*].mutation_witness"
+        "database_evidence.selected_record.selection_rule"
       ],
       "label": "local-evidence",
-      "record": "The Gate test program and its saved test-case file",
-      "machine_can_verify": "The names and descriptions were copied correctly.",
-      "human_keeps": "Whether three cases cover enough possible mistakes."
+      "record": "Saved test rule",
+      "machine_can_verify": "Uses the first complete row.",
+      "human_keeps": "Is this a fair test rule?"
     },
     {
-      "output": "Correct Gate results and totals",
+      "output": "H-1B row used in the test",
+      "technical_fields": [
+        "database_evidence.selected_record.company_name",
+        "database_evidence.selected_record.total_approvals",
+        "database_evidence.selected_record.total_denials",
+        "database_evidence.selected_record.approval_rate_percent"
+      ],
+      "label": "record",
+      "record": "First complete row in the file",
+      "machine_can_verify": "Checks the company, numbers, and rate math.",
+      "human_keeps": "Was this company matched correctly?"
+    },
+    {
+      "output": "H-1B row checks and test value",
+      "technical_fields": [
+        "database_evidence.selected_record.data_record_number",
+        "database_evidence.selected_record.recomputed_approval_rate_percent",
+        "database_evidence.selected_record.normalized_approval_rate",
+        "database_evidence.selected_record.arithmetic_status"
+      ],
+      "label": "script-output",
+      "record": "Saved rate divided by 100",
+      "machine_can_verify": "Checks the division and score math.",
+      "human_keeps": "Remembers this is not a real sponsorship chance."
+    },
+    {
+      "output": "How the H-1B row is used",
+      "technical_fields": [
+        "database_evidence.harness_use.*"
+      ],
+      "label": "local-evidence",
+      "record": "Saved Gate test rule",
+      "machine_can_verify": "Uses the rate only as a test value.",
+      "human_keeps": "Does not call it a real sponsorship chance."
+    },
+    {
+      "output": "Three Gate test cases",
+      "technical_fields": [
+        "production.implementation",
+        "production.cases[*].id",
+        "production.cases[*].purpose",
+        "production.cases[*].mutation_witness"
+      ],
+      "label": "local-evidence",
+      "record": "Saved Gate test file",
+      "machine_can_verify": "Checks the test names and purpose.",
+      "human_keeps": "Are three tests enough?"
+    },
+    {
+      "output": "Correct Gate results",
       "technical_fields": [
         "generated",
-        "cases[*].expected.*",
-        "cases[*].observed.composite",
-        "cases[*].observed.recommendation",
-        "cases[*].observed.reason",
-        "cases[*].observed.gate_product",
-        "cases[*].checks[*].status",
-        "cases[*].status",
-        "production.summary",
+        "production.cases[*].expected.*",
+        "production.cases[*].observed.*",
+        "production.cases[*].checks[*].*",
+        "production.cases[*].status",
+        "production.summary.*",
         "machine_result"
       ],
       "label": "script-output",
-      "record": "The saved H-1B row, the chapter rules, and the real scoring program",
-      "machine_can_verify": "The expected and actual results, every PASS/FAIL check, the totals, and the run time.",
-      "human_keeps": "Whether the test inputs are true for a real job and whether more cases are needed."
+      "record": "H-1B row, Gate rules, and scoring program",
+      "machine_can_verify": "Compares the expected and real results.",
+      "human_keeps": "Would this be true for a real job?"
     },
     {
-      "output": "Results from deliberately wrong Gate code",
+      "output": "Wrong-code test",
       "technical_fields": [
         "deliberate_break.mutation_result",
         "deliberate_break.detection",
-        "deliberate_break.witnesses",
-        "deliberate_break.failed_checks"
+        "deliberate_break.witnesses[*].*",
+        "deliberate_break.failed_checks[*]",
+        "deliberate_break.full_result.*"
       ],
       "label": "script-output",
-      "record": "A saved bad version of the formula used only inside the test",
-      "machine_can_verify": "The bad code produces the wrong Apply results and the test catches both.",
-      "human_keeps": "Whether other kinds of bad code should also be tested."
+      "record": "Bad formula used only for testing",
+      "machine_can_verify": "Checks that both wrong Apply results are caught.",
+      "human_keeps": "Should more wrong formulas be tested?"
     },
     {
-      "output": "Final human review status",
+      "output": "Human review",
       "technical_fields": [
         "human_decision"
       ],
       "label": "local-evidence",
-      "record": "Human-review rule in SNICKERDOODLE.md",
-      "machine_can_verify": "The program leaves the final decision as HUMAN_REVIEW_REQUIRED.",
-      "human_keeps": "A named person must read the work and approve it."
+      "record": "Project review rule",
+      "machine_can_verify": "Leaves the final result for a person.",
+      "human_keeps": "Reads and approves the work."
     },
     {
-      "output": "Facts this project does not have",
+      "output": "Missing real facts",
       "technical_fields": [
+        "database_evidence.not_implemented.full_sponsorship_probability",
+        "database_evidence.not_implemented.real_job_liveness",
+        "database_evidence.not_implemented.personal_visa_timeline",
+        "database_evidence.not_implemented.real_role_recommendation",
         "real résumé truth",
-        "all commercial ATS results",
-        "current job-opening status",
-        "full sponsorship probability",
-        "personal visa legality",
-        "final Apply decision"
+        "all commercial ATS results"
       ],
       "label": "missing",
-      "record": "No verified record is available in this project",
-      "machine_can_verify": "The reports leave these items unknown or say NOT_IMPLEMENTED.",
-      "human_keeps": "Find real evidence later or leave the answer unknown."
+      "record": "No saved proof",
+      "machine_can_verify": "Leaves the answer unknown.",
+      "human_keeps": "Finds proof or keeps it unknown."
     },
     {
-      "output": "Any future AI opinion",
+      "output": "Known limits",
+      "technical_fields": [
+        "limitations[*]",
+        "database_evidence.limitations[*]"
+      ],
+      "label": "local-evidence",
+      "record": "Saved limit notes",
+      "machine_can_verify": "Shows the limits in the report.",
+      "human_keeps": "Decides if the limits are safe."
+    },
+    {
+      "output": "Future AI opinion",
       "technical_fields": [
         "model judgments"
       ],
       "label": "model-inference",
-      "record": "The current public tests do not create an AI opinion",
-      "machine_can_verify": "Test values are not presented as facts or AI opinions.",
-      "human_keeps": "Check any future AI opinion against real evidence."
+      "record": "None in this test",
+      "machine_can_verify": "Does not call test values facts.",
+      "human_keeps": "Checks any AI opinion against real proof."
     }
   ],
   "metric_readout": {
@@ -410,11 +470,44 @@
       "cases_total": 3,
       "checks_passed": 19,
       "checks_total": 19,
+      "sponsorship_weight": 0.35,
+      "apply_threshold": 0.3,
+      "gate_control_values": [
+        0,
+        1
+      ],
+      "database_records": 30369,
+      "database_columns": 20,
+      "database_complete_records": 1557,
+      "database_math_mismatches": 0,
+      "database_record_number": 80,
       "database_company": "1LIFE HEALTHCARE INC",
       "database_approvals": 2,
       "database_denials": 0,
       "database_rate_percent": 100,
+      "database_recomputed_rate_percent": 100,
+      "database_normalized_rate": 1,
       "database_arithmetic_status": "PASS",
+      "open_case": {
+        "composite": 0.35,
+        "recommendation": "NOT_ASSERTED_TEST_CONTROL",
+        "status": "PASS"
+      },
+      "liveness_case": {
+        "composite": 0,
+        "recommendation": "Skip",
+        "status": "PASS"
+      },
+      "timeline_case": {
+        "composite": 0,
+        "recommendation": "Skip",
+        "status": "PASS"
+      },
+      "broken_open_composite": 2.35,
+      "broken_cases_passed": 0,
+      "broken_cases_total": 3,
+      "broken_checks_passed": 0,
+      "broken_checks_total": 19,
       "witnesses": [
         {
           "id": "liveness-zero-database-vote",

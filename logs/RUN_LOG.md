@@ -349,7 +349,30 @@ private emails, or sensitive application notes.
 
 ## 2026-08-16 -- Rewrite the Step 3 boundary table in plain language
 
-- **Change:** shortened the table from 29 detailed rows to 18 grouped rows. The visible report now uses names such as “the PDF chosen for the ATS test,” “the software that reads the PDF,” and “correct Gate results and totals.”
+- **Change:** shortened the table from 29 detailed rows to 18 grouped rows. Every visible cell now uses short wording such as “PDF file,” “Script result,” “Checks that the file exists,” and “Is this the right file?” The formal source labels no longer appear inside the table.
 - **Exact fields:** kept the computer field names in `step3.json` under each row's `technical_fields` list, so the shorter Markdown table does not remove the detailed evidence map.
 - **Evidence:** no source, number, result, privacy rule, or human-review boundary changed.
 - **Checks:** regenerated Step 3 with privacy and source checks passing. Step 3 tests passed 8/8; full `verify` and strict `doctor` passed.
+
+## 2026-08-16 -- Rewrite all of Step 3 in very simple English
+
+- **Writing:** rewrote the title, result, checks, proof labels, main numbers, human review, unknown items, and fixes with short words and short sentences. Kept one table only.
+- **Required details:** kept the exact PASS/FAIL results, numbers, source paths, teacher source labels, privacy check, named-human review, and missing-data rule. Exact computer field names remain in `step3.json`.
+- **Evidence:** no data, source, result, privacy rule, or human decision changed.
+- **Checks:** regenerated Step 3 with privacy and source checks passing. The report has one table. Step 3 tests passed 8/8; full `verify`, strict `doctor`, and `git diff --check` passed.
+
+## 2026-08-16 -- Match Step 3 to the verified-data rubric
+
+- **Boundary:** made the one Markdown table the full “Give to AI / Keep for yourself” split. It now shows the exact field groups and uses all seven required labels: `record`, `script-output`, `local-evidence`, `external-source`, `model-inference`, `your-input`, and `missing`.
+- **Numbers:** listed each main ATS, Gate-rule, database, correct-run, and bad-run figure with its code and saved record. Kept every smaller numeric field in `step3.json` under `number_trace`, where each item has a value, label, script, and record.
+- **Ethics:** added a clear Privacy PASS and Honesty PASS section. It names the Git and strict-doctor checks, states that a failure stops Step 3, keeps missing real facts missing, and points to the named-human review record.
+- **Machine checks:** added checks that all seven labels appear, every boundary row names fields and both sides of the human/code split, and every numeric audit value has a label, script, and record.
+- **Validation:** Step 3 generated with privacy PASS, honesty/provenance PASS, and the named review recorded. Step 3 tests passed 8/8. Full `verify`, strict `doctor`, and `git diff --check` passed.
+
+## 2026-08-16 -- Remove all tables and shorten Step 3 and Step 4
+
+- **Step 3:** replaced the Markdown boundary table with seven short label bullets. The complete field-by-field split remains in `step3.json` under `boundary`. Kept the main number traces and the Privacy/Honesty PASS result.
+- **Step 4:** kept only the private-run note, real commands and key terminal output, math check, two break attempts, limits, and final result.
+- **Size:** Step 3 is 42 lines and has no table. Step 4 is 71 lines and has no table; its command and output blocks account for much of the length.
+- **Evidence:** no source, number, test result, privacy result, or human decision changed.
+- **Validation:** Step 3 tests passed 8/8. Full `verify`, strict `doctor`, and `git diff --check` passed.
