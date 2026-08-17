@@ -92,7 +92,7 @@ These are saved test-program results, not estimates or real-job recommendations.
 - The selected H-1B record's approval rate matches its approvals and denials.
 - A zero gate produces `0 / Skip`.
 - The known gate-as-vote bug is caught.
-- The reported totals match their JSON files.
+
 
 ## What the programs cannot know
 
@@ -100,8 +100,6 @@ These are saved test-program results, not estimates or real-job recommendations.
 - Whether the résumé claims are true or persuasive.
 - Whether the résumé design looks professional.
 - Whether a real job is still open.
-- Whether the mapped company identity is correct; the raw join evidence is not stored here.
-- The full Chapter 7 sponsorship probability.
 - Whether a real visa timeline is legally correct.
 - Whether the scoring weights are good for one person's search.
 - Whether the person should apply.
@@ -115,7 +113,6 @@ These are saved test-program results, not estimates or real-job recommendations.
 - A private résumé tries to write a public report.
 - The AI recipe and human card stop matching.
 
-Each of these cases has a clear failure result. The program does not hide it behind a friendly summary.
 
 ## Main limitation
 
@@ -140,5 +137,3 @@ The main code is in the [ATS checker](../../../scripts/resumes/ats-parse-test.mj
 ## What I learned
 
 The hardest bugs are not always obvious crashes. The wrong gate code returned numbers that looked reasonable. Without the deliberate bad version, a normal test could have missed the problem.
-
-This project taught me to test the wrong answer on purpose, save the evidence, and be clear about what the program still cannot know.

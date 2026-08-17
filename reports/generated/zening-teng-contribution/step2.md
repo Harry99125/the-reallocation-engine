@@ -67,7 +67,6 @@ The two modules share one pair of instructions:
 
 The recipe gives the full run order, checks, outputs, and stop rules. The card is the shorter version for a person. It explains what the tools do, how to run them, and what can go wrong.
 
-Both files point to each other and use pair version `0.12.1`. The tested recipe logic remains version `0.12.0`.
 
 ## Main code
 

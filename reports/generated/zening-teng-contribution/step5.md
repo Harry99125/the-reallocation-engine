@@ -17,13 +17,7 @@ It was built from the teacher's current `upstream/main`. The older fork history 
 - The code is under `scripts/`.
 - The AI recipe and human card are under `recipes/`.
 - Reports are under `reports/generated/`.
-- The public résumé PDF is created at test time instead of being committed as source data.
-- Zening Teng approved recipe 0.12.0 and the current database hash in the new Step 3 review record.
-- Step 4 now contains the approved private ATS run, the post-approval database-backed gate run, public terminal evidence, a plausibility check, and two break attempts.
-- `verify` passes.
-- Strict `doctor` passes.
-- The proposed files contain no real résumé, private ATS records, passwords, or environment files.
-- A PR title and description are ready below.
+
 
 ## What is not done
 
