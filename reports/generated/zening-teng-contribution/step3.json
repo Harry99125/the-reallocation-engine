@@ -3,7 +3,7 @@
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
   "recipe_version": "0.12.0",
-  "generated": "2026-08-16T21:49:21.674Z",
+  "generated": "2026-08-17T01:06:10.588Z",
   "machine_result": "PASS",
   "human_attestation": {
     "status": "RECORDED",
@@ -130,7 +130,7 @@
       "id": "provenance:boundary-labels",
       "status": "PASS",
       "expected": "all boundary rows use assignment-approved labels",
-      "observed": "local-evidence, your-input, external-source, script-output, record, missing, model-inference",
+      "observed": "local-evidence, your-input, external-source, record, script-output, missing, model-inference",
       "record": "BOUNDARY_ROWS in scripts/verified-data-evidence.mjs"
     },
     {
@@ -143,207 +143,249 @@
   ],
   "boundary": [
     {
-      "output": "ATS schema_version, harness, mode, chapter",
+      "output": "ATS report rules",
+      "technical_fields": [
+        "schema_version",
+        "harness",
+        "mode",
+        "chapter"
+      ],
       "label": "local-evidence",
-      "record": "Chapter 13 and the ATS checker rules",
-      "machine_can_verify": "The fields exist and the mode is allowed",
-      "human_keeps": "Whether these rules are enough for the intended use"
+      "record": "Chapter 13 and the saved ATS test rules",
+      "machine_can_verify": "The report names the test and uses an allowed test mode.",
+      "human_keeps": "Whether those rules are good enough for this assignment."
     },
     {
-      "output": "ATS document_id",
+      "output": "The PDF chosen for the ATS test",
+      "technical_fields": [
+        "document_id",
+        "inputs.* paths",
+        "inputs.* file types"
+      ],
       "label": "your-input",
-      "record": "Expected-field file or input filename",
-      "machine_can_verify": "The ID is present and copied correctly",
-      "human_keeps": "Whether it points to the right résumé"
+      "record": "The file path typed in the command",
+      "machine_can_verify": "The file exists, is a supported type, and is saved in an allowed place.",
+      "human_keeps": "Whether it is the right PDF and is safe to use."
     },
     {
-      "output": "ATS parser.name, parser.version, parser.source_type",
+      "output": "The software that reads the PDF",
+      "technical_fields": [
+        "parser.name",
+        "parser.version",
+        "parser.source_type"
+      ],
       "label": "external-source",
-      "record": "pdfjs-dist version in package.json and the installed package",
-      "machine_can_verify": "Which parser and version ran",
-      "human_keeps": "Whether that parser is close enough to a commercial ATS"
+      "record": "The installed PDF.js package and its saved version number",
+      "machine_can_verify": "Which PDF reader and version actually ran.",
+      "human_keeps": "Whether that reader is similar enough to a real company ATS."
     },
     {
-      "output": "ATS inputs.* paths and file types",
-      "label": "your-input",
-      "record": "CLI arguments",
-      "machine_can_verify": "The file exists, has a supported type, and follows the privacy rule",
-      "human_keeps": "Whether this is the right and safe file to inspect"
-    },
-    {
-      "output": "ATS inputs.expectation_manifest and inputs.source_markdown",
-      "label": "local-evidence",
-      "record": "data/examples/aarav-patel-ats-expected.json",
-      "machine_can_verify": "Both files exist and each expected value matches its source line",
-      "human_keeps": "Whether the public sample is good enough for the task"
-    },
-    {
-      "output": "paste-test.txt extracted text",
-      "label": "script-output",
-      "record": "Text read from the PDF and saved in paste-test.txt",
-      "machine_can_verify": "The text was extracted and cleaned with fixed rules",
-      "human_keeps": "Whether the meaning, design, and claims are correct"
-    },
-    {
-      "output": "ATS metrics.pages.value",
-      "label": "script-output",
-      "record": "PDF page tree",
-      "machine_can_verify": "The page count returned by PDF.js",
-      "human_keeps": "Whether the number of pages is acceptable"
-    },
-    {
-      "output": "ATS verify fields[*].id/category/expected/match/occurrence/required",
+      "output": "The answer sheet for the public ATS example",
+      "technical_fields": [
+        "inputs.expectation_manifest",
+        "inputs.source_markdown",
+        "fields[*].id",
+        "fields[*].category",
+        "fields[*].expected",
+        "fields[*].match",
+        "fields[*].occurrence",
+        "fields[*].required"
+      ],
       "label": "record",
-      "record": "Public résumé lines named by aarav-patel-ats-expected.json",
-      "machine_can_verify": "The expected-field file is valid and still matches the résumé source",
-      "human_keeps": "Whether the chosen fields cover enough of the résumé"
+      "record": "The saved public résumé and its separate expected-field file",
+      "machine_can_verify": "The expected text really appears in the public source résumé.",
+      "human_keeps": "Whether the chosen fields cover the important parts of the résumé."
     },
     {
-      "output": "ATS verify fields[*].status/observed_index/evidence.observed_record",
+      "output": "Text and page count taken from the PDF",
+      "technical_fields": [
+        "paste-test.txt",
+        "metrics.pages.value"
+      ],
       "label": "script-output",
-      "record": "ATS checker comparison with paste-test.txt",
-      "machine_can_verify": "Whether each expected field was found with the stated rule",
-      "human_keeps": "Whether the text makes the right claim"
+      "record": "The selected PDF",
+      "machine_can_verify": "The text it extracted and the number of PDF pages.",
+      "human_keeps": "Whether the text still has the right meaning and whether the length is acceptable."
     },
     {
-      "output": "ATS verify order_checks[*].status/positions/reason and evidence",
+      "output": "ATS field, order, and final PASS/FAIL results",
+      "technical_fields": [
+        "fields[*].status",
+        "fields[*].observed_index",
+        "fields[*].evidence.observed_record",
+        "order_checks[*].status",
+        "order_checks[*].positions",
+        "order_checks[*].reason",
+        "order_checks[*].evidence",
+        "verdict",
+        "metrics.required_fields",
+        "metrics.order_checks",
+        "summary"
+      ],
       "label": "script-output",
-      "record": "Field results and positions in paste-test.txt",
-      "machine_can_verify": "Whether fields are missing or out of order",
-      "human_keeps": "Whether that order will work in every ATS"
+      "record": "The extracted text compared with the saved answer sheet",
+      "machine_can_verify": "Which listed fields were found, whether they stayed in order, and the totals.",
+      "human_keeps": "Whether a PASS means the résumé is ready for a real application."
     },
     {
-      "output": "ATS verify verdict, metrics.required_fields/order_checks, summary",
+      "output": "General ATS inspection results",
+      "technical_fields": [
+        "parser_floor",
+        "checks[*]",
+        "inventory.*",
+        "page_metrics.*"
+      ],
       "label": "script-output",
-      "record": "Field and order results in the same audit JSON",
-      "machine_can_verify": "The totals and final PASS/FAIL result",
-      "human_keeps": "Whether a passing résumé is ready to submit"
+      "record": "The extracted text and the locations of text on each page",
+      "machine_can_verify": "Basic reading problems and simple counts of headings, dates, and bullet-like lines.",
+      "human_keeps": "Whether the résumé is complete and useful. These counts are not a quality score."
     },
     {
-      "output": "ATS inspect parser_floor and checks[*]",
-      "label": "script-output",
-      "record": "PDF pages, text, characters, lines, and text positions",
-      "machine_can_verify": "The basic parser checks listed by the tool",
-      "human_keeps": "Whether the extracted résumé is complete and useful"
-    },
-    {
-      "output": "ATS inspect inventory.* and page_metrics.*",
-      "label": "script-output",
-      "record": "paste-test.txt lines and PDF.js text positions",
-      "machine_can_verify": "Counts made with the saved text and layout rules",
-      "human_keeps": "What those rough counts mean; they are not a quality score"
-    },
-    {
-      "output": "ATS boundary and limitations text",
+      "output": "Warnings about what the ATS test cannot prove",
+      "technical_fields": [
+        "boundary",
+        "limitations"
+      ],
       "label": "local-evidence",
       "record": "Chapter 13 and the checker rules",
-      "machine_can_verify": "The report states the parser boundary and its limits without generating a decision",
-      "human_keeps": "The final decision about the résumé"
+      "machine_can_verify": "The report shows its limits and does not make the final decision.",
+      "human_keeps": "The final decision about the résumé."
     },
     {
-      "output": "Gate schema_version, harness, fixture, sources, contract",
+      "output": "Gate test rules and saved settings",
+      "technical_fields": [
+        "schema_version",
+        "harness",
+        "fixture",
+        "sources",
+        "contract",
+        "sponsorship weight",
+        "Apply threshold",
+        "zero/one gate controls"
+      ],
       "label": "record",
-      "record": "Gate test cases, Chapters 11 and 16, and the stored H-1B database",
-      "machine_can_verify": "The report points to the saved test file and chapters",
-      "human_keeps": "Whether these rules are enough for a real decision"
+      "record": "Chapters 11 and 16, the saved test cases, and the real scoring program settings",
+      "machine_can_verify": "The test used the same saved rules and settings as the real scoring program.",
+      "human_keeps": "Whether the weight and cutoff are good enough for real decisions."
     },
     {
-      "output": "Gate sponsorship weight, Apply threshold, and zero/one controls",
-      "label": "record",
-      "record": "Chapter 11, Chapter 16, and the stored production scorer configuration",
-      "machine_can_verify": "The run used the same saved algorithm settings and contract controls",
-      "human_keeps": "Whether the approximate threshold and weight are adequately calibrated"
-    },
-    {
-      "output": "Gate database path, SHA-256, row/column counts, complete-record count, arithmetic mismatches",
+      "output": "Identity and basic checks of the saved H-1B database",
+      "technical_fields": [
+        "database.path",
+        "database.sha256",
+        "database.data_record_count",
+        "database.column_count",
+        "database.complete_record_count",
+        "database.arithmetic_mismatch_count"
+      ],
       "label": "script-output",
       "record": "data/80-days-to-stay/data/SEC_DOL_H1b_data_mapped.csv",
-      "machine_can_verify": "The stored bytes, schema, record count, and approval-rate arithmetic",
-      "human_keeps": "Whether the mapped company identities are trustworthy enough to use"
+      "machine_can_verify": "Which saved file was used, its size and shape, and whether its rate math is correct.",
+      "human_keeps": "Whether companies were matched correctly when this file was created."
     },
     {
-      "output": "Gate selected H-1B record: company, approvals, denials, approval rate",
+      "output": "The one saved H-1B row used by the test",
+      "technical_fields": [
+        "company",
+        "approvals",
+        "denials",
+        "approval_rate"
+      ],
       "label": "record",
       "record": "First complete H-1B record in stored CSV order",
-      "machine_can_verify": "The values occur in the selected stored record and the rate recomputes",
-      "human_keeps": "Whether the entity join is correct; raw match evidence is missing"
+      "machine_can_verify": "The company and numbers really occur in that saved row and its rate math is correct.",
+      "human_keeps": "Whether that company was matched correctly. The original matching proof is missing."
     },
     {
-      "output": "Gate normalized H-1B rate used as sponsorship.p",
+      "output": "The H-1B rate changed from percent to decimal for the test",
+      "technical_fields": [
+        "normalized_h1b_rate",
+        "sponsorship.p"
+      ],
       "label": "script-output",
-      "record": "Stored Approval_Rate divided by 100",
-      "machine_can_verify": "The unit conversion and scorer arithmetic",
-      "human_keeps": "It is only a mechanical proxy, not full P(sponsorship)"
+      "record": "The saved approval rate divided by 100",
+      "machine_can_verify": "The conversion and the later score calculation.",
+      "human_keeps": "This is only a test starting value, not the full chance of sponsorship."
     },
     {
-      "output": "Gate generated timestamp",
-      "label": "script-output",
-      "record": "System clock read by the gate report program",
-      "machine_can_verify": "The run saved a time",
-      "human_keeps": "Whether the report is recent enough"
-    },
-    {
-      "output": "Gate production implementation and case id/purpose/mutation_witness",
+      "output": "Names and purpose of the three Gate test cases",
+      "technical_fields": [
+        "production.implementation",
+        "cases[*].id",
+        "cases[*].purpose",
+        "cases[*].mutation_witness"
+      ],
       "label": "local-evidence",
-      "record": "Gate report program and gate-behavior-cases.json",
-      "machine_can_verify": "The case names and test labels were copied correctly",
-      "human_keeps": "Whether the three gate cases cover enough situations"
+      "record": "The Gate test program and its saved test-case file",
+      "machine_can_verify": "The names and descriptions were copied correctly.",
+      "human_keeps": "Whether three cases cover enough possible mistakes."
     },
     {
-      "output": "Gate production cases[*].expected.* and expected check values",
+      "output": "Correct Gate results and totals",
+      "technical_fields": [
+        "generated",
+        "cases[*].expected.*",
+        "cases[*].observed.composite",
+        "cases[*].observed.recommendation",
+        "cases[*].observed.reason",
+        "cases[*].observed.gate_product",
+        "cases[*].checks[*].status",
+        "cases[*].status",
+        "production.summary",
+        "machine_result"
+      ],
       "label": "script-output",
-      "record": "Database record plus Chapter 11/16 contract controls in gate-behavior-cases.json",
-      "machine_can_verify": "The expected values recompute from the stored record and contract controls",
-      "human_keeps": "Whether important real situations are missing"
+      "record": "The saved H-1B row, the chapter rules, and the real scoring program",
+      "machine_can_verify": "The expected and actual results, every PASS/FAIL check, the totals, and the run time.",
+      "human_keeps": "Whether the test inputs are true for a real job and whether more cases are needed."
     },
     {
-      "output": "Gate production observed composite/recommendation/reason/gate_product",
+      "output": "Results from deliberately wrong Gate code",
+      "technical_fields": [
+        "deliberate_break.mutation_result",
+        "deliberate_break.detection",
+        "deliberate_break.witnesses",
+        "deliberate_break.failed_checks"
+      ],
       "label": "script-output",
-      "record": "Production scorer run on each controlled case",
-      "machine_can_verify": "The formula result and saved calculation details",
-      "human_keeps": "Whether the inputs for a real job are true"
+      "record": "A saved bad version of the formula used only inside the test",
+      "machine_can_verify": "The bad code produces the wrong Apply results and the test catches both.",
+      "human_keeps": "Whether other kinds of bad code should also be tested."
     },
     {
-      "output": "Gate case/check status and production summary counts",
-      "label": "script-output",
-      "record": "Gate checker comparisons",
-      "machine_can_verify": "Each PASS/FAIL result and the final totals",
-      "human_keeps": "Whether more checks are needed"
-    },
-    {
-      "output": "Gate deliberate_break mutation result, detection, witnesses, failed checks",
-      "label": "script-output",
-      "record": "Deliberately wrong code in gate-behavior-core.mjs",
-      "machine_can_verify": "The wrong code fails and both examples are caught",
-      "human_keeps": "Whether other wrong versions should also be tested"
-    },
-    {
-      "output": "Gate machine_result",
-      "label": "script-output",
-      "record": "Real scorer result plus the wrong-version result",
-      "machine_can_verify": "Whether the real code passed and the wrong code failed",
-      "human_keeps": "Whether that is enough to approve the work"
-    },
-    {
-      "output": "Gate human_decision",
+      "output": "Final human review status",
+      "technical_fields": [
+        "human_decision"
+      ],
       "label": "local-evidence",
       "record": "Human-review rule in SNICKERDOODLE.md",
-      "machine_can_verify": "The value stays HUMAN_REVIEW_REQUIRED",
-      "human_keeps": "The named review and final approval"
+      "machine_can_verify": "The program leaves the final decision as HUMAN_REVIEW_REQUIRED.",
+      "human_keeps": "A named person must read the work and approve it."
     },
     {
-      "output": "Real résumé truth, universal ATS compatibility, current posting truth, full sponsorship probability, visa legality, final Apply decision",
+      "output": "Facts this project does not have",
+      "technical_fields": [
+        "real résumé truth",
+        "all commercial ATS results",
+        "current job-opening status",
+        "full sponsorship probability",
+        "personal visa legality",
+        "final Apply decision"
+      ],
       "label": "missing",
-      "record": "The reports explicitly mark these records NOT IMPLEMENTED or unavailable",
-      "machine_can_verify": "The reports do not claim to know these things",
-      "human_keeps": "Find other evidence or leave the answer unknown"
+      "record": "No verified record is available in this project",
+      "machine_can_verify": "The reports leave these items unknown or say NOT_IMPLEMENTED.",
+      "human_keeps": "Find real evidence later or leave the answer unknown."
     },
     {
-      "output": "Model judgments",
+      "output": "Any future AI opinion",
+      "technical_fields": [
+        "model judgments"
+      ],
       "label": "model-inference",
-      "record": "The public test does not create AI judgments",
-      "machine_can_verify": "Controlled test values are not mislabeled as AI or outside facts",
-      "human_keeps": "Check any future AI judgment against real evidence"
+      "record": "The current public tests do not create an AI opinion",
+      "machine_can_verify": "Test values are not presented as facts or AI opinions.",
+      "human_keeps": "Check any future AI opinion against real evidence."
     }
   ],
   "metric_readout": {

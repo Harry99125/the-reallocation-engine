@@ -329,3 +329,27 @@ private emails, or sensitive application notes.
 - **Correction:** the prior slide showed the hard-stop outcome but did not explicitly say that `Skip` is a successful engine result when either hard gate is zero.
 - **Wording:** slide 1 now says `A correct stop is success`; slide 2 is titled `A correct Skip is success` and labels the two mutation witnesses as wrong `Apply` results.
 - **Boundary:** this changes the explanation only. The controlled `2 / 2` record, gate code, database evidence, and real-world unknowns did not change.
+
+## 2026-08-16 -- Rewrite Step 3 and Step 4 against the current audits
+
+- **Reason:** the public reports still contained superseded gate values from the earlier hand-written fixture. Replaced those values with the current database-backed evidence and simplified the writing.
+- **Step 3:** updated the stored generator and regenerated `step3.md` and `step3.json`. The report now shows the passing privacy/honesty gate, the complete verified/human-owned boundary, the number trace, the named-human decision, and the `NOT_IMPLEMENTED` boundary in plain language.
+- **Step 4:** pasted the current public ATS and gate terminal summaries, recorded the private résumé run without private content or counts, recomputed the plausibility check from the stored H-1B record, documented both deliberate breaks, listed the controlled metrics, and stated what the machine could not know.
+- **Recovered required records:** the current branch had deleted the recipe/card lifecycle frontmatter and the database-bound Step 3 review record. Restored them from the immediately preceding committed version. The review remains bound to recipe `0.12.0` and the current database hash; lifecycle `attestation` remains null.
+- **Current evidence:** public ATS positive control returned 13/13 fields and 1/1 order; the deliberate ATS break returned 7/13 fields, 0/1 order, FAIL, and exit 1; production gate behavior passed 3/3 cases and 19/19 assertions; both deliberate gate-as-vote witnesses returned 1.35/Apply and were caught.
+- **Checks:** ATS regression passed 11/11, gate regression passed 10/10, and Step 3 regression passed 8/8. Targeted conformance, full `verify`, strict `doctor`, and `git diff --check` passed. A stale-value search found none of the old 6/6, 40/40, 0.65, 0.80, or 0.85 gate figures in Step 3 or Step 4.
+- **Privacy:** no private résumé text, path, or résumé-derived count was added to a tracked report. Strict doctor found no tracked private/PII paths.
+
+## 2026-08-16 -- Simplify the Step 3 and Step 4 writing
+
+- **Step 3:** kept only the one table the assignment requires: what the scripts check and what a person must check. Changed the privacy checks and main number sources into short lists.
+- **Step 4:** removed tables and replaced terms such as “positive control,” “fixture,” “assertions,” and “contract” with simpler wording in the explanation. The copied terminal output stays unchanged so it still matches the real run.
+- **Evidence:** no data, totals, test outcomes, source paths, or limitations changed.
+- **Checks:** the Step 3 tests passed 8/8. Full `verify`, strict `doctor`, targeted conformance, and `git diff --check` passed. Step 3 contains one table and Step 4 contains none.
+
+## 2026-08-16 -- Rewrite the Step 3 boundary table in plain language
+
+- **Change:** shortened the table from 29 detailed rows to 18 grouped rows. The visible report now uses names such as “the PDF chosen for the ATS test,” “the software that reads the PDF,” and “correct Gate results and totals.”
+- **Exact fields:** kept the computer field names in `step3.json` under each row's `technical_fields` list, so the shorter Markdown table does not remove the detailed evidence map.
+- **Evidence:** no source, number, result, privacy rule, or human-review boundary changed.
+- **Checks:** regenerated Step 3 with privacy and source checks passing. Step 3 tests passed 8/8; full `verify` and strict `doctor` passed.

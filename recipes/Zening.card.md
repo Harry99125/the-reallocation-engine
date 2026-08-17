@@ -1,3 +1,13 @@
+---
+status: RUNNABLE-SAMPLE
+todos_open: 0
+last_gate: "step4-honest-run-v0.12.0, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
+attestation: null
+recipe_version: 0.12.0
+pair: recipes/Zening-AIRecipe.md
+pair_version: 0.12.1
+type: human-card
+---
 
 # Reallocation Verification Harness — Human Card
 
