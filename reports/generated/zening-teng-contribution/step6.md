@@ -1,6 +1,5 @@
 # Two Safety Checks for the Reallocation Engine
 
-**Zening Teng — Software Engineering Case Study**
 
 [Open the single-page website](step6.html).
 

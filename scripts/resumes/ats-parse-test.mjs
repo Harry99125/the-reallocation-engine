@@ -360,7 +360,6 @@ export function inspectExtractedText(extracted) {
 
   return {
     parser_floor: parserFloor,
-    decision: 'HUMAN_REVIEW_REQUIRED',
     checks,
     inventory: {
       nonempty_lines: lines.length,
@@ -480,12 +479,11 @@ export function renderVerificationMarkdown(audit) {
   return output.join('\n');
 }
 
-function renderInspectionMarkdown(audit) {
+export function renderInspectionMarkdown(audit) {
   const output = [
     `# ATS paste-test inspection — ${audit.document_id}`,
     '',
-    `**Parser floor: ${audit.parser_floor}**  `,
-    `**Decision: ${audit.decision}**`,
+    `**Parser floor: ${audit.parser_floor}**`,
     '',
     `PDF.js ${audit.parser.version} extracted ${audit.metrics.pages.value} page(s) and ${audit.inventory.nonempty_lines} non-empty line(s).`,
     '',
@@ -549,7 +547,7 @@ async function main(argv = process.argv.slice(2)) {
   if (!args.expectPath) {
     const inspection = inspectExtractedText(extracted);
     const audit = {
-      schema_version: '1.0.0',
+      schema_version: '2.0.0',
       harness: 'ats-paste-test',
       mode: 'inspect',
       chapter: 13,
@@ -579,7 +577,6 @@ async function main(argv = process.argv.slice(2)) {
     console.log(`  deterministic checks: ${deterministicPasses}/${audit.checks.length} PASS · ${reviews} REVIEW`);
     console.log(`  inventory (heuristic): ${audit.inventory.heading_categories_detected.length} heading categories · ${audit.inventory.date_like_lines} date-like lines · ${audit.inventory.bullet_lines} bullet-like lines`);
     console.log(`  artifacts: ${relativeDisplay(textPath)}, ${relativeDisplay(jsonPath)}, ${relativeDisplay(markdownPath)}`);
-    console.log('  decision: HUMAN_REVIEW_REQUIRED — add --expect only when independent expected fields exist');
     process.exitCode = audit.parser_floor === 'PASS' ? 0 : 1;
     return;
   }

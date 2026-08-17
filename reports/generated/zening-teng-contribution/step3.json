@@ -3,7 +3,7 @@
   "artifact": "verified-data-evidence",
   "contribution": "reallocation-verification-harness",
   "recipe_version": "0.12.0",
-  "generated": "2026-08-16T10:38:05.297Z",
+  "generated": "2026-08-16T21:49:21.674Z",
   "machine_result": "PASS",
   "human_attestation": {
     "status": "RECORDED",
@@ -234,10 +234,10 @@
       "human_keeps": "What those rough counts mean; they are not a quality score"
     },
     {
-      "output": "ATS decision and boundary/limitations text",
+      "output": "ATS boundary and limitations text",
       "label": "local-evidence",
       "record": "Chapter 13 and the checker rules",
-      "machine_can_verify": "The report includes HUMAN_REVIEW_REQUIRED and its limits",
+      "machine_can_verify": "The report states the parser boundary and its limits without generating a decision",
       "human_keeps": "The final decision about the résumé"
     },
     {

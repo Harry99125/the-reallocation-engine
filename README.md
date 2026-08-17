@@ -50,6 +50,7 @@ Capstone step reports:
 - [`step5.md`](reports/generated/zening-teng-contribution/step5.md) — PR-readiness audit and PR-description draft
 - [`step6.md`](reports/generated/zening-teng-contribution/step6.md) — employer-facing engineering case study
 - [`step6.html`](reports/generated/zening-teng-contribution/step6.html) — responsive single-page portfolio site
+- [`video-simple.pptx`](reports/generated/zening-teng-contribution/video-simple.pptx) — two-slide visual explainer for the capstone video
 
 Read the current reports from PowerShell:
 
@@ -66,6 +67,13 @@ Open the Step 6 single-page site in the default browser:
 
 ```powershell
 Start-Process "reports\generated\zening-teng-contribution\step6.html"
+```
+
+Build and open the two-slide video explainer in PowerPoint:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File "scripts\presentation\build-video-ppt.ps1"
+Start-Process "reports\generated\zening-teng-contribution\video-simple.pptx"
 ```
 
 ### Check Step 5 PR readiness

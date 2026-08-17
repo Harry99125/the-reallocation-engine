@@ -287,3 +287,45 @@ private emails, or sensitive application notes.
 - **Pair update:** changed the AI recipe, current READMEs, status, Step 2 report, Step 6 link, and documented conformance commands to the new path. Both pair records now use `pair_version: 0.12.1`; tested recipe behavior remains `recipe_version: 0.12.0` because no script, data, formula, gate, or evidence boundary changed.
 - **Checks:** ATS regression passed 11/11, gate regression passed 10/10, and Step 3 evidence regression passed 8/8. Step 3 regenerated with privacy PASS, honesty/provenance PASS, and the current named review recorded. Full `verify` passed 142-file conformance and the manifest check. Strict `doctor` reported a runnable environment and no tracked private/PII paths.
 - **Boundary:** this is a packaging correction only. It does not add a real liveness input, personal timeline, full sponsorship probability, real-role recommendation, PR, or final lifecycle attestation.
+
+## 2026-08-16 -- Remove the ATS inspect `decision` field
+
+- **Requested behavior:** generic ATS inspect mode no longer generates a `decision` property in JSON, a Decision line in Markdown, or a decision line in the console. Its inspect-audit schema advanced to `2.0.0` because the machine-readable shape changed.
+- **Boundary retained:** inspect mode still reports the objective `parser_floor`, deterministic checks, heuristic inventory, source boundary, and private artifacts. Verify mode still emits evidence-backed `PASS/FAIL` only when an independent expectation record is supplied. Gate and named-human review fields were not changed.
+- **Private rerun:** reran the approved real PDF locally. Parser floor passed with 7/7 deterministic checks and 0 review flags. The regenerated private JSON and Markdown contain no `decision` field or heading; no private content or résumé-derived audit was added to the tracked tree.
+- **Checks:** ATS regression passed 11/11, including an explicit no-decision assertion. Step 3 evidence regression passed 8/8 and regenerated with privacy PASS, honesty/provenance PASS, and the current named review recorded. Full `verify` and strict `doctor` passed with no tracked private/PII paths.
+
+## 2026-08-16 -- Three-slide capstone video explainer
+
+- **Output:** created `reports/generated/zening-teng-contribution/video.pptx`, a three-slide 16:9 live deck with embedded English speaker notes. The rebuild script is `scripts/presentation/build-video-ppt.ps1`; the command and open action are recorded in the root README.
+- **Visual:** generated one project-local, transparent editorial-cartoon asset at `reports/generated/zening-teng-contribution/assets/capstone-cartoon.png`. It shows a résumé scanner, a scoring machine, two gates catching a software bug, and a human reviewer. It contains no text, logos, personal information, or watermark.
+- **Claims:** slide numbers come only from the stored audits and code: seven ATS deterministic checks and two of two controlled gate-as-vote witnesses caught. The deck labels the historical H-1B value as a proxy and keeps commercial-ATS compatibility, current liveness, personal legal timeline, and the final application decision outside the verified boundary.
+- **Layout review:** rendered all three slides at 1920 × 1080 and visually checked title safe zones, text wrapping, arrows, borders, image edges, and footer placement. No clipping, overlap, or unreadable text was observed. The PowerPoint package contains three notes-slide records.
+- **Accuracy review:** reconciled the `2 / 2` witness claim to the two `deliberate_break.witnesses` records in the gate JSON and checked the ATS seven-check label against the maintained inspect implementation. The first-slide wording was tightened from “survives the filter” to “becomes inspectable” to avoid implying universal ATS certification.
+- **Repository layout linter:** `npm.cmd run audit:layout` still reports nine errors and eight warnings in eight pre-existing chapter SVGs. The new deck adds no SVG and none of those findings came from the PPT; its rendered-slide layout was reviewed separately.
+
+## 2026-08-16 -- Simplify the capstone video deck
+
+- **User feedback:** the first three-slide deck and its cartoon carried too many elements. Replaced the project cartoon with a minimal two-icon image: one scanner and one pair of gates stopping a single software bug.
+- **Current output:** generated `reports/generated/zening-teng-contribution/video-simple.pptx` with two slides and two speaker-note records. Slide 1 names the two modules; slide 2 shows only `PDF → audit`, `Zero gate → Skip`, the traced `2 / 2` controlled-witness result, and one short unknown-data boundary.
+- **File-in-use boundary:** the earlier `video.pptx` was open in PowerPoint and could not be overwritten. It remains as the earlier generated version; README and the build script now point to `video-simple.pptx` as the current deck.
+- **Visual QA:** rendered both slides at 1920 × 1080. No clipping, overlap, unreadable label, or off-canvas image was observed. The simplified cartoon has no words, people, personal data, logos, or watermark.
+
+## 2026-08-16 -- Make the two hard gates visually explicit
+
+- **User feedback:** the raised barriers in the first simplified illustration looked passable and did not show the required hard-stop rule.
+- **Visual correction:** replaced them with two separate, fully lowered barriers and labeled them `LIVENESS` and `TIMELINE`. Slide 1 now states `Either zero → 0 / Skip`; slide 2 repeats `Either gate = 0 → Skip`.
+- **Scope:** the ATS scanner illustration, the two-module structure, the stored `2 / 2` witness result, and the verified/unknown boundary did not change. The image contains no résumé details or other personal data.
+- **QA:** regenerated `video-simple.pptx`, exported both slides at 1920 × 1080, and visually checked the white background, labels, lowered barriers, title safe zones, footer, overlap, and clipping.
+
+## 2026-08-16 -- Simplify the second explainer slide
+
+- **User feedback:** slide 2 tried to explain the ATS module, the gate rule, the witness count, and all unknown inputs at once.
+- **Change:** reduced the slide to two equations: `Liveness = 0 → Skip` and `Timeline = 0 → Skip`. Kept only the traced `2 / 2` controlled bad-code result and the boundary sentence that the final application decision stays human.
+- **QA:** regenerated the two-slide deck, preserved both speaker-note records, and visually checked the new slide at 1920 × 1080 for readability, overlap, and clipping.
+
+## 2026-08-16 -- State that a correct Skip is success
+
+- **Correction:** the prior slide showed the hard-stop outcome but did not explicitly say that `Skip` is a successful engine result when either hard gate is zero.
+- **Wording:** slide 1 now says `A correct stop is success`; slide 2 is titled `A correct Skip is success` and labels the two mutation witnesses as wrong `Apply` results.
+- **Boundary:** this changes the explanation only. The controlled `2 / 2` record, gate code, database evidence, and real-world unknowns did not change.

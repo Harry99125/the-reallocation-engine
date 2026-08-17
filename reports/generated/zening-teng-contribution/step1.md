@@ -11,20 +11,6 @@ I kept them together because they solve the same kind of problem. In both cases,
 
 The ATS checker looks at the text that comes out of a PDF. The gate test checks that job liveness and visa timing stay hard gates in the scorer.
 
-## Why I chose it
-
-This was a good size for the capstone. It was small enough to test carefully, but it fixed two gaps that the book names directly.
-
-It also meets the project rules:
-
-- The work is real code under `scripts/`.
-- The ATS test uses a public sample under `data/examples/`.
-- The gate test reads the stored H-1B database instead of using a hand-written company score.
-- Every reported number comes from a saved audit or test run.
-- The workflow has an AI recipe and a human card.
-- Failed checks stop the run instead of being hidden.
-- Real résumé data stays private and out of Git.
-- The reports say what the programs cannot know.
 
 ## Chapters used
 
@@ -40,6 +26,3 @@ It does not tell someone whether a résumé is good. It does not prove that ever
 
 Those decisions still need real records and a person.
 
-## Status
-
-Step 1 is complete. The build is explained in `step2.md`.

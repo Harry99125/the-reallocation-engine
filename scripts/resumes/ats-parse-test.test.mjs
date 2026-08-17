@@ -10,6 +10,7 @@ import {
   extractPdfText,
   inspectExtractedText,
   normalizeForMatch,
+  renderInspectionMarkdown,
   renderVerificationMarkdown,
   validateManifest,
   verifyManifestProvenance,
@@ -110,16 +111,25 @@ test('line-contains matches a title sharing a row with its date', () => {
   assert.equal(result.fields.find((field) => field.id === 'title').status, 'PASS');
 });
 
-test('generic inspection passes parser mechanics but still requires human review', () => {
+test('generic inspection reports parser mechanics without generating a decision', () => {
   const result = inspectExtractedText({
     text: 'Candidate Name\nSummary\nExperience with systems.\nEducation\nMay 2026\n',
     pageCount: 1,
     pageMetrics: [{ page: 1, text_items: 5, extracted_lines: 5, explicit_eol_items: 5, vertical_order_reversals: 0 }],
   });
   assert.equal(result.parser_floor, 'PASS');
-  assert.equal(result.decision, 'HUMAN_REVIEW_REQUIRED');
+  assert.equal(Object.hasOwn(result, 'decision'), false);
   assert.deepEqual(result.inventory.heading_categories_detected, ['summary', 'education']);
   assert.equal(result.inventory.date_like_lines, 1);
+  const report = renderInspectionMarkdown({
+    document_id: 'fixture',
+    parser_floor: result.parser_floor,
+    parser: { version: 'test' },
+    metrics: { pages: { value: 1 } },
+    ...result,
+  });
+  assert.doesNotMatch(report, /Decision:/i);
+  assert.match(report, /only a named human can clear adequacy/i);
 });
 
 test('generic inspection fails closed on replacement characters', () => {

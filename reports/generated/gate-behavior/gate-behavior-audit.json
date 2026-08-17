@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "harness": "gate-behavior",
-  "generated": "2026-08-16T10:12:12.207Z",
+  "generated": "2026-08-16T23:53:14.670Z",
   "fixture": "data/examples/gate-behavior-cases.json",
   "sources": [
     "chapters/11-the-bayesian-role-scorer.md",

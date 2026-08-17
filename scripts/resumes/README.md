@@ -40,8 +40,8 @@ npm run resumes:paste-test -- .build/ats-paste-test/aarav-patel-public.pdf
 
 Default output goes to `private/ats-paste-test/<input-name>/`, even for public
 samples. Inspect mode can prove parser mechanics and character integrity, but
-its heading/date/contact inventory is heuristic and its decision always remains
-`HUMAN_REVIEW_REQUIRED`.
+its heading/date/contact inventory is heuristic. It does not generate a
+decision; a person reads the extracted text and decides whether it is adequate.
 
 Real Markdown source files still belong under `private/`; `resumes/` is for the
 tracked anonymized Markdown examples. Local PDF inputs under `resumes/` are

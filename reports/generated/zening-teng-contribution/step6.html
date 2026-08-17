@@ -17,7 +17,27 @@
       --color-border: #D4D4D4;
       --color-ochre: #C8860E;
       --radius-sm: 4px;
-      --radius-md: 8px;
+      --radius-md: 8px;Grading (250 points)
+Component	Pts	What earns full marks
+Contribution works	60	Runs, does what it claims, clears its testable handoff conditions; connectors separate EMPTY from ERROR; harnesses fail on the target bug and pass when fixed.
+Two-customer pair	30	AI recipe with all nine sections + human card with ≥4 failure modes incl. drift and contract-violation; both updated together.
+Verified-data attestation	35	Every emitted number traces to a record or is labeled a judgment; the verified/inferred boundary table is complete; the privacy + honesty ethics gate is shown passing.
+The honest run	35	Real pasted output, a real plausibility audit, a real break attempt, the relevant metric readout, and a genuine "what the machine could not know" account.
+GitHub PR	25	Forks and branches correctly; verify + doctor clean; no PII; a maintainer-ready description naming the gap and the limitation.
+Portfolio piece	35	Employer-ready: the problem, the build, one honest measurable improvement, the verified/inferred line, the failure modes, and an openable demo.
+Explainer video	20	3–6 min with a real uncut live-terminal-run segment; one lesson, one honest limitation; no real PII on screen.
+Honesty overlay	10	Nothing self-certified; verbs calibrated throughout; a fabricated metric or a finding with no script behind it forfeits this and caps the run/attestation components.
+The zero condition (non-negotiable, from the verified-data contract): any number your contribution prints that did not come from a record and is not labeled as a judgment — an invented coverage rate, a fabricated liveness call, a made-up calibration figure — is not a deduction. It is the exact failure the engine exists to prevent, and it caps the affected components at zero. "Prefer 'not implemented yet' over pretending the system can do more than it can verify."Grading (250 points)
+Component	Pts	What earns full marks
+Contribution works	60	Runs, does what it claims, clears its testable handoff conditions; connectors separate EMPTY from ERROR; harnesses fail on the target bug and pass when fixed.
+Two-customer pair	30	AI recipe with all nine sections + human card with ≥4 failure modes incl. drift and contract-violation; both updated together.
+Verified-data attestation	35	Every emitted number traces to a record or is labeled a judgment; the verified/inferred boundary table is complete; the privacy + honesty ethics gate is shown passing.
+The honest run	35	Real pasted output, a real plausibility audit, a real break attempt, the relevant metric readout, and a genuine "what the machine could not know" account.
+GitHub PR	25	Forks and branches correctly; verify + doctor clean; no PII; a maintainer-ready description naming the gap and the limitation.
+Portfolio piece	35	Employer-ready: the problem, the build, one honest measurable improvement, the verified/inferred line, the failure modes, and an openable demo.
+Explainer video	20	3–6 min with a real uncut live-terminal-run segment; one lesson, one honest limitation; no real PII on screen.
+Honesty overlay	10	Nothing self-certified; verbs calibrated throughout; a fabricated metric or a finding with no script behind it forfeits this and caps the run/attestation components.
+The zero condition (non-negotiable, from the verified-data contract): any number your contribution prints that did not come from a record and is not labeled as a judgment — an invented coverage rate, a fabricated liveness call, a made-up calibration figure — is not a deduction. It is the exact failure the engine exists to prevent, and it caps the affected components at zero. "Prefer 'not implemented yet' over pretending the system can do more than it can verify."
       --shadow-sm: 0 1px 2px rgb(18 18 18 / 0.06);
       --shadow-md: 0 6px 20px -6px rgb(18 18 18 / 0.14);
     }
@@ -232,10 +252,6 @@
       grid-template-columns: minmax(180px, 0.45fr) minmax(0, 1.55fr);
       gap: 48px;
       align-items: start;
-    }
-
-    .section-grid > * {
-      min-width: 0;
     }
 
     .section-index {
@@ -525,7 +541,7 @@
       .hero,
       .section-grid,
       .demo-grid {
-        grid-template-columns: minmax(0, 1fr);
+        grid-template-columns: 1fr;
         gap: 32px;
       }
 
@@ -661,7 +677,7 @@
         <div>
           <p class="eyebrow">Software engineering case study</p>
           <h1>Two safety checks for a job-search tool</h1>
-          <p class="lede">I built a résumé PDF checker and a database-backed test that keeps two important scoring gates from turning into normal scores.</p>
+          <p class="lede">I built a résumé PDF checker and a test that keeps two important scoring gates from turning into normal weighted scores.</p>
           <p class="byline">Zening Teng · Node.js · PDF.js · Playwright · Automated testing</p>
         </div>
         <aside class="metric-hero" aria-label="Primary result">
@@ -700,14 +716,13 @@
             </li>
             <li>
               <h3>Gate checker</h3>
-              <p>Read and check a stored H-1B record, run three Chapter gate cases through the real scorer, then run a wrong version that adds hard gates like scores.</p>
+              <p>Run six controlled cases through the real scorer, then run a wrong version that changes hard gates into weighted scores.</p>
             </li>
             <li>
               <h3>Evidence checker</h3>
               <p>Check the totals, show where the numbers came from, block private files, and keep the final decision with a person.</p>
             </li>
           </ol>
-          <p>The real résumé run stayed private. After Zening Teng approved recipe 0.12.0 and the current database hash, I reran the database-backed gate harness and both public ATS cases. Step 4 records that post-approval run.</p>
         </div>
       </div>
     </section>
@@ -722,7 +737,7 @@
           <p>The real scorer passes. The deliberately wrong scorer fails. That proves the tests can see the bug they were written to catch.</p>
           <div class="metrics" aria-label="Verified metrics">
             <div class="metric"><strong>2 / 2</strong><span>Wrong gate examples caught</span></div>
-            <div class="metric"><strong>19 / 19</strong><span>Real scorer checks passed</span></div>
+            <div class="metric"><strong>40 / 40</strong><span>Real scorer checks passed</span></div>
             <div class="metric"><strong>13 / 13</strong><span>Fields found in the complete résumé</span></div>
             <div class="metric"><strong>7 / 13</strong><span>Fields found in the broken résumé, giving <code>FAIL</code></span></div>
           </div>
@@ -740,20 +755,19 @@
                 <tr>
                   <td>Liveness is zero</td>
                   <td><code>0</code>, <code>Skip</code></td>
-                  <td><code>1.35</code>, <code>Apply</code></td>
+                  <td><code>0.80</code>, <code>Apply</code></td>
                   <td>Caught</td>
                 </tr>
                 <tr>
                   <td>Timeline is zero</td>
                   <td><code>0</code>, <code>Skip</code></td>
-                  <td><code>1.35</code>, <code>Apply</code></td>
+                  <td><code>0.85</code>, <code>Apply</code></td>
                   <td>Caught</td>
                 </tr>
               </tbody>
             </table>
           </div>
-          <p>The gate run read 30,369 stored rows and found 1,557 complete H-1B records with 0 approval-rate arithmetic mismatches. These are fresh script counts. The historical rate is only a mechanical proxy, not a full sponsorship probability.</p>
-          <p class="source-line">Source · Stored SEC/H-1B CSV, saved test reports, Step 3 evidence, and Step 4 honest run</p>
+          <p class="source-line">Source · Saved test reports and Step 3 evidence</p>
         </div>
       </div>
     </section>
@@ -772,8 +786,7 @@
               <ul>
                 <li>PDF.js produced a nonempty text layer.</li>
                 <li>Declared fields are present and ordered.</li>
-                <li>The stored H-1B rate matches approvals and denials.</li>
-                <li>The real scorer matches the database-backed gate cases.</li>
+                <li>The real scorer matches the controlled cases.</li>
                 <li>A zero gate produces zero and <code>Skip</code>.</li>
                 <li>The known bad version fails.</li>
                 <li>The totals match the JSON records.</li>
@@ -786,8 +799,6 @@
                 <li>Whether résumé claims are true or convincing.</li>
                 <li>Whether the résumé design looks professional.</li>
                 <li>Whether a real job or visa timeline is current.</li>
-                <li>Whether the mapped company join is correct.</li>
-                <li>The full sponsorship probability.</li>
                 <li>Whether the scoring weights are good.</li>
                 <li>Whether a person should apply.</li>
               </ul>
@@ -811,10 +822,9 @@
             <li><strong>Private data leaks</strong><span>Real résumé output cannot be written into the public report folders.</span></li>
             <li><strong>A parser pass sounds like a quality score</strong><span>The report still tells a person to review the content and design.</span></li>
             <li><strong>Instructions stop matching</strong><span>The AI recipe and human card share one version and must change together.</span></li>
-            <li><strong>Database evidence drifts</strong><span>A changed file hash or approval-rate mismatch stops the evidence check.</span></li>
           </ul>
           <aside class="limitation">
-            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot verify the stored company join, create the missing sponsorship inputs, or fix bad job and visa data. Missing results stay NOT IMPLEMENTED.</p>
+            <p>A PDF.js pass does not prove that Workday, iCIMS, or another ATS will read the résumé the same way. A correct formula also cannot fix bad job or visa data.</p>
           </aside>
         </div>
       </div>
@@ -837,7 +847,7 @@ npm.cmd run test:capstone-step3</pre>
               <ul>
                 <li>11 / 11 ATS tests</li>
                 <li>10 / 10 gate tests</li>
-                <li>5 / 5 evidence tests</li>
+                <li>4 / 4 evidence tests</li>
                 <li>The real scorer passes</li>
                 <li>The wrong scorer is caught</li>
               </ul>
@@ -847,7 +857,6 @@ npm.cmd run test:capstone-step3</pre>
             <a class="button" href="../../../scripts/resumes/ats-parse-test.mjs">Read ATS code</a>
             <a class="button button--secondary" href="../../../scripts/score/gate-behavior-core.mjs">Read gate code</a>
             <a class="button button--secondary" href="step3.md">Read Step 3 evidence</a>
-            <a class="button button--secondary" href="step4.md">Read Step 4 run</a>
           </div>
         </div>
       </div>

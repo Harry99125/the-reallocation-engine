@@ -137,10 +137,10 @@ export const BOUNDARY_ROWS = [
     human_keeps: 'What those rough counts mean; they are not a quality score',
   },
   {
-    output: 'ATS decision and boundary/limitations text',
+    output: 'ATS boundary and limitations text',
     label: 'local-evidence',
     record: 'Chapter 13 and the checker rules',
-    machine_can_verify: 'The report includes HUMAN_REVIEW_REQUIRED and its limits',
+    machine_can_verify: 'The report states the parser boundary and its limits without generating a decision',
     human_keeps: 'The final decision about the résumé',
   },
   {

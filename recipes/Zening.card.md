@@ -1,13 +1,3 @@
----
-status: RUNNABLE-SAMPLE
-todos_open: 0
-last_gate: "step4-honest-run-v0.12.0, 2026-08-16, reports/generated/zening-teng-contribution/step4.md"
-attestation: null
-recipe_version: 0.12.0
-pair: recipes/Zening-AIRecipe.md
-pair_version: 0.12.1
-type: human-card
----
 
 # Reallocation Verification Harness — Human Card
 
@@ -61,8 +51,9 @@ Run from the repository root in PowerShell.
 ### 1. Regression tests
 
 ```powershell
-npm.cmd run test:ats-parse
+npm.cmd run resumes:paste-test -- "resumes\Resume SE.pdf"
 npm.cmd run test:gate-behavior
+npm.cmd run gate:behavior 
 ```
 
 The first command checks parser normalization, field/order failures, provenance drift, generic inspection, and the public PDF integration. The second reads the stored H-1B database, checks its selected record, runs the three gate cases, catches the deliberate mutation, and checks CLI report writing.
