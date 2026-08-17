@@ -86,7 +86,7 @@ The public test records are under `data/examples/`. The saved reports are under 
 - The expected field list no longer matches the public source résumé.
 - A gate is changed into a normal weighted score.
 - A private résumé tries to write a public report.
-- A machine report tries to sound more certain than the evidence allows.
+
 
 ## What this step did not prove
 

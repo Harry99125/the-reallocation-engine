@@ -88,8 +88,6 @@ For Gate behavior, I ran deliberately wrong code that added liveness and timelin
 
 ## Metric readout
 
-These are controlled software-test results, not real-job performance rates:
-
 - Public ATS positive control: `13/13` fields and `1/1` order check passed.
 - ATS break: `7/13` fields and `0/1` order checks passed; final verdict `FAIL`.
 - Production Gate contract: `3/3` cases and `19/19` assertions passed.
@@ -109,7 +107,7 @@ The tools could not know:
 - whether the stored company join is correct without the missing raw match evidence;
 - whether a person should apply.
 
-These items stay unknown or `NOT_IMPLEMENTED`. A human owns the final decision.
+These items stay unknown or `NOT_IMPLEMENTED`. 
 
 ## Honest result
 

@@ -14,7 +14,6 @@ Made on: 2026-08-17T02:28:38.654Z
 
 Code may read, count, compare, and do math. A person must judge meaning, safety, company matching, and the final choice.
 
-The full field-by-field split is in `step3.json` under `boundary`. Each item has exact fields, a label, a source, the code job, and the human job.
 
 ## 2. Every number has a source
 
