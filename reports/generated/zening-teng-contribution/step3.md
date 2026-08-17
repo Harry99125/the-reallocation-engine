@@ -37,6 +37,4 @@ A privacy or honesty FAIL stops Step 3. Step 4 must not run.
 - **Privacy — PASS:** no private path is staged or tracked; `node scripts/doctor.mjs --strict` passed.
 - **Honesty — PASS:** totals and math match saved records; bad code was caught; every number is traced; missing facts stay `missing` or `NOT_IMPLEMENTED`.
 
-Zening Teng allowed Step 4 on 2026-08-16. Record: `logs/zening-teng-step3-review-v0.12.0.json`.
-
 The code did not approve itself. This is not proof for every ATS, job, company, or visa case.
